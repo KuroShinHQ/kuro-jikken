@@ -7,6 +7,12 @@ turns chat-driven research hypotheses into **verifiable in-silico experiments**
 (computation -> molecular simulation -> bio/system modelling) and publishes the
 results as clean, reproducible docs.
 
+## Project Soul (DEC-20261023; user-approved, total = one-page compass)
+> *"Can an LLM act like a scientist?"* — a laboratory for that question.
+Core chain: **claim -> evidence -> publication**. Main axis: harmless real-world
+experiments + open researcher identity + portfolio. PC/TUI/tools are the support
+line; the measure of success = solving one real person's problem.
+
 ## Features
 - Staged FAZ pipeline (F1 computation, F2 molecular sim, F3 bio/system, F4 research-agent)
 - Evidence-first working rules (kanit zorunlu), Q&A decision flow

@@ -27,6 +27,7 @@ LANG_FILE = os.path.join(ROOT, ".lang")
 STR = {
     "en": {
         "boot": "Kuro-Jikken boot animation",
+        "soul": "claim -> evidence -> publication | can an LLM act like a scientist?",
         "menu_title": "Kuro-Jikken Control Deck",
         "faz1": "FAZ 1 - Basic computation (RDKit)",
         "faz2": "FAZ 2 - Molecular simulation",
@@ -40,6 +41,7 @@ STR = {
     },
     "tr": {
         "boot": "Kuro-Jikken baslama animasyonu",
+        "soul": "iddia -> kanit -> yayin | LLM bilim insani gibi calisabilir mi?",
         "menu_title": "Kuro-Jikken Kumanda Merkezi",
         "faz1": "FAZ 1 - Basit hesaplama (RDKit)",
         "faz2": "FAZ 2 - Molekuler simulasyon",
@@ -85,6 +87,7 @@ def ekran1_boot(t: dict) -> None:
     """Boot animasyonu + health-check tablosu."""
     CONSOLE.print(Text("kuro-jikken", style="bold cyan"), justify="center")
     CONSOLE.print(Text("deney deck - faz pipeline", style="dim"), justify="center")
+    CONSOLE.print(Text(t["soul"], style="dim italic"), justify="center")
     for ch in r"/-\\|/-\\|":
         CONSOLE.print(f"  [{ch}]", end="\r")
         time.sleep(0.05)
