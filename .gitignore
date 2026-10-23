@@ -1,0 +1,10 @@
+# kuro-jikken skeleton: python cache / venv / runtime state / yedekler
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+logs/
+.lang
+*.bak
+*.bak_*
+*.621bak
