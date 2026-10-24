@@ -32,6 +32,12 @@ __all__ = [
     "hbond_donors",
     "hbond_acceptors",
     "rotatable_bonds",
+    "hbd_lipinski",
+    "hbd_plain",
+    "hba_lipinski",
+    "hba_plain",
+    "rotatable_bonds_strict",
+    "rotatable_bonds_nonstrict",
 ]
 
 
@@ -216,4 +222,109 @@ def rotatable_bonds(smiles: str) -> dict:
         "count",
         "rdkit.Chem.rdMolDescriptors.CalcNumRotatableBonds(mol) "
         "[NumRotatableBondsOptions.Default]",
+    )
+
+
+# --- explicit definition variants (no primary chosen yet; decision pending) ---
+
+def hbd_lipinski(smiles: str) -> dict:
+    """H-bond donors, Lipinski scheme (RDKit ``CalcNumLipinskiHBD``).
+
+    Bundled RDKit doc (pinned 2026.09.1, ``Chem/Lipinski.py``, ``NHOHCount``):
+    *"Number of NHs or OHs"* - counts N-H and O-H **hydrogens** (water -> 2,
+    urea 2x NH2 -> 4). Differs from PubChem's donor-**atom** count; deltas are
+    reported in ``validation/tool_vs_pubchem.md``.
+    """
+    mol = _with_mol(smiles)
+    if mol is None:
+        return _fail(f"RDKit could not parse SMILES: {smiles!r}")
+    return _ok(
+        rdMolDescriptors.CalcNumLipinskiHBD(mol),
+        "count",
+        "rdkit.Chem.rdMolDescriptors.CalcNumLipinskiHBD(mol)",
+    )
+
+
+def hbd_plain(smiles: str) -> dict:
+    """H-bond donors, plain scheme (RDKit ``CalcNumHBD``).
+
+    Bundled RDKit doc (pinned 2026.09.1): *"Number of Hydrogen Bond Donors"*.
+    Donor-atom count driven by RDKit's internal SMARTS; known quirk: water -> 0
+    (the pattern requires exactly one H on the O). Sensitivity-analysis variant.
+    """
+    mol = _with_mol(smiles)
+    if mol is None:
+        return _fail(f"RDKit could not parse SMILES: {smiles!r}")
+    return _ok(
+        rdMolDescriptors.CalcNumHBD(mol),
+        "count",
+        "rdkit.Chem.rdMolDescriptors.CalcNumHBD(mol)",
+    )
+
+
+def hba_lipinski(smiles: str) -> dict:
+    """H-bond acceptors, Lipinski scheme (RDKit ``CalcNumLipinskiHBA``).
+
+    Bundled RDKit doc via ``NOCount``: *"Number of Nitrogens and Oxygens"* -
+    counts N/O atoms (urea -> 3, caffeine -> 6). PubChem's acceptor count is a
+    more restrictive eligibility subset; deltas reported in validation.
+    """
+    mol = _with_mol(smiles)
+    if mol is None:
+        return _fail(f"RDKit could not parse SMILES: {smiles!r}")
+    return _ok(
+        rdMolDescriptors.CalcNumLipinskiHBA(mol),
+        "count",
+        "rdkit.Chem.rdMolDescriptors.CalcNumLipinskiHBA(mol)",
+    )
+
+
+def hba_plain(smiles: str) -> dict:
+    """H-bond acceptors, plain scheme (RDKit ``CalcNumHBA``).
+
+    Bundled RDKit doc (pinned 2026.09.1): *"Number of Hydrogen Bond
+    Acceptors"*. SMARTS-driven acceptor-atom count (urea -> 1, caffeine -> 3;
+    matches PubChem in this sample). Sensitivity-analysis variant.
+    """
+    mol = _with_mol(smiles)
+    if mol is None:
+        return _fail(f"RDKit could not parse SMILES: {smiles!r}")
+    return _ok(
+        rdMolDescriptors.CalcNumHBA(mol),
+        "count",
+        "rdkit.Chem.rdMolDescriptors.CalcNumHBA(mol)",
+    )
+
+
+def rotatable_bonds_strict(smiles: str) -> dict:
+    """Rotatable bonds, default/strict option (excludes amide/ester-like).
+
+    Definition: ``CalcNumRotatableBonds(mol)`` with RDKit's default option
+    (``NumRotatableBondsOptions.Default``, pinned 2026.09.1). Aspirin -> 2.
+    """
+    mol = _with_mol(smiles)
+    if mol is None:
+        return _fail(f"RDKit could not parse SMILES: {smiles!r}")
+    return _ok(
+        rdMolDescriptors.CalcNumRotatableBonds(mol),
+        "count",
+        "rdkit.Chem.rdMolDescriptors.CalcNumRotatableBonds(mol) [Default]",
+    )
+
+
+def rotatable_bonds_nonstrict(smiles: str) -> dict:
+    """Rotatable bonds, NonStrict option ("Simple rotatable bond definition").
+
+    Definition: ``CalcNumRotatableBonds(mol, NumRotatableBondsOptions.NonStrict)``
+    (RDKit bundled doc, pinned 2026.09.1). Aspirin -> 3 (ester C-O counted).
+    """
+    mol = _with_mol(smiles)
+    if mol is None:
+        return _fail(f"RDKit could not parse SMILES: {smiles!r}")
+    return _ok(
+        rdMolDescriptors.CalcNumRotatableBonds(
+            mol, rdMolDescriptors.NumRotatableBondsOptions.NonStrict
+        ),
+        "count",
+        "rdkit.Chem.rdMolDescriptors.CalcNumRotatableBonds(mol) [NonStrict]",
     )

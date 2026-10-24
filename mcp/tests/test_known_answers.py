@@ -31,6 +31,12 @@ from rdkit_tool import (  # noqa: E402
     parse_smiles,
     ring_count,
     rotatable_bonds,
+    hbd_lipinski,
+    hbd_plain,
+    hba_lipinski,
+    hba_plain,
+    rotatable_bonds_strict,
+    rotatable_bonds_nonstrict,
 )
 
 PINNED_RDKit = "2026.09.1"
@@ -200,3 +206,46 @@ def test_parse_smiles_canonical_idempotent(name):
     second = parse_smiles(first["canonical_smiles"])
     assert second["ok"] is True
     assert first["canonical_smiles"] == second["canonical_smiles"], cite(row)
+
+
+# --- definition variants (Task A): no primary chosen yet -------------------
+# (name, hbd_lip, hbd_plain, hba_lip, hba_plain, rot_def, rot_ns,
+#  pc_hbd, pc_hba, pc_rotb)
+VARIANT_ROWS = [
+    ("water", 2, 0, 1, 0, 0, 0, 1, 1, 0),
+    ("ethanol", 1, 1, 1, 1, 0, 0, 1, 1, 0),
+    ("benzene", 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    ("aceticacid", 1, 1, 2, 1, 0, 0, 1, 2, 0),
+    ("acetone", 0, 0, 1, 1, 0, 0, 0, 1, 0),
+    ("urea", 4, 2, 3, 1, 0, 0, 2, 1, 0),
+    ("glycine", 3, 2, 3, 2, 1, 1, 2, 3, 1),
+    ("aspirin", 1, 1, 4, 3, 2, 3, 1, 4, 3),
+    ("caffeine", 0, 0, 6, 3, 0, 0, 0, 3, 0),
+    ("glucose", 5, 5, 6, 6, 1, 1, 5, 6, 1),
+    ("citricacid", 4, 4, 7, 4, 5, 5, 4, 7, 5),
+    ("ibuprofen", 1, 1, 2, 1, 4, 4, 1, 2, 4),
+    ("menthol", 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    ("vanillin", 1, 1, 3, 3, 2, 2, 1, 3, 2),
+]
+
+VROWS = {r[0]: r for r in VARIANT_ROWS}
+
+
+@pytest.mark.parametrize("name", [r[0] for r in VARIANT_ROWS])
+def test_variant_matrix(name):
+    r = VROWS[name]
+    smi = NAME2[name][2]
+    assert hbd_lipinski(smi)["value"] == r[1], f"{name} hbd_lipinski"
+    assert hbd_plain(smi)["value"] == r[2], f"{name} hbd_plain"
+    assert hba_lipinski(smi)["value"] == r[3], f"{name} hba_lipinski"
+    assert hba_plain(smi)["value"] == r[4], f"{name} hba_plain"
+    assert rotatable_bonds_strict(smi)["value"] == r[5], f"{name} rot_def"
+    assert rotatable_bonds_nonstrict(smi)["value"] == r[6], f"{name} rot_ns"
+    assert r[7] == VROWS[name][7] and r[8] == VROWS[name][8]
+
+
+def test_variant_aliases():
+    smi = NAME2["urea"][2]
+    assert hbd_lipinski(smi)["value"] == hbond_donors(smi)["value"]
+    assert hba_lipinski(smi)["value"] == hbond_acceptors(smi)["value"]
+    assert rotatable_bonds_strict(smi)["value"] == rotatable_bonds(smi)["value"]
