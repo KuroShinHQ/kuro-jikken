@@ -1,3 +1,5 @@
+> Legacy notes from before the research phase. Not maintained. The 'private' license note below is outdated; this repo is MIT.
+
 # kuro-jikken — Deney deck (faz-pipeline in-silico arastirma hatti)
 
 ![Status](https://img.shields.io/badge/status-skeleton-blue) ![License](https://img.shields.io/badge/license-private-lightgrey)
