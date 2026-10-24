@@ -1,49 +1,98 @@
-# kuro-jikken — Deney deck (faz-pipeline in-silico arastirma hatti)
+# 黒・実験 · kuro-jikken
 
-![Status](https://img.shields.io/badge/status-skeleton-blue) ![License](https://img.shields.io/badge/license-private-lightgrey)
+> *jikken (実験) = experiment.* An open, reproducible lab notebook asking one narrow question:
+> **when does an LLM agent get computational chemistry wrong, and how much do deterministic tools and verification help?**
 
-Kuro-Jikken is the research side of the KuroShinHQ ecosystem: a staged pipeline that
-turns chat-driven research hypotheses into **verifiable in-silico experiments**
-(computation -> molecular simulation -> bio/system modelling) and publishes the
-results as clean, reproducible docs.
+![status](https://img.shields.io/badge/status-pre--registration-orange)
+![scope](https://img.shields.io/badge/scope-benign%20molecules%20only-green)
+![license](https://img.shields.io/badge/license-MIT-blue)
 
-## Project Soul (DEC-20261023; user-approved, total = one-page compass)
-> *"Can an LLM act like a scientist?"* — a laboratory for that question.
-Core chain: **claim -> evidence -> publication**. Main axis: harmless real-world
-experiments + open researcher identity + portfolio. PC/TUI/tools are the support
-line; the measure of success = solving one real person's problem.
+| | |
+|---|---|
+| **Author** | Yasin Yagci ([ORCID 0009-0001-3456-4299](https://orcid.org/0009-0001-3456-4299)), independent researcher |
+| **Org** | [KuroShinHQ](https://github.com/KuroShinHQ) |
+| **Stage** | Phase 1: dataset + tools + pre-registered predictions |
+| **Principle** | claim → evidence → publication. The LLM plans; numbers come only from tested tools. |
 
-## Features
-- Staged FAZ pipeline (F1 computation, F2 molecular sim, F3 bio/system, F4 research-agent)
-- Evidence-first working rules (kanit zorunlu), Q&A decision flow
-- Rich TUI control deck with EN/TR, boot animation and auto-close exit
-- BAT-15.1 standard launcher set (single bat + go.ps1 + uninstall)
+---
 
-## Tech Stack
-- Python 3.10+ (rich TUI), PowerShell bootstrap (go.ps1)
-- opencode + MCP integration (research side; planned: RDKit, fairchem, aizynthfinder, Talk2Biomodels ...) — tools are chosen per phase by research, not fixed
+## 1. Research question
 
-## Installation
-```bash
-git clone https://github.com/KuroShinHQ/kuro-jikken.git
-cd kuro-jikken
-# Windows: double-click kuro-jikken.bat  (or: powershell -File script\go.ps1)
+Given a small molecule (as a SMILES string), an LLM is asked for basic properties.
+We compare three modes:
+
+| Mode | Description |
+|---|---|
+| **A · Bare** | LLM answers from its own knowledge, no tools |
+| **B · Tool** | LLM calls an RDKit-based tool (via MCP) and reports its output |
+| **C · Tool + verify** | Same as B, plus an automatic check (parse, unit, range, re-compute) before the answer is accepted |
+
+**Predictions** (to be frozen on OSF *before* any model is run):
+
+- **P1.** Mode B has a lower error rate than Mode A.
+- **P2.** Mode C has a lower error rate than Mode B.
+- **P3.** Remaining errors in B/C are mostly *process* errors (tool not called, wrong SMILES passed, unit slip), not chemistry errors.
+
+If the data contradict these predictions, that result gets published too.
+
+## 2. Method (summary)
+
+- **Molecules:** 200-300 small, well-known, benign molecules (drug-like, food, common reagents). Selection rule and random seed are recorded.
+- **Properties:** molecular formula, molecular weight, heavy-atom count, ring count, H-bond donors/acceptors, rotatable bonds.
+- **Reference values:** computed by a fixed, versioned RDKit function and cross-checked against PubChem.
+  *Caveat:* some properties (H-bond counts, logP) are algorithm-dependent, so the **reference definition is written down per property** and disagreements with PubChem are reported, not hidden.
+- **Models:** at least three, including one local model. Model name, version, temperature and date are logged for every run.
+- **Repeats:** each question is asked several times per model; results are reported with spread, not a single run.
+- **Metrics:** exact match for counts; absolute/relative error with pre-set tolerance for numeric values; tool-call rate; error category (see below).
+- **Error categories:** `no_tool_call`, `bad_smiles_passed`, `parse_failure`, `unit_error`, `arithmetic_error`, `chemistry_knowledge_error`, `other`.
+
+## 3. Repository layout
+
+```
+kuro-jikken/
+├── README.md
+├── CITATION.cff
+├── LICENSE
+├── data/            # molecule list, reference values, SCHEMA.md (source, version, date, unit)
+├── mcp/             # RDKit tool server + unit tests
+├── runs/            # raw model outputs (one file per run, never edited)
+├── validation/      # known-answer tests, tool vs PubChem deviations
+├── results/         # tables, figures, error analysis
+├── prereg/          # frozen predictions (mirrored on OSF)
+└── docs/            # notes, decisions log
 ```
 
-## Usage
-Run `kuro-jikken.bat`, pick a phase in the menu; results and evidence land in
-`docs/` and `logs/`. Language preference is remembered in `.lang` (EN default).
+## 4. Reproducibility rules
 
-## Folder structure
-| Path | Content |
-|------|---------|
-| `site/kuro_jikken_menu.py` | TUI control deck (boot / menu / exit screens) |
-| `script/go.ps1` | bootstrap: python/deps/menu start |
-| `script/uninstall.ps1` | modular uninstall |
-| `docs/` | research notes (published subset) |
+1. Every number in `results/` can be regenerated by one documented command.
+2. Raw outputs in `runs/` are append-only.
+3. Data files carry source, retrieval date, version and unit.
+4. Tools have unit tests and pass known-answer checks before any model run.
+5. Predictions are committed and registered **before** results exist.
 
-## License & Rules
-Private KuroShinHQ repo. No paid tools; fully local-first. Evidence rules
-(DEVAM.md SABIT KURALLAR) apply: no claim without proof; commit/push require
-explicit user approval. GIF demo (`docs/img/readme_demo.gif`) and menu photo are
-scheduled right after the first functional phase.
+## 5. Scope and safety
+
+Only common, harmless molecules are used. No toxins, pathogens, weapons-relevant chemistry, synthesis routes or wet-lab protocols are in scope, and none will be published here.
+Simulation outputs are **hypotheses, not proof**. This repo makes no medical, cosmetic or therapeutic claims.
+
+## 6. Use of AI assistance (disclosure)
+
+Parts of the code and text were drafted with AI assistants (a coding agent and a chat assistant). The research question, design decisions, predictions, and interpretation are the author's responsibility; AI-generated code is reviewed and covered by tests. Commit history shows when and what changed.
+
+## 7. Roadmap
+
+- [ ] Phase 0: identity and infrastructure (ORCID, Zenodo, OSF), done
+- [ ] Phase 1: dataset, RDKit tool + tests, pre-registration
+- [ ] Phase 2: model runs, error analysis, preprint (Zenodo, then arXiv)
+- [ ] Phase 3: outside feedback, issues, collaboration
+- [ ] Phase 4 (≥ 6 months public history): software paper submission
+
+## 8. Cite
+
+See `CITATION.cff`. Each tagged release receives a Zenodo DOI.
+
+---
+
+### 🇹🇷 Kısa özet
+
+Bu repo, "LLM'ler hesaplamalı kimyada ne zaman yanlış yapar, araç ve doğrulama bunu ne kadar azaltır?" sorusunu açık ve tekrarlanabilir şekilde ölçer. Sayıları LLM değil, test edilmiş araçlar üretir. Yalnızca zararsız, bilinen moleküller kullanılır. Tahminler sonuçlardan önce kaydedilir; tahminler tutmasa da sonuç yayınlanır.

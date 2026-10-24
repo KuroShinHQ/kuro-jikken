@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite it as below."
+title: "kuro-jikken: when do LLM agents get computational chemistry wrong?"
+abstract: >-
+  An open, reproducible benchmark and tool suite comparing LLM-only, tool-augmented,
+  and tool-plus-verification modes on basic molecular property questions for
+  benign small molecules.
+authors:
+  - family-names: "Yagci"
+    given-names: "Yasin"
+    orcid: "https://orcid.org/0009-0001-3456-4299"
+repository-code: "https://github.com/KuroShinHQ/kuro-jikken"
+license: MIT
+version: "0.1.0"
+# Update date-released to the day you publish the GitHub release.
+date-released: "2026-10-24"
+keywords:
+  - computational chemistry
+  - LLM agents
+  - reproducibility
+  - open science
