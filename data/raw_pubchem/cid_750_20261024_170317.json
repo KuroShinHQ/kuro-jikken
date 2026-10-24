@@ -1,0 +1,17 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 750,
+        "MolecularFormula": "C2H5NO2",
+        "MolecularWeight": "75.07",
+        "SMILES": "C(C(=O)O)N",
+        "ConnectivitySMILES": "C(C(=O)O)N",
+        "HBondDonorCount": 2,
+        "HBondAcceptorCount": 3,
+        "RotatableBondCount": 1,
+        "HeavyAtomCount": 5
+      }
+    ]
+  }
+}

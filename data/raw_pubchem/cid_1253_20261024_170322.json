@@ -1,0 +1,17 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 1253,
+        "MolecularFormula": "C15H18N2O",
+        "MolecularWeight": "242.32",
+        "SMILES": "CC=C1C2CC3=C(C1(CC(=C2)C)N)C=CC(=O)N3",
+        "ConnectivitySMILES": "CC=C1C2CC3=C(C1(CC(=C2)C)N)C=CC(=O)N3",
+        "HBondDonorCount": 2,
+        "HBondAcceptorCount": 2,
+        "RotatableBondCount": 0,
+        "HeavyAtomCount": 18
+      }
+    ]
+  }
+}

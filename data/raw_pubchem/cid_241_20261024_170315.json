@@ -1,0 +1,17 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 241,
+        "MolecularFormula": "C6H6",
+        "MolecularWeight": "78.11",
+        "SMILES": "C1=CC=CC=C1",
+        "ConnectivitySMILES": "C1=CC=CC=C1",
+        "HBondDonorCount": 0,
+        "HBondAcceptorCount": 0,
+        "RotatableBondCount": 0,
+        "HeavyAtomCount": 6
+      }
+    ]
+  }
+}

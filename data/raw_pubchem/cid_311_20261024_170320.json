@@ -1,0 +1,17 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 311,
+        "MolecularFormula": "C6H8O7",
+        "MolecularWeight": "192.12",
+        "SMILES": "C(C(=O)O)C(CC(=O)O)(C(=O)O)O",
+        "ConnectivitySMILES": "C(C(=O)O)C(CC(=O)O)(C(=O)O)O",
+        "HBondDonorCount": 4,
+        "HBondAcceptorCount": 7,
+        "RotatableBondCount": 5,
+        "HeavyAtomCount": 13
+      }
+    ]
+  }
+}

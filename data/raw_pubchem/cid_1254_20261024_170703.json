@@ -1,0 +1,17 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 1254,
+        "MolecularFormula": "C10H20O",
+        "MolecularWeight": "156.26",
+        "SMILES": "CC1CCC(C(C1)O)C(C)C",
+        "IUPACName": "5-methyl-2-propan-2-ylcyclohexan-1-ol",
+        "HBondDonorCount": 1,
+        "HBondAcceptorCount": 1,
+        "RotatableBondCount": 1,
+        "HeavyAtomCount": 11
+      }
+    ]
+  }
+}

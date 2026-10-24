@@ -1,0 +1,17 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 1176,
+        "MolecularFormula": "CH4N2O",
+        "MolecularWeight": "60.056",
+        "SMILES": "C(=O)(N)N",
+        "ConnectivitySMILES": "C(=O)(N)N",
+        "HBondDonorCount": 2,
+        "HBondAcceptorCount": 1,
+        "RotatableBondCount": 0,
+        "HeavyAtomCount": 4
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 1183,
+        "MolecularFormula": "C8H8O3",
+        "MolecularWeight": "152.15",
+        "SMILES": "COC1=C(C=CC(=C1)C=O)O",
+        "ConnectivitySMILES": "COC1=C(C=CC(=C1)C=O)O",
+        "HBondDonorCount": 1,
+        "HBondAcceptorCount": 3,
+        "RotatableBondCount": 2,
+        "HeavyAtomCount": 11
+      }
+    ]
+  }
+}

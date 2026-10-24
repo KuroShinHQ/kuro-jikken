@@ -1,0 +1,17 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 176,
+        "MolecularFormula": "C2H4O2",
+        "MolecularWeight": "60.05",
+        "SMILES": "CC(=O)O",
+        "ConnectivitySMILES": "CC(=O)O",
+        "HBondDonorCount": 1,
+        "HBondAcceptorCount": 2,
+        "RotatableBondCount": 0,
+        "HeavyAtomCount": 4
+      }
+    ]
+  }
+}

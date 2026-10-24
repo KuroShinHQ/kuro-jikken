@@ -1,0 +1,17 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 702,
+        "MolecularFormula": "C2H6O",
+        "MolecularWeight": "46.07",
+        "SMILES": "CCO",
+        "ConnectivitySMILES": "CCO",
+        "HBondDonorCount": 1,
+        "HBondAcceptorCount": 1,
+        "RotatableBondCount": 0,
+        "HeavyAtomCount": 3
+      }
+    ]
+  }
+}
