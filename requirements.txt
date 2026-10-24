@@ -1,1 +1,6 @@
-rich>=13.5
+# pinned runtime — install: pip install -r requirements.txt (venv: .venv)
+rdkit==2026.9.1        # cheminformatics core (rdkit.__version__ reports 2026.09.1)
+numpy==2.5.4           # rdkit dependency (pinned for reproducibility)
+rich==15.0.0           # legacy TUI deck (pre-research era)
+pytest==9.1.1          # tests only (dev)
+
