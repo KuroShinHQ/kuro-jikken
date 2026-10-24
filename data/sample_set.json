@@ -1,0 +1,19 @@
+{
+  "note": "CIDs verified via PubChem name->cid resolution, 2026-10-24",
+  "molecules": [
+    {"name": "water", "cid": 962},
+    {"name": "ethanol", "cid": 702},
+    {"name": "benzene", "cid": 241},
+    {"name": "aceticacid", "cid": 176},
+    {"name": "acetone", "cid": 180},
+    {"name": "urea", "cid": 1176},
+    {"name": "glycine", "cid": 750},
+    {"name": "aspirin", "cid": 2244},
+    {"name": "caffeine", "cid": 2519},
+    {"name": "glucose", "cid": 5793},
+    {"name": "citricacid", "cid": 311},
+    {"name": "ibuprofen", "cid": 3672},
+    {"name": "menthol", "cid": 1254},
+    {"name": "vanillin", "cid": 1183}
+  ]
+}
