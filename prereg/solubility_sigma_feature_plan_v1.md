@@ -193,6 +193,16 @@ The primary analysis is unchanged (whole locked set, engine-worked subset). A
 sensitivity analysis that excludes those 412 molecules is EXPLORATORY, is reported
 separately, and cannot change the primary decision.
 
+### Clarifications C14-C15 (written 2026-10-25, before any evaluation, no result seen)
+
+Same status as C1-C13: clarifications of items the plan did not specify, written
+before any evaluation and before any result was seen; no existing rule is changed.
+
+| # | item | clarification | basis |
+|---|---|---|---|
+| C14 | engine worked | ln gamma_inf finite AND gamma = exp(ln gamma_inf) finite. gamma = exp(ln) is positive by construction, so "negative activity coefficient" in section 6 cannot occur; the finite checks are the operative ones. Negative ln gamma is normal and is NOT a failure | section 6 line 94 |
+| C15 | implementation details | (a) exploratory sensitivity analysis: models fixed, no refit; the 412 overlap molecules are removed from the evaluation set only. (b) secondary analysis: point estimates only, no bootstrap. (c) clustering: one row per molecule, so cluster = row. (d) result file `results/solubility_sigma_eval_v2.json`. (e) `lstsq` with `rcond=None`; rank deficient or rows <= columns is a hard error | - |
+
 ## 12. Risks
 
 - R1 aqueous solubility is only a stepping stone, not a formulation.
