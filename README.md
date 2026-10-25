@@ -118,8 +118,10 @@ remains the primary result. Nothing was deleted or recomputed away.
 
 See `CITATION.cff`. Each tagged release receives a Zenodo DOI.
 Pre-registration artifacts: https://osf.io/kjye6 (plan + lock; OSF upload came
-after the evaluation — see Limitations). Archive DOI:
-https://doi.org/10.5281/zenodo.23633859
+after the evaluation — see Limitations).
+Cite the latest version via the concept DOI 10.5281/zenodo.23633858.
+v0.1.0 (https://doi.org/10.5281/zenodo.23633859) is superseded.
+v0.1.1 DOI: (to be added after Zenodo finishes)
 
 ---
 

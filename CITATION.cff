@@ -11,7 +11,7 @@ authors:
     orcid: "https://orcid.org/0009-0001-3456-4299"
 repository-code: "https://github.com/KuroShinHQ/kuro-jikken"
 license: MIT
-version: "0.1.0"
+version: "0.1.1"
 # Update date-released to the day you publish the GitHub release.
 date-released: "2026-10-25"
 keywords:
