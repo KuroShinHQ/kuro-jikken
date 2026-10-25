@@ -1,142 +1,169 @@
-# kuro-jikken - solubility sigma feature - Pre-registration PLAN v1 (DRAFT)
+# kuro-jikken - solubility sigma feature - PLAN v1 (DRAFT)
 
-Status: PLAN ONLY. No engine run, no error/RMSE/feature value computed, no AqSolDB
-label used beyond counting.
+Status: PLAN ONLY. No engine run, no error/RMSE/feature value, no comparison
+with AqSolDB logS. Row counts only.
 
-Order rule: this plan -> OSF registration -> only then any evaluation.
+SCOPE: result applies only to molecules in the sigma DB passing the in-domain
+rule (~1/3 of AqSolDB), not all molecules.
 
-Supersedes `prereg/formulation_screening_plan_v0.md` (archived, never registered).
+Order: this plan -> OSF Freeze-1 -> Freeze-2 (seed, locked set, SHA-256, OSF
+dated note) -> one evaluation -> report. Supersedes
+`prereg/formulation_screening_plan_v0.md` (archived, never registered).
 
 ## 1. Question
 
-One narrow question:
+Does adding ONE engine feature (ln gamma-infinity of the solute in water at
+298.15 K, NIST COSMOSAC + PubChemQC sigma DB) to a linear ESOL-type regression
+reduce aqueous solubility (logS) error versus an equally cheap RDKit feature
+(TPSA) on held-out molecules?
 
-> Does adding **one** feature from the NIST COSMOSAC engine (log gamma-infinity
-> of the solute in water, from the precomputed PubChemQC sigma-profile DB) to a
-> linear ESOL-type regression **reduce error in predicting aqueous solubility
-> (logS)** on held-out molecules?
+Unit under test: engine + sigma DB together. No candidate list.
 
-Unit under test: **engine + this new non-peer-reviewed sigma DB**, together.
-This study produces **no candidate list**.
-
-## 2. Models (fixed now)
+## 2. Models
 
 | id | model |
 |---|---|
-| **M0** | ESOL with its **published coefficients** (no fitting) |
-| **M1** | ESOL descriptors, **refit on the tune set** |
-| **M2** | M1 + the **engine feature**, refit on the same tune set |
+| M0 | ESOL published coefficients (no fitting) |
+| M1 | ESOL descriptors, OLS on tune |
+| M2 | M1 + engine feature, OLS on same tune |
+| M3 | M1 + RDKit TPSA, OLS on same tune |
 
-- **Primary comparison: M2 vs M1.** Secondary: **M0**.
-- **One primary engine: NIST COSMOSAC.** Other engines are exploratory only.
-- ESOL descriptors fixed: logP, molecular weight, rotatable bonds, aromatic
-  proportion. M0 uses the published coefficients, not refit.
+**PRIMARY: M2 vs M3.** M1 and M0 are secondary. One primary engine: NIST
+COSMOSAC. Other engines are exploratory only.
 
-## 3. Data and identity rules (written before any test)
+TPSA call: `rdkit.Chem.rdMolDescriptors.CalcTPSA(mol)` with defaults
+(`force=False, includeSandP=False`; S and P not counted). RDKit 2026.09.1.
 
-**Source labels:** AqSolDB (CC0 1.0, Harvard Dataverse DOI `10.7910/DVN/OVHAW8`),
-9,982 molecules, aqueous solubility logS. **Source profiles:** PubChemQC
-sigma-profile DB v1.0.0, Zenodo `10.5281/zenodo.20672192` (preprint-level).
+## 3. Engine feature (frozen now)
 
-**Matching key rule:** exact **full 27-character InChIKey**. No CID match
-(AqSolDB has no CID column); no first-block match; no stereo/protonation
-normalisation. Rows with empty InChIKey are excluded.
+ln gamma-infinity of the solute in **water** at **298.15 K**, composition
+`[1e-12, 1-1e-12]`. Code: `usnistgov/COSMOSAC`, commit
+`1b82456be38026719b16cad4076109bef3fcb309` (2026-07-03), module
+`easy_COSMOSAC`, method `COSMOSAC-2010` (COSMO3).
 
-**One-profile-per-molecule rule (rule only, not tested):**
+Stock `calc_LNAC` loads only its UD/VT profile folders; our profiles are the
+PubChemQC parquet, so the frozen call is the COSMO3 core with an adapter
+`PubChemQCProfiles` (written and committed at Freeze-2 with its SHA-256):
 
-1. Identity = full InChIKey.
-2. Prefer rows whose SMILES parses to **formal charge 0**; if no neutral row
-   exists, keep all rows for that key and log the key.
-3. Among eligible rows, take the **lowest PubChem CID**; tie -> lowest file row.
-4. Water therefore uses **CID 962** (six rows share its InChIKey; the other five
-   CIDs are logged, not used).
-5. Every dropped duplicate is counted and reported; no profile averaging.
+`cosmo = COSMO3(names=[solute,"WATER"], db=PubChemQCProfiles)`
+`ln_gamma_inf = cosmo.get_lngamma_comb(298.15, comp) + cosmo.get_lngamma_resid(298.15, comp)`
 
-## 4. In-domain rule (depends on INPUT only)
+- params `sequential_final_params.json` sha256 `b210b1687dec8ebe93aa60b6946ed2b3b6d57dbf542fb1d6ce2ae0edaa13a536`
+- sigma main `8e1c4d21acee25b04ad5e63b0c846f98524b0b5d1554d1426b9616de5a62da2c`
+- index `810e18592807da962a718753abfafaa32bf423ac6afa87dbbd9707267cea73f0`
+- water profile: CID 962.
 
-A molecule enters the evaluation set only if **all** hold, checked before any
-label comparison:
+Models are linear, so log base is a scaling only.
 
-- neutral (formal charge 0) and **single component** (no `.` in SMILES);
-- elements only from whitelist **C, H, N, O, S, F, Cl, Br, I** (no P, no metals);
-- molecular weight <= **[AUTHOR TO DECIDE]** g/mol;
+## 4. Fitting rule
+
+Ordinary least squares; no regularisation, no feature selection, no outlier
+removal, no transforms beyond those written here. Fixed ESOL descriptors:
+Crippen `MolLogP`, `Descriptors.MolWt`, `CalcNumRotatableBonds` (strict
+default), aromatic proportion = aromatic atoms / heavy atoms. RDKit 2026.09.1.
+
+M0 coefficients are the published ESOL ones, not refit.
+
+## 5. Data and identity
+
+AqSolDB (CC0 1.0, DOI `10.7910/DVN/OVHAW8`), 9,982 molecules. PubChemQC sigma
+DB v1.0.0 (Zenodo `10.5281/zenodo.20672192`).
+
+Matching: exact **full 27-character InChIKey**; no CID, first-block, stereo or
+protonation normalisation; empty keys excluded. **Recount: 3,416 matched
+molecules (34.22% of 9,982).** Counts only; no label values.
+
+One profile per molecule: identity = full InChIKey; prefer rows parsing to
+formal charge 0; among those take the lowest CID (tie: lowest file row). **If no
+neutral row exists, the molecule is out of domain.** Water uses CID 962. Dropped
+duplicates are counted; no profile averaging.
+
+## 6. In-domain rule (input only)
+
+All must hold before any label comparison:
+
+- neutral (formal charge 0), single component (no `.`);
+- elements only C,H,N,O,S,F,Cl,Br,I (no P, no metals);
+- **no MW limit** (500 is not used and was not borrowed from the earlier ESOL analysis);
 - present in the sigma DB after the one-profile rule;
 - AqSolDB logS present and numeric.
 
-**Engine numerical failure is not an exclusion.** For that molecule M2 falls
-back to the M1 prediction; the failure count and affected keys are reported.
-The word "benign" is not used; if ever used, it requires a machine-checkable
-file committed with its SHA-256.
+Engine failure is not an exclusion: M2 falls back to M1 on the locked set;
+failure count reported.
 
-## 5. Split, tune set, locked set
+## 7. Split, tune and locked sets
 
-- **Molecule-level split only** (never pair-level or row-level).
-- **New seed: `20261027`.** The previous ESOL question used seed `20261026`.
-- The **tune/development set** is for fitting M1/M2 and for all development
-  choices; it is never reported as confirmation.
-- **New locked set** `data/solubility/split_locked_v2.csv` is built at Freeze-2
-  and committed with `LOCKED_V2.sha256` **before any evaluation**; it is opened
-  **once**, after the plan is registered.
-- **Disclosure:** the earlier ESOL locked set of this repo was already opened
-  once. The molecule overlap between old and new locked sets is computed at
-  Freeze-2 and declared in the lock file; overlapping molecules are not
-  presented as new evidence.
+Molecule-level split, **50/50**, seed **20261027**. Tune = fitting only; locked
+= one-shot confirmation.
 
-## 6. Metrics and decision rule
+GATE: count the in-domain pool (counts only). If the locked half is **< 800
+molecules, STOP and report**; do not change the rule. If >= 800 but the CI is
+too wide to exclude the margin, report **inconclusive**. The locked set size is
+whatever 50% gives; it is not inflated. No separate power calculation: the 50%
+split plus the 800 gate are the rule.
 
-- **Primary: RMSE** on the locked set, M2 vs M1.
-- Secondary: MAE; **bootstrap CI clustered by molecule**; **paired difference
-  M2 - M1** (negative favours the engine feature).
-- **Success margin:** [AUTHOR TO DECIDE] (the minimum RMSE reduction that counts
-  as a real difference).
-- **Sample size / power reasoning:** the rule is to size the locked set from the
-  paired-difference SD observed on the tune set, targeting 80% power at the
-  chosen margin, with a minimum of [AUTHOR TO DECIDE] molecules; the resulting
-  number is written before the lock is opened.
-- Tune vs locked purpose: tune = fitting and pipeline development; locked =
-  one-shot confirmation, no changes after opening.
+Locked set `data/solubility/split_locked_v2.csv` is built at Freeze-2 and
+committed with `LOCKED_V2.sha256` **before any evaluation**, opened once. The
+earlier ESOL locked set was already opened once; molecule overlap with the new
+set is computed and declared at Freeze-2. After the hash commit, the same hash
+is added as a dated note to the OSF registration.
 
-## 7. Hypotheses
+Engine failures: tune excludes failed molecules from M2/M3 fitting and counts
+them; locked falls back to M1. Report **two numbers**: all in-domain molecules,
+and engine-worked subset.
 
-- **H1 only:** M2 RMSE is lower than M1 by at least the success margin on the
-  locked set.
-- Everything else is **EXPLORATORY**. Any exploratory claim must map to a
-  pre-defined measurable category; otherwise it is not tested here.
-- Failed hypotheses will be published.
+## 8. Metrics and decision
 
-## 8. Author expectations
+Primary RMSE on locked set, M2 vs M3. Secondary MAE; 95% bootstrap CI clustered
+by molecule; paired difference M2-M3.
 
-**[AUTHOR TO DECIDE]**
+**Success (both required):** difference <= **-0.10 RMSE** AND the 95% CI of the
+paired difference lies entirely below 0.
 
-- Expected RMSE reduction: [AUTHOR TO DECIDE]
-- Minimum reduction that counts: [AUTHOR TO DECIDE]
+Margin **0.10** comes from literature, not our data: Palmer & Mitchell 2014
+doi:10.1021/mp500103r (experimental uncertainty 0.6-0.7 logS); AqSolDB paper
+PMC6687799 (SD up to 0.5); Sluga et al. 2020 doi:10.5562/cca3776 (external RMSE
+0.8-1.1); Avdeef 2019 doi:10.5599/admet.698.
 
-No number is written by the agent in this section.
+## 9. Hypotheses
 
-## 9. Deviations
+H1 only: M2 RMSE is lower than M3 by at least 0.10 on the locked set. All else
+is EXPLORATORY and must map to a pre-defined measurable category. Failed
+hypotheses will be published.
 
-This clause covers **all sections** of this plan, not only scoring: any change
-to question, models, data, identity rules, in-domain rule, split, seed, locked
-set, metrics, hypotheses or reporting must be recorded as a dated deviation
-before it is applied, with its reason and its effect on the analysis.
+## 10. Author expectations (author-stated, 2026-10-25)
 
-## 10. Risks
+- Expected: "a slight decrease, about 0.05, M2 vs M3".
+- Minimum reduction that counts: **0.10** (above).
 
-- **R1** Aqueous solubility is only a stepping stone, not a formulation.
-- **R2** Solids need melting data; AqSolDB lacks it.
-- **R3** The sigma DB is a non-peer-reviewed, preprint-level source.
-- **R4** Engine and DB are evaluated jointly (cannot separate their effects).
-- **R5** LGPL engines run as separate processes; this is not legal advice.
-- **R6** The earlier ESOL locked set was opened once; overlap must be declared.
+These are recorded as author words, not agent numbers.
 
-## 11. Scope prohibitions
+## 11. Deviations
 
-No candidate list in this study. No synthesis, dosage, health or cosmetic
-claims. The output is an error comparison and a published result, positive or
-negative.
+Covers ALL sections: question, models, data, identity, in-domain, split, seed,
+locked set, metrics, hypotheses, reporting. Any change is recorded as a dated
+deviation before it is applied, with reason and effect.
 
-## 12. Freeze and registration order
+## 12. Risks
 
-1. This plan (v1) -> 2. Freeze-1: OSF registration -> 3. Freeze-2: new seed,
-locked set and SHA-256 committed -> 4. one evaluation -> 5. report, including
-failures and deviation log.
+- R1 aqueous solubility is only a stepping stone, not a formulation.
+- R2 solids need melting data; AqSolDB lacks it.
+- R3 sigma DB is non-peer-reviewed, preprint-level.
+- R4 engine and DB are evaluated jointly.
+- R5 LGPL engines run as separate processes; not legal advice.
+- R6 earlier ESOL locked set was opened once.
+- R7 sigma DB parameters were fitted on 24,522 gamma-infinity records in water;
+  overlap with AqSolDB molecules is unknown (possible leak).
+- R8 M0 uses published ESOL coefficients from an older dataset; some of those
+  molecules may be in AqSolDB, so M0 may have seen test molecules (secondary).
+
+## 13. Scope prohibitions
+
+No candidate list, no synthesis, dosage, health or cosmetic claims. Output is an
+error comparison, positive or negative. No use of the word "benign".
+
+## 14. Freeze and registration order
+
+1. this plan -> 2. OSF Freeze-1 -> 3. Freeze-2: seed, locked set, SHA-256
+committed and OSF dated note -> 4. one evaluation -> 5. report with failures and
+deviation log.
