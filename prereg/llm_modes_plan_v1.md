@@ -41,8 +41,7 @@ MW <= 500, parseable by RDKit. Random sample of N = 250, seed 20261026, SMILES o
 
 **3.2 Properties (7).** Molecular formula (Hill system), molecular weight, heavy-atom count,
 ring count (SSSR), H-bond donors (Lipinski definition), H-bond acceptors (Lipinski definition),
-rotatable bonds (RDKit `CalcNumRotatableBonds` default definition; exact wording is written into
-the question text and finalized at Freeze 2). Reference values come from the tested functions in
+rotatable bonds (strict; RDKit `CalcNumRotatableBonds` default). Reference values come from the tested functions in
 `mcp/rdkit_tool.py` (rdkit 2026.09.1; pip package name `rdkit==2026.9.1` as pinned in requirements.txt).
 Every question states the definition in plain words, so a correct answer is well defined.
 Items per (model, mode): 200 x 7 = 1,400.
@@ -102,11 +101,15 @@ throughput only, never accuracy.
 
 ## 9. Author's expectations (fill in BEFORE registering)
 
-- Overall error rate, mode A: ____ %
-- Overall error rate, mode B: ____ %
-- Overall error rate, mode C: ____ %
-- Property I expect to be hardest in mode A: ________
-- Risk I see for H1: ________ (for example the model may call tools badly)
+- Overall error rate, mode A: 89 %
+- Overall error rate, mode B: 9 %
+- Overall error rate, mode C: 6 %
+- Property I expect to be hardest in mode A: molecular weight (tolerance 0.05 g/mol)
+  and rotatable bonds
+- Risk I see for H1: the local quantized model may call tools with broken formatting,
+  which could make mode B worse than mode A
+
+Written on 2026-10-25 before any LLM run on benchmark questions.
 
 ## 10. Deviations and transparency
 
