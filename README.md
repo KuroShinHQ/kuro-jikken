@@ -96,3 +96,11 @@ See `CITATION.cff`. Each tagged release receives a Zenodo DOI.
 ### 🇹🇷 Kısa özet
 
 Bu repo, "LLM'ler hesaplamalı kimyada ne zaman yanlış yapar, araç ve doğrulama bunu ne kadar azaltır?" sorusunu açık ve tekrarlanabilir şekilde ölçer. Sayıları LLM değil, test edilmiş araçlar üretir. Yalnızca zararsız, bilinen moleküller kullanılır. Tahminler sonuçlardan önce kaydedilir; tahminler tutmasa da sonuç yayınlanır.
+
+## 9) Tools · MCP server (stdio)
+
+Run `python mcp/server.py` (installed via `pip install -r requirements.txt`; MCP SDK 2.3.0, stdio).
+Exposed: `parse_smiles`, `formula`, `molecular_weight`, `heavy_atom_count`, `ring_count`,
+`hbd_lipinski`, `hbd_plain`, `hba_lipinski`, `hba_plain`, `esol_predict`.
+Every response carries `value`, `unit`, `method`, `rdkit_version` and an `error_bar`
+note ("validation results, NOT locked").

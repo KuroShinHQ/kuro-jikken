@@ -4,3 +4,5 @@ numpy==2.5.4           # rdkit dependency (pinned for reproducibility)
 rich==15.0.0           # legacy TUI deck (pre-research era)
 pytest==9.1.1          # tests only (dev)
 
+matplotlib==3.11.2     # Task 11 figures (pinned)
+mcp==2.3.0            # Task 12 thin MCP server (stdio)
