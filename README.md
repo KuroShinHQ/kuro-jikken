@@ -79,6 +79,33 @@ Simulation outputs are **hypotheses, not proof**. This repo makes no medical, co
 
 Parts of the code and text were drafted with AI assistants (a coding agent and a chat assistant). The research question, design decisions, predictions, and interpretation are the author's responsibility; AI-generated code is reviewed and covered by tests. Commit history shows when and what changed.
 
+## 6b. Results so far (first locked evaluation, 2026-10-25)
+
+| Group | validation RMSE | locked-set RMSE | status |
+|---|---|---|---|
+| all data (pre-registered primary) | 2.23 | 2.14 | red, but stable |
+| in-domain (neutral, single-component, MW<=500) | 1.222 | 1.225 | green, matches literature |
+| salts / mixtures | 4.56 | 5.27 | red |
+| metal-containing | 4.55 | 4.99 | red |
+
+Secondary result (amendment, accepted): the in-domain group view was decided
+after seeing validation results; the pre-registered all-data result above
+remains the primary result. Nothing was deleted or recomputed away.
+
+### Limitations
+
+- The pre-registered plan and lock value were committed with timestamps before
+  the evaluation ran; OSF registration came after `--final`, so this round has
+  no external pre-registration record. Rule for the next round: OSF
+  registration BEFORE any model run.
+- The MCP tool's `in_domain` flag excludes phosphorus; the locked-set metric
+  did not separately exclude phosphorus.
+- Domain grouping is exploratory, not blind: the authors saw validation
+  numbers before writing prediction P1-P4 (recorded as such).
+- This is a reproducible baseline with a published linear model (ESOL,
+  Delaney 2004), not a discovery and not yet an LLM benchmark; the LLM A/B/C
+  experiment has NOT started.
+
 ## 7. Roadmap
 
 - [ ] Phase 0: identity and infrastructure (ORCID, Zenodo, OSF), done
@@ -102,5 +129,8 @@ Bu repo, "LLM'ler hesaplamalı kimyada ne zaman yanlış yapar, araç ve doğrul
 Run `python mcp/server.py` (installed via `pip install -r requirements.txt`; MCP SDK 2.3.0, stdio).
 Exposed: `parse_smiles`, `formula`, `molecular_weight`, `heavy_atom_count`, `ring_count`,
 `hbd_lipinski`, `hbd_plain`, `hba_lipinski`, `hba_plain`, `esol_predict`.
-Every response carries `value`, `unit`, `method`, `rdkit_version` and an `error_bar`
-note ("validation results, NOT locked").
+Every response carries `value`, `unit`, `method`, `rdkit_version` and a matched
+`error_bar` (`in_domain` flag: neutral, single-component, no metal, MW<=500,
+no phosphorus -> in-domain ~1.2 log units; salts/mixtures+metal groups ~5 log
+units, from the locked-set report; explicit unreliability caveat when out of
+domain).
