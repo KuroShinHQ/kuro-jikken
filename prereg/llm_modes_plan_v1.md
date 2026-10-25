@@ -46,9 +46,14 @@ rotatable bonds (strict; RDKit `CalcNumRotatableBonds` default). Reference value
 Every question states the definition in plain words, so a correct answer is well defined.
 Items per (model, mode): 200 x 7 = 1,400.
 
-**3.3 Models.** Primary (confirmatory) models are local only, so versions and settings are controllable:
-- M1: Swift-Qwen3.8-Flash-Next-GSQ-RCO, IQ3_XXS quantization, via llama-server. File name / SHA-256 / llama.cpp build: *added at Freeze 2*.
-- M2: Hermes 3.6-35B-A3B. File name / SHA-256 / llama.cpp build: *added at Freeze 2*.
+**3.3 Models.** One primary (confirmatory) model, local only, so version and settings are controllable:
+- **Primary (confirmatory):** `Hermes3.6-35B-A3B-Uncensored-Genesis-MTP-APEX-Compact.gguf`, 18,339,420,608 bytes,
+  SHA-256 `A60C9CA376578AC98FC419D12CD1FAD4D47C1CFEC1BBE75A162F6BBB86E554B2`;
+  chat template `qwen-fixed-chat-template.jinja`, SHA-256 `E57684BAE4156211A55473C5A63BE976A405A37AB5BE5AE0E5ABF1DF5349C4B2`.
+  llama.cpp build, context size, sampling parameters and draft/speculative settings (the draft model stays disabled)
+  are fixed at Freeze 2.
+- A standard open-weights ~7-9B instruct model MAY be run as a secondary, exploratory replication; its results are
+  reported separately and are not part of the confirmatory tests.
 Cloud models (if used) are **exploratory only**, with date and version logged; they are not part of the confirmatory tests.
 
 ## 4. Modes
@@ -86,17 +91,17 @@ Cloud models (if used) are **exploratory only**, with date and version logged; t
 
 ## 7. Analysis
 
-- Primary: per model, error rate per mode; paired exact McNemar tests (A vs B, B vs C) over all items.
+- Primary: for the single primary model, error rate per mode; paired exact McNemar tests (A vs B, B vs C) over all items.
 - 95% confidence intervals for differences by cluster bootstrap (resampling molecules).
-- Holm correction across the four confirmatory tests (2 models x H1, H2); alpha = 0.05.
+- Holm correction across the two confirmatory tests (H1, H2); alpha = 0.05.
 - H3: share of process errors among all errors in B and C, per model.
 - Secondary: results by property, tool-call rate, latency, `verification_failed` rate.
 - Everything not listed here is exploratory and will be labeled so.
 
 ## 8. Feasibility fallback
 
-If the pilot shows that the confirmatory run of one model would take more than 48 hours, N is reduced to
-the first 100 confirmatory IDs in the registered order, for both models. This decision uses pilot
+If the pilot shows that the confirmatory run of the primary model would take more than 48 hours, N is reduced to
+the first 100 confirmatory IDs in the registered order. This decision uses pilot
 throughput only, never accuracy.
 
 ## 9. Author's expectations (fill in BEFORE registering)
@@ -123,7 +128,7 @@ Written on 2026-10-25 before any LLM run on benchmark questions.
 - Only common, benign molecules; no hazardous compounds, synthesis routes, or wet-lab protocols.
 - AqSolDB is public, so models may have seen some molecules during training; SMILES-only questions reduce but do not remove this.
 - Heavily quantized local models may behave differently from full-precision versions; results apply to the tested files only.
-- Only two models are tested confirmatorily; results do not generalize to all LLMs.
+- Only one model is tested confirmatorily; results do not generalize to all LLMs.
 
 
 
