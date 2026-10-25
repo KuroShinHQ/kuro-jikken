@@ -39,9 +39,27 @@ En iyi: asitler ve alkoller (kucuk, polar molekuller). En kotu: "diger" grubu - 
 
 Ayni formul, katsayilar sadece ayar setinde yeniden hesaplandi (P-B): RMSE 2.23 -> 1.85 (iyilesti), fakat tipik hata 1.22 -> 1.26 ve "1.0 icinde" orani %60 -> %52 (kotulesti). Dürüst hukum: **yeniden hesaplama belirgin bir kazanc getirmedi; bazi metriklerde kotulesti.**
 
-## 5) Kilitli sinav
+## 5) Kilitli sinav (bir kez, 25.10.2026)
 
-Kilitli sinav **henuz acilmadi**. Kural geregi bir kez, en sonda calisacak (`--final`); sonucu bu sayfaya eklenecek.
+Kilit hash dogrulandi (LOCK.sha256), LOCK_ACCESS_LOG.md dosyasina zamanli kayit dusuldu; kilitli set 2.399 molekul.
+
+| olcut | P-A | P-B |
+|---|---|---|
+| RMSE | 2.14 | 1.85 |
+| tipik hata (MAE) | 1.19 | 1.24 |
+| bias | +0.19 | -0.06 |
+| <=0.5 icinde | %32 | %28 |
+| <=1.0 icinde | %59 | %52 |
+
+On-kayitli tahminlerin karnesi:
+
+- P1 (tum veri RMSE 2.23 +/- 0.3): **TUTTU** - 2.14 (-0.09).
+- P2 (hedef alan RMSE 1.22 +/- 0.2): **TUTTU** - 1.225 (fark ~0.003).
+- P3 (refit 0.1den fazla iyilestirmez): **TUTTU, ama ters yonde** - hedef alanda P-B 1.401, yani 0.176 KOTULESTI.
+- P4 (tuz/metal yine >3.0): **TUTTU** - tuz/karisim 5.27, metal 4.99.
+
+Sade ceviri: kilitli sinav, dogrulama setindeki kirmizi karneyi tekrarladi; hedef alandaki "orta karar" dogruluk (1.22-1.23) da iki sette neredeyse ayni cikti. Formul, tuz/metal/karisimlarda hala cok kotu.
+
 
 ## 6) Bu sonuc neyi KANITLAMAZ
 
@@ -70,3 +88,4 @@ Ayrintili tablo ve en kotu 20 tahmin: `exploratory.md`.
 ## Duzeltme kontrolu (cetvel saglam mi?)
 
 Formulu orijinal Delaney setinde (1.128 molekul) calistik: RMSE 1.10, tipik hata 0.84; yayindaki deger ~1.0 civari. Yani kod dogru; AqSolDB genis oldugu icin karne kirmizi. Ayrinti: `sanity_delaney.md`.
+
