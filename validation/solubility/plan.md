@@ -32,14 +32,13 @@ Molecule classes (documented SMARTS, priority order): acid `[#6](=O)[OX2H1]`, am
 
 The locked set is never used for any decision. No manual exclusions after this plan is committed.
 
-## Predictions (to be filled by the author)
 
-The author fills this section BEFORE the locked run (values are the author's forecasts, not results):
+## Predictions (author, written AFTER seeing validation results; validation numbers are
 
-- P-A RMSE on validation: ____ log units
-- P-B RMSE on validation: ____ log units
-- P-B vs P-A (better / same / worse): ____
-- fraction within 1.0 log units (P-A, validation): ____
-- worst molecule class: ____
+The following forecasts were written after the validation numbers existed (so they
+are not blind), and BEFORE the locked set was opened.
 
-If predictions miss, that is reported, not hidden.
+P1. On the locked set, all-data RMSE of P-A will be within +/- 0.3 of its validation value (2.23).
+P2. On the locked set, RMSE for neutral single-component molecules with MW <= 500 will be within +/- 0.2 of its validation value (about 1.22).
+P3. Refitting coefficients on the tune split (P-B) will not improve the in-domain RMSE by more than 0.1 log units compared with P-A.
+P4. Salts/mixtures and metal-containing molecules will again show RMSE > 3.0.
