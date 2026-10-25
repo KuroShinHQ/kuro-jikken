@@ -1,5 +1,7 @@
 # kuro-jikken · formulation-screening · Pre-registration PLAN (v0 — DRAFT, not registered yet)
 
+> **Superseded by `prereg/solubility_sigma_feature_plan_v1.md` (2026-10-25). This v0 was never registered.**
+
 Working name: **formulation-screening**.
 Status: **PLAN ONLY.** No model has been run, no error has been computed.
 Order rule: **this plan → OSF registration → only then any benchmark run.**
