@@ -58,7 +58,10 @@ def hba_plain(smiles: str) -> dict:
 
 @mcp.tool()
 def esol_predict(smiles: str) -> dict:
-    """ESOL aqueous-solubility prediction, logS (mol/L), Delaney 2004 coefficients."""
+    """ESOL aqueous-solubility prediction, logS (mol/L), Delaney 2004 coefficients.
+    Returns in_domain flag (neutral, single-component, no metal, MW<=500, no phosphorus),
+    matched error bar (in-domain ~1.2, out-of-domain ~5 log units, locked-set report),
+    and an explicit unreliability caveat when out of domain."""
     return wrap(E.esol_published(smiles))
 
 if __name__ == "__main__":
