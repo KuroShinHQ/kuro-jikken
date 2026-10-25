@@ -161,6 +161,38 @@ Covers ALL sections: question, models, data, identity, in-domain, split, seed,
 locked set, metrics, hypotheses, reporting. Any change is recorded as a dated
 deviation before it is applied, with reason and effect.
 
+### Clarifications (written 2026-10-25, before any evaluation, no result seen)
+
+Each entry clarifies an item this plan did not specify. None is a change: no
+specified rule is redefined, and no result had been seen when this was written.
+
+| # | item | clarification | basis |
+|---|---|---|---|
+| C1 | M0 coefficients | logS = 0.16 - 0.63*clogP - 0.0062*MW + 0.066*RB - 0.74*AP | Delaney 2004, J. Chem. Inf. Comput. Sci. 44, 1000-1005, doi:10.1021/ci034243x; the same values are recorded in this repo at `validation/solubility/plan.md:7-9` (cross-checked there 2026-10-25 against two independent reproductions) |
+| C2 | OLS intercept | present | - |
+| C3 | feature scaling | none; raw features | - |
+| C4 | OLS solver | `numpy.linalg.lstsq`; rank deficiency -> stop and report, never silent | - |
+| C5 | NaN / inf | engine feature: counts as an engine failure (section 6). RDKit feature NaN -> stop and count, never silently dropped | - |
+| C6 | gamma clipping | none | - |
+| C7 | bootstrap refit | no; models are fitted once on tune, the bootstrap resamples locked residuals only | - |
+| C8 | percentile CI | `numpy.percentile` defaults (linear), 2.5 and 97.5 | - |
+| C9 | paired difference | the same molecule indices are drawn for both models in each replicate; statistic = RMSE(M2) - RMSE(M3) | - |
+| C10 | how ln gamma enters M2 | raw ln gamma-infinity; with an intercept, dividing by RT or taking log10 changes nothing in the fitted prediction | - |
+| C11 | target base | AqSolDB logS as is (log10 mol/L), no transform | - |
+| C12 | evaluation order | engine-worked subset of the locked set is fixed first; both models are then scored on the same molecules | - |
+| C13 | training rows of M1/M2/M3 | all three are fitted on the engine-worked part of the tune set, so the comparison uses identical training rows | section 7 lines 119-120 already fix this for M2/M3; section 2 line 29 leaves M1 as "tune" |
+
+### Overlap with the earlier ESOL locked set (counts only)
+
+n_locked_v2 = 1,566. The earlier ESOL locked set is `data/solubility/locked_ids.txt`
+(SHA-256 `9f8ccc5d69e4accc4dece2f07cd9588345dc812d051f4ba39a7f588bcca2da64`, pinned in
+`validation/solubility/LOCK.sha256`). It carries AqSolDB IDs, so InChIKeys were
+resolved through the ID and InChIKey columns of `data/solubility/raw/aqsoldb_20261025.tab`
+(2,399/2,399 mapped, no label column read). Overlap = **412 (26.31%)**.
+The primary analysis is unchanged (whole locked set, engine-worked subset). A
+sensitivity analysis that excludes those 412 molecules is EXPLORATORY, is reported
+separately, and cannot change the primary decision.
+
 ## 12. Risks
 
 - R1 aqueous solubility is only a stepping stone, not a formulation.
