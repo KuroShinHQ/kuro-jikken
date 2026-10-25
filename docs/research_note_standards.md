@@ -161,3 +161,14 @@ gate).
   only `CID` + `InChIKey` from the Parquet index; exact string equality, no
   normalisation of InChIKey case beyond `strip()`.
 - No network call was made for the counts; no engine installation or run.
+
+## 6. Follow-up checks (2026-10-25)
+
+CHECK 1: 361,583 rows - 5,315 null keys - 21,554 duplicate rows = 334,714 unique; 26,869 = 5,315 + 21,554.
+
+- 19,948 keys are duplicated (max 11 rows). Example: water appears 6x (CID 962 + 5), same formula/SMILES. Duplicates are mostly multiple PubChem CIDs for one structure.
+- Rule (not tested): identity = full InChIKey; drop charged SMILES (+/-); take lowest CID; if still >1, drop molecule and log it.
+
+CHECK 2: **yes** - water is present (6 rows, CID 962 + five duplicates). Params lines 2-4 declare "Hsieh-2010 sequential refit (NLLS soft_l1 on gamma-inf)", "COSMO3", COSMO eps=inf; lines 27-31 list 24,522 gamma-inf training records. So gamma-inf in water is computable by construction. No value computed.
+
+CHECK 3: both files are valid UTF-8, no BOM, no U+FFFD. DEVAM first 30 lines clean; last 30 lines contain two **legacy** mojibake rows (1270, 1272) from earlier sessions, untouched.
