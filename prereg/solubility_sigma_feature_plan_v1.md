@@ -3,11 +3,12 @@
 Status: PLAN ONLY. No engine run, no error/RMSE/feature value, no comparison
 with AqSolDB logS. Row counts only.
 
-SCOPE: result applies only to molecules in the sigma DB passing the in-domain
-rule (~1/3 of AqSolDB), not all molecules.
+SCOPE: at most about one third of AqSolDB; exact count fixed at Freeze-2.
 
-Order: this plan -> OSF Freeze-1 -> Freeze-2 (seed, locked set, SHA-256, OSF
-dated note) -> one evaluation -> report. Supersedes
+Order: this plan -> adapter written and label-free sanity tests pass, SHA-256
+committed -> OSF Freeze-1 -> Freeze-2 (locked set SHA-256 + OSF dated note) ->
+one evaluation -> report. The adapter is NOT written after registration.
+Supersedes
 `prereg/formulation_screening_plan_v0.md` (archived, never registered).
 
 ## 1. Question
@@ -88,13 +89,19 @@ All must hold before any label comparison:
 - present in the sigma DB after the one-profile rule;
 - AqSolDB logS present and numeric.
 
-Engine failure is not an exclusion: M2 falls back to M1 on the locked set;
-failure count reported.
+Engine worked = finite number and no physically impossible value (NaN,
+infinite, negative activity coefficient). Anything else = engine failure.
+Failure is not an exclusion: M2 falls back to M1 on the locked set; failure
+count reported.
 
 ## 7. Split, tune and locked sets
 
 Molecule-level split, **50/50**, seed **20261027**. Tune = fitting only; locked
-= one-shot confirmation.
+= one-shot confirmation. One script `data/solubility/make_split_v2.py` builds
+the locked set from (pool file SHA-256, seed 20261027): rows sorted by InChIKey,
+seeded Fisher-Yates with Python `random.Random(20261027)`, first half tune,
+second half locked. No other sorting or library choice. Freeze-2 only hashes
+the output.
 
 GATE: count the in-domain pool (counts only). If the locked half is **< 800
 molecules, STOP and report**; do not change the rule. If >= 800 but the CI is
@@ -114,11 +121,20 @@ and engine-worked subset.
 
 ## 8. Metrics and decision
 
-Primary RMSE on locked set, M2 vs M3. Secondary MAE; 95% bootstrap CI clustered
-by molecule; paired difference M2-M3.
+PRIMARY: engine-worked subset of the locked set, M2 and M3 scored on the SAME
+molecules. SECONDARY: all in-domain molecules (M2 falls back to M1 on engine
+failures). Metric: RMSE, M2 vs M3; MAE secondary. Bootstrap: 10,000 resamples,
+clustered by molecule, percentile method, fixed seed 20261028, two-sided 95% CI.
 
-**Success (both required):** difference <= **-0.10 RMSE** AND the 95% CI of the
-paired difference lies entirely below 0.
+Three outcomes (primary set):
+
+- **SUCCESS:** observed M2-M3 RMSE difference <= **-0.10** AND 95% CI entirely
+  below 0.
+- **NO GAIN:** 95% CI entirely above **-0.10**.
+- **INCONCLUSIVE:** everything else.
+
+SUCCESS means only "observed difference passed the margin and is distinguishable
+from zero", NOT "the true effect is at least 0.10".
 
 Margin **0.10** comes from literature, not our data: Palmer & Mitchell 2014
 doi:10.1021/mp500103r (experimental uncertainty 0.6-0.7 logS); AqSolDB paper
@@ -127,7 +143,7 @@ PMC6687799 (SD up to 0.5); Sluga et al. 2020 doi:10.5562/cca3776 (external RMSE
 
 ## 9. Hypotheses
 
-H1 only: M2 RMSE is lower than M3 by at least 0.10 on the locked set. All else
+H1 only: the SUCCESS rule in section 8, exactly (no second wording). All else
 is EXPLORATORY and must map to a pre-defined measurable category. Failed
 hypotheses will be published.
 
@@ -156,6 +172,10 @@ deviation before it is applied, with reason and effect.
   overlap with AqSolDB molecules is unknown (possible leak).
 - R8 M0 uses published ESOL coefficients from an older dataset; some of those
   molecules may be in AqSolDB, so M0 may have seen test molecules (secondary).
+- R9 M0 uses Crippen logP; original ESOL used a different logP, so RDKit-based
+  M0 is not identical to the published ESOL.
+- R10 AqSolDB mixes temperatures and pH conditions; the engine assumes 298.15 K.
+- R11 conflicting measurements and label noise for the same compound.
 
 ## 13. Scope prohibitions
 
@@ -164,6 +184,10 @@ error comparison, positive or negative. No use of the word "benign".
 
 ## 14. Freeze and registration order
 
-1. this plan -> 2. OSF Freeze-1 -> 3. Freeze-2: seed, locked set, SHA-256
-committed and OSF dated note -> 4. one evaluation -> 5. report with failures and
-deviation log.
+1. this plan -> 2. adapter + label-free sanity tests, SHA-256 committed ->
+3. OSF Freeze-1 -> 4. Freeze-2: locked set SHA-256 committed, then a dated note
+on OSF -> 5. one evaluation -> 6. report with failures and deviation log.
+
+Freeze-2 OSF fallback: if OSF cannot attach a dated note to a finalized
+registration, the locked-set hash must be committed and posted BEFORE
+registration instead.
