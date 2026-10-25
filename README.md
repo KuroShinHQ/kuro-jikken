@@ -121,7 +121,7 @@ Pre-registration artifacts: https://osf.io/kjye6 (plan + lock; OSF upload came
 after the evaluation — see Limitations).
 Cite the latest version via the concept DOI 10.5281/zenodo.23633858.
 v0.1.0 (https://doi.org/10.5281/zenodo.23633859) is superseded.
-v0.1.1 DOI: (to be added after Zenodo finishes)
+v0.1.1 DOI: https://doi.org/10.5281/zenodo.23638653
 
 ---
 
