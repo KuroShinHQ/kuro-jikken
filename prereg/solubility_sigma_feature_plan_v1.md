@@ -1,14 +1,15 @@
 # kuro-jikken - solubility sigma feature - PLAN v1 (DRAFT)
 
-Status: PLAN ONLY. No engine run, no error/RMSE/feature value, no comparison
-with AqSolDB logS. Row counts only.
+Status: PLAN ONLY. No study engine run, no error/RMSE/feature value used in any
+design decision, no comparison with AqSolDB logS. Row counts and file hashes
+only; the label-free sanity run is disclosed in section 16.
 
-SCOPE: at most about one third of AqSolDB; exact count fixed at Freeze-2.
+SCOPE: at most about one third of AqSolDB; exact count fixed in section 15.
 
-Order: this plan -> adapter written and label-free sanity tests pass, SHA-256
-committed -> OSF Freeze-1 -> Freeze-2 (locked set SHA-256 + OSF dated note) ->
-one evaluation -> report. The adapter is NOT written after registration.
-Supersedes
+Order: this plan, with all hashes written inside it -> adapter written and
+label-free sanity tests pass, SHA-256 committed -> ONE OSF registration -> one
+evaluation -> report. There is no separate freeze step and no dated note.
+Nothing that defines the feature is written after registration. Supersedes
 `prereg/formulation_screening_plan_v0.md` (archived, never registered).
 
 ## 1. Question
@@ -44,7 +45,7 @@ ln gamma-infinity of the solute in **water** at **298.15 K**, composition
 
 Stock `calc_LNAC` loads only its UD/VT profile folders; our profiles are the
 PubChemQC parquet, so the frozen call is the COSMO3 core with an adapter
-`PubChemQCProfiles` (written and committed at Freeze-2 with its SHA-256):
+`PubChemQCProfiles` (written and committed BEFORE registration, with its SHA-256):
 
 `cosmo = COSMO3(names=[solute,"WATER"], db=PubChemQCProfiles)`
 `ln_gamma_inf = cosmo.get_lngamma_comb(298.15, comp) + cosmo.get_lngamma_resid(298.15, comp)`
@@ -100,8 +101,8 @@ Molecule-level split, **50/50**, seed **20261027**. Tune = fitting only; locked
 = one-shot confirmation. One script `data/solubility/make_split_v2.py` builds
 the locked set from (pool file SHA-256, seed 20261027): rows sorted by InChIKey,
 seeded Fisher-Yates with Python `random.Random(20261027)`, first half tune,
-second half locked. No other sorting or library choice. Freeze-2 only hashes
-the output.
+second half locked. No other sorting or library choice. The registration only
+carries the output hash (section 15).
 
 GATE: count the in-domain pool (counts only). If the locked half is **< 800
 molecules, STOP and report**; do not change the rule. If >= 800 but the CI is
@@ -109,11 +110,11 @@ too wide to exclude the margin, report **inconclusive**. The locked set size is
 whatever 50% gives; it is not inflated. No separate power calculation: the 50%
 split plus the 800 gate are the rule.
 
-Locked set `data/solubility/split_locked_v2.csv` is built at Freeze-2 and
-committed with `LOCKED_V2.sha256` **before any evaluation**, opened once. The
-earlier ESOL locked set was already opened once; molecule overlap with the new
-set is computed and declared at Freeze-2. After the hash commit, the same hash
-is added as a dated note to the OSF registration.
+Locked set `data/solubility/split_locked_v2.csv` was generated before
+registration and is committed with `LOCKED_V2.sha256` **before any evaluation**,
+opened once. The earlier ESOL locked set was already opened once; molecule
+overlap with the new set is computed and declared before the evaluation (counts
+only). The same hash is written into the registered plan (section 15).
 
 Engine failures: tune excludes failed molecules from M2/M3 fitting and counts
 them; locked falls back to M1. Report **two numbers**: all in-domain molecules,
@@ -182,12 +183,41 @@ deviation before it is applied, with reason and effect.
 No candidate list, no synthesis, dosage, health or cosmetic claims. Output is an
 error comparison, positive or negative. No use of the word "benign".
 
-## 14. Freeze and registration order
+## 14. Registration order
 
-1. this plan -> 2. adapter + label-free sanity tests, SHA-256 committed ->
-3. OSF Freeze-1 -> 4. Freeze-2: locked set SHA-256 committed, then a dated note
-on OSF -> 5. one evaluation -> 6. report with failures and deviation log.
+1. this plan, with the hashes in section 15 written inside it -> 2. adapter and
+label-free sanity tests (SHA-256 committed) -> 3. ONE OSF registration -> 4. one
+evaluation -> 5. report with failures and the deviation log.
 
-Freeze-2 OSF fallback: if OSF cannot attach a dated note to a finalized
-registration, the locked-set hash must be committed and posted BEFORE
-registration instead.
+The locked set was generated before registration and was not inspected: only row
+counts and the file hash were used, and the hash is part of the registered plan
+text (section 15), so the registration timestamp covers it. There is no separate
+freeze step and no dated note; the hash lives in the registered plan text.
+
+## 15. Hashes fixed in this plan
+
+| item | value |
+|---|---|
+| locked set `data/solubility/split_locked_v2.csv` | `6d624855e2e570e12484e7becb69d7522600ee13a14d6a49b1db6dfa6215be0c` |
+| pool `data/solubility/pool_v2.csv` | `1ba6d5b33e9f9dd5d168f452ab204f74ba1b31fd12f94352851b55e849c51a3f` |
+| split script `data/solubility/make_split_v2.py` | `b6807e41e98778da8146c29bb0ef1583ca4ef9f8092b8cdfc352a8331e7ec927` |
+| adapter `mcp/cosmosac_pubchemqc.py` | `86a1174bfd0445b19ddf2953c187dfa7ca6d9e46c3ce83485fb1ba71183239a3` |
+| engine commit `usnistgov/COSMOSAC` | `1b82456be38026719b16cad4076109bef3fcb309` |
+| cCOSMO wheel (cp312, win_amd64) | `1bbf8fe5ae8be1e5b54c536190b9660b7a07b4fd6515f21402ef021e28e90fbb` |
+
+Pool counts, in order: **9,982** AqSolDB rows -> **3,416** matched on the full
+27-character InChIKey -> **3,132** in domain (dropped: 238 charged, 45 with P,
+1 multi-component) -> **1,566** tune / **1,566** locked; the 800 gate passes.
+Data-file hashes (sigma parquet, index, parameter file) are in section 3.
+
+## 16. Disclosures before registration
+
+The label-free sanity check ran the engine for water-water and for seven solutes
+(ethanol, benzene, toluene, caffeine, aspirin, acetic acid, urea). The three data
+files (`pool_v2.csv`, `split_tune_v2.csv`, `split_locked_v2.csv`) carry the
+AqSolDB `logS` column unchanged, so a label column is present in them; it was
+carried through as row data and never examined. No label value was printed,
+summarized, compared or used for any design decision, and every number reported
+in this plan is a row count or a file hash. The BioVia-restricted UD profiles
+were used only for the local equivalence check; they are not redistributed and
+are not part of the study data.

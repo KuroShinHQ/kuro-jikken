@@ -1,0 +1,18 @@
+{
+  "aqsoldb_rows": 9982,
+  "matched_rows_full_inchikey": 3416,
+  "dropped": {
+    "charged": 238,
+    "element_not_allowed:P": 45,
+    "multi_component": 1
+  },
+  "pool_rows": 3132,
+  "unique_keys": 3132,
+  "pool_sha256": "1ba6d5b33e9f9dd5d168f452ab204f74ba1b31fd12f94352851b55e849c51a3f",
+  "rules": {
+    "match": "exact full 27-character InChIKey",
+    "one_profile": "neutral rows only, lowest CID, tie = lowest file row",
+    "in_domain": "neutral, single component, elements C,H,N,O,S,F,Cl,Br,I, logS numeric",
+    "no_MW_limit": true
+  }
+}

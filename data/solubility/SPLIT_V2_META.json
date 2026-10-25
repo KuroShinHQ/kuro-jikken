@@ -1,0 +1,13 @@
+{
+  "pool_file": "pool_v2.csv",
+  "pool_sha256": "1ba6d5b33e9f9dd5d168f452ab204f74ba1b31fd12f94352851b55e849c51a3f",
+  "seed": 20261027,
+  "split": "50/50 molecule-level; first half tune, second half locked",
+  "algorithm": "sorted by InChIKey (UTF-8 bytes), explicit seeded Fisher-Yates",
+  "pool_rows": 3132,
+  "tune_rows": 1566,
+  "locked_rows": 1566,
+  "locked_sha256": "6d624855e2e570e12484e7becb69d7522600ee13a14d6a49b1db6dfa6215be0c",
+  "min_locked": 800,
+  "gate": "PASS"
+}
