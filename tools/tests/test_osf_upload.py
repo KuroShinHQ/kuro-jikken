@@ -17,9 +17,12 @@ class FakeResp:
 class FakeSession:
     def post(self, url, **k): return FakeResp({"data": {"id": "fakeid"}})
     def get(self, url, **k):
-        if "files/osfstorage/root/" in url:
-            return FakeResp({"data": [{"links": {"upload": "https://u/presigned"}}]})
         if url.rstrip("/").endswith("files"):
+            return FakeResp({"data": [
+                {"attributes": {"kind": "folder", "name": "osfstorage"},
+                 "links": {"upload": "https://u/presigned"}},
+            ]})
+        if "format=json" in url:
             return FakeResp({"data": [
                 {"attributes": {"kind": "file", "name": "plan.md", "size": 2681, "extra": {"hashes": {}}}},
                 {"attributes": {"kind": "file", "name": "LOCK.sha256", "size": 82, "extra": {"hashes": {}}}},

@@ -94,29 +94,29 @@ def create_project(session):
     r = session.post(
         f"{API}/nodes/",
         headers=_headers(),
-        json={"type": "nodes", "category": "project", "title": TITLE, "description": DESCRIPTION},
+        json={"data": {"type": "nodes", "attributes": {"category": "project", "title": TITLE, "description": DESCRIPTION}}},
         timeout=60,
     )
     r.raise_for_status()
     return r.json()["data"]["id"]
 
-def root_folder_url(session, node_id):
-    r = session.get(f"{API}/nodes/{node_id}/files/osfstorage/root/", headers=_headers(), timeout=60)
+def provider_url(session, node_id):
+    r = session.get(f"{API}/nodes/{node_id}/files/", headers=_headers(), timeout=60)
     r.raise_for_status()
-    items = r.json().get("data", [])
-    return (items[0].get("links") or {}).get("upload") if items else None
+    for d in r.json().get("data", []):
+        if d.get("attributes", {}).get("name") == "osfstorage":
+            return (d.get("links") or {}).get("upload")
 
 def upload_file(session, upload_url, path):
-    data = (ROOT / path).read_bytes()
     import urllib.parse
-    meta = json.dumps({"name": Path(path).name, "kind": "file", "size": len(data)})
-    url = upload_url + ("&" if "?" in upload_url else "?") + "meta=" + urllib.parse.quote(meta, safe="")
-    r = session.put(url, headers={**_headers(), "Content-Type": "application/octet-stream"}, data=data, timeout=120)
+    data = (ROOT / path).read_bytes()
+    q = urllib.parse.urlencode({"name": Path(path).name, "kind": "file", "size": len(data)})
+    r = session.put(upload_url + "?" + q, headers={**_headers(), "Content-Type": "application/octet-stream"}, data=data, timeout=120)
     r.raise_for_status()
     return r.status_code
 
-def list_files(session, node_id):
-    r = session.get(f"{API}/nodes/{node_id}/files/", headers=_headers(), timeout=60)
+def list_files(session, upload_url):
+    r = session.get(upload_url + "?format=json", headers=_headers(), timeout=60)
     r.raise_for_status()
     found = {}
     for item in r.json().get("data", []):
@@ -125,8 +125,8 @@ def list_files(session, node_id):
             found[a.get("name")] = {"size": a.get("size"), "hashes": (a.get("extra") or {}).get("hashes", {})}
     return found
 
-def verify(session, node_id, plan):
-    remote = list_files(session, node_id)
+def verify(session, upload_url, plan):
+    remote = list_files(session, upload_url)
     ok = True
     for f in plan:
         name = Path(f["path"]).name
@@ -150,18 +150,18 @@ def run_confirm():
     s = new_session()
     node_id = create_project(s)
     print("project created:", node_id)
-    upload_url = root_folder_url(s, node_id)
+    upload_url = provider_url(s, node_id)
     if not upload_url:
-        err("no root upload url (unexpected API shape)")
+        err("no provider upload url (unexpected API shape)")
     for f in local_plan():
         upload_file(s, upload_url, f["path"])
         print("uploaded:", Path(f["path"]).name)
-    ok = verify(s, node_id, local_plan())
+    ok = verify(s, upload_url, local_plan())
     print("VERIFICATION:", "OK" if ok else "MISMATCH")
     return node_id, ok
 
 def make_public(session, node_id):
-    r = session.patch(f"{API}/nodes/{node_id}/", headers=_headers(), json={"is_public": True}, timeout=60)
+    r = session.patch(f"{API}/nodes/{node_id}/", headers=_headers(), json={"data": {"type": "nodes", "id": node_id, "attributes": {"public": True}}}, timeout=60)
     r.raise_for_status()
     print("project set public")
 
