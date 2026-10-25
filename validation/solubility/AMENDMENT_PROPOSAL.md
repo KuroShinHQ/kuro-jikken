@@ -35,3 +35,7 @@ aggregate scores — but listed separately, never silently dropped.
 record.** If the rule is adopted, it must be adopted in a dated amendment before
 any new locked/practice evaluation, and both pre-registered and amended numbers
 must be published side by side.
+
+## Acceptance record
+
+ACCEPTED as secondary analysis on 2026-10-25. The pre-registered all-data result remains the primary result. This rule was decided after seeing validation results; it is applied only as a clearly marked secondary analysis, side by side with the primary numbers, and nothing is deleted or recomputed away.
