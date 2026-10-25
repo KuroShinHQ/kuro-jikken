@@ -9,3 +9,7 @@ logs/
 *.bak
 *.bak_*
 *.621bak
+.env
+.env.*
+*.env
+_secrets/
