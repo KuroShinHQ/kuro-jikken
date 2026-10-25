@@ -13,7 +13,7 @@ repository-code: "https://github.com/KuroShinHQ/kuro-jikken"
 license: MIT
 version: "0.1.0"
 # Update date-released to the day you publish the GitHub release.
-date-released: "2026-10-24"
+date-released: "2026-10-25"
 keywords:
   - computational chemistry
   - LLM agents
