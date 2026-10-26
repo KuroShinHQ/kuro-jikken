@@ -181,7 +181,7 @@ def refusal(
     return answer
 
 
-NO_DATA_HINTS = ("no hansen entry", "no melting data", "not found", "not declared")
+NO_DATA_HINTS = ("no hansen entry", "no melting data", "not found", "not declared", "no gate input")
 NO_ENGINE_CAPS = {"mixture.wax"}
 
 

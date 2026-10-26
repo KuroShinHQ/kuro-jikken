@@ -126,3 +126,12 @@ def test_identity_refuses_an_unparseable_structure():
     plan = R.plan("bu molekulun logP'si", {"smiles": "unobtainium"})
     out = E.identity("bu molekulun logP'si", plan, {"smiles": "unobtainium"})
     assert out["verdict"] == "RED" and out["reason"] == "out of domain"
+
+def test_unifac_refuses_when_the_request_asks_for_cosmo():
+    """Answering a cOSMO question with UNIFAC would be a different model."""
+    request = "asetonun suda gamma'si cosmo ile"
+    plan = R.plan(request, {"smiles": ["CC(=O)C", "O"]})
+    out = E.unifac(request, plan, {"smiles": ["CC(=O)C", "O"]})
+    assert out["verdict"] == "RED" and out["value"] is None
+    assert out["reason"] == "no engine"
+    assert "cOSMO" in out["limits"][0]

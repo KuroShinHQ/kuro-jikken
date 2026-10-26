@@ -129,6 +129,16 @@ def unifac(request, plan, payload):
 
     smiles = smiles_list(payload)
     gate = plan.get("gate")
+    if "cosmo" in (request or "").lower():
+        return A.refusal(
+            "no engine",
+            capability="mixture.gamma",
+            reason=(
+                "the request names cOSMO, which is not wired to the answer contract; "
+                "answering with UNIFAC would be a different model"
+            ),
+            gate=gate,
+        )
     if len(smiles) < 2:
         return A.refusal(
             "no data",
