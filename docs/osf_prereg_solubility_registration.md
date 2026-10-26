@@ -75,8 +75,9 @@ Until then: registration not readable anonymously (401), no DOI.
 record is now `public=true` with DOI `10.17605/OSF.IO/UCE8D` and an anonymous
 `GET` returns 200; `date_registered` is unchanged. A dated OSF *Update* on this
 record (`uce8d`) was accepted on 2026-10-26. Separate record, separate state: the
-Freeze 2 *Update* for `8pbnu` is still an unsent draft
-(`docs/osf_freeze2_update_draft.md`, `[AUTHOR APPROVAL PENDING]`).
+Freeze 2 *Update* for `8pbnu` is no longer a draft. The author approval line is
+present (Freeze 2 approved 2026-10-26) and OSF accepted that Update on
+2026-10-26 (`docs/osf_freeze2_update_draft.md`).
 
 ## Token hygiene
 

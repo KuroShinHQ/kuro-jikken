@@ -58,3 +58,11 @@ Any deviation is dated here; primary analyses stay as registered.
   since their commits (`8967d06`, `b2b52b3`).
 - No confirmatory run has been started.
 
+## 2026-10-26 — OSF Update accepted before the run
+
+9. **OSF Update on `8pbnu` (Freeze 2) accepted** before the confirmatory run:
+   OSF showed "Changes successfully accepted" on 2026-10-26. The Summary keeps
+   the original text with one appended `UPDATE 2026-10-26:` line. Update text:
+   `docs/osf_freeze2_update_draft.md`. The Update started no run and reports no
+   result.
+
