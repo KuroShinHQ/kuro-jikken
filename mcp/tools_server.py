@@ -210,16 +210,41 @@ def unifac_gamma_infinity(
 
 
 @MCP.tool()
-def kj_ask(request: str) -> dict:
-    """Route a free-text request to a capability and return the PLAN only.
+def kj_ask(request: str, payload: dict | None = None, plan_only: bool = False) -> dict:
+    """One call: plan -> gate -> engine -> answer contract -> ledger (P5a/P5d).
 
-    This tool never computes a value: it says which engine, which gate and
-    which unit would be used, so the caller can see the decision before any
-    number exists. UNKNOWN/CLARIFY/RED mean: do not answer with a number.
+    ``plan_only=True`` keeps the old dry behaviour: it says which engine, gate
+    and unit would be used and produces no number. Otherwise the answer is
+    computed, gated, stored in the append-only ledger and returned; a refusal is
+    a normal result with ``value = None`` and a fixed sentence.
     """
-    from router import plan
+    if plan_only:
+        from router import plan
 
-    return plan(request)
+        return plan(request, payload)
+
+    from pipeline import ask
+
+    return ask(request, payload)
+
+
+@MCP.tool()
+def kj_replay(entry_id: str, recompute: bool = True) -> dict:
+    """Replay one ledger entry; with ``recompute`` the number is re-derived.
+
+    Without ``recompute`` the plan, gate and stored-answer digest are checked and
+    ``value_same`` is ``None`` (never a fake True). With it, the number is
+    compared within ``ledger.VALUE_REL_TOL``/``VALUE_ABS_TOL``.
+    """
+    from ledger import replay
+    from pipeline import compute as compute_answer
+
+    compute = (
+        (lambda entry: compute_answer(entry["request"], entry.get("payload"))[1])
+        if recompute
+        else None
+    )
+    return replay(entry_id, compute=compute)
 
 
 if __name__ == "__main__":
