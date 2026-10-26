@@ -42,10 +42,20 @@ def test_refusal_is_stored_with_the_same_shape(tmp_path):
     A.validate(entry["answer"])
 
 
-def test_wax_never_reaches_an_engine():
+def test_wax_mixture_cas_is_refused_by_the_gate():
+    """Petrolatum carries Tm but no Hfus: the gate refuses before any engine."""
     plan, ans = P.compute("mum 40 C'de erir mi", {"casrn": ["8009-03-8"]})
     assert (plan["route"]["capability"]) == "mixture.wax"
-    assert ans["reason"] == "no engine" and ans["value"] is None
+    assert ans["verdict"] == "RED" and ans["value"] is None
+    assert ans["reason"] == "no data"
+
+
+def test_wax_blend_reaches_the_engine():
+    payload = {"casrn": ["112-95-8", "630-02-4"], "x": [0.5, 0.5]}
+    plan, ans = P.compute("mumun erime araligi nedir", payload)
+    assert ans["verdict"] == "YELLOW" and ans["unit"] == "kelvin"
+    assert abs(ans["value"] - 326.7) < 0.1
+    assert ans["gate"]["verdict"] == "PASS"
 
 
 def test_red_capability_never_reaches_an_engine():

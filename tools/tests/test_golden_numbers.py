@@ -43,7 +43,7 @@ ROWS = [
     (9, "etanol/su azeotrop noktasi", None, "RED", "no engine", None, 0, None),
     (10, "bu ilac toksik mi", None, "RED", "no engine", None, 0, None),
     (11, "bu protein hedefe baglanir mi", None, "RED", "no engine", None, 0, None),
-    (12, "mum 40 C'de erir mi", {"casrn": ["112-92-5"]}, "RED", "no engine", None, 0, None),
+    (12, "mum 40 C'de erir mi", {"casrn": ["112-92-5"]}, "YELLOW", None, 332.6, 0.1, "kelvin"),
     (13, "etanolun suda gamma-infinity'si", {"smiles": ["CCO", "O"]},
      "GREEN", None, 4.7918, 1e-4, "ratio"),
     (14, "asetonun suda gamma'si cosmo ile", {"smiles": ["CC(=O)C", "O"]},
@@ -84,7 +84,7 @@ def test_every_golden_row_is_stored_with_its_gate(tmp_path):
     assert len(entries) == len(ROWS)
     assert len(set(ids)) == len(ROWS)
     numbers = [e for e in entries if e["answer"]["value"] is not None]
-    assert len(numbers) == 6  # rows 1, 2, 6, 8, 13, 18
+    assert len(numbers) == 7  # rows 1, 2, 6, 8, 12, 13, 18 (row 12 = R1 wax)
     for entry in entries:
         A.validate(entry["answer"])
         if entry["answer"]["value"] is not None:

@@ -6,10 +6,9 @@ engine's own reason; it never writes the ledger and never invents a number.
 Heavy libraries (pycalphad, RDKit, pandas) are imported inside the adapter so
 that importing this module stays cheap.
 
-Adapters exist only for capabilities whose engine is validated today:
-solubility.aqueous (ESOL), mixture.gamma (UNIFAC Dortmund), alloy.phase
-(pycalphad) and molecule.identity (RDKit). ``mixture.wax`` has a gate but no
-engine, so it is refused before any adapter is reached.
+Adapters exist for every capability that has a validated engine: solubility.aqueous
+(ESOL), mixture.gamma (UNIFAC Dortmund), mixture.wax (ideal solid-liquid equilibrium
+from ``tools/wax_melting.py``), alloy.phase (pycalphad) and molecule.identity (RDKit).
 """
 import json
 import pathlib
@@ -363,9 +362,101 @@ def identity(request, plan, payload):
     )
 
 
+WAX_MODEL = "ideal solid-liquid equilibrium, gamma = 1"
+
+
+def _wax_components(payload):
+    """(CAS -> mole fraction, None) or (None, why it is missing)."""
+    if not isinstance(payload, dict):
+        return None, "the wax engine needs a payload with CAS numbers"
+    raw = payload.get("casrn") or payload.get("cas") or payload.get("components")
+    if isinstance(raw, dict) and (raw.get("casrn") or raw.get("components")):
+        raw = raw.get("casrn") or raw.get("components")
+    if isinstance(raw, dict):
+        return {str(k).strip(): float(v) for k, v in raw.items() if str(k).strip()}, None
+    cas = _as_list(raw)
+    if not cas:
+        return None, "no CAS number for the wax engine"
+    xs = payload.get("x") if payload.get("x") is not None else payload.get("xs")
+    if xs is None:
+        if len(cas) == 1:
+            return {cas[0]: 1.0}, None
+        return None, (
+            "a blend needs mole fractions in the same order as the CAS list "
+            '(e.g. "x": [0.5, 0.5]); assuming equimolar would invent the composition'
+        )
+    xs = [float(v) for v in _as_list(xs)]
+    if len(xs) != len(cas):
+        return None, f"{len(cas)} CAS numbers but {len(xs)} mole fractions"
+    if any(v <= 0 for v in xs):
+        return None, "every mole fraction must be greater than zero"
+    return dict(zip(cas, xs)), None
+
+
+def wax(request, plan, payload):
+    """Melting range of an n-alkane blend (ideal SLE): YELLOW, range only."""
+    import wax_melting as W
+
+    gate = plan.get("gate")
+    if gate is None:
+        return A.refusal(
+            "no data",
+            capability="mixture.wax",
+            reason="no gate input for the wax engine",
+            gate=None,
+        )
+    components, problem = _wax_components(payload)
+    if problem:
+        return A.refusal(
+            "missing input",
+            capability="mixture.wax",
+            reason=problem,
+            gate=gate,
+        )
+    try:
+        out = W.wax_range(components)
+    except ValueError as exc:
+        return A.refusal(
+            "missing parameters",
+            capability="mixture.wax",
+            reason=f"{type(exc).__name__}: {exc}",
+            gate=gate,
+        )
+    wat = float(out["wax_appearance_k"])
+    last = float(out["last_solid_k"])
+    parts = ", ".join(
+        f"{row['casrn']} x={row['x']}" for row in out["components"]
+    )
+    return A.build(
+        capability="mixture.wax",
+        value=wat,
+        unit="K",
+        method=f"ideal SLE: ln(x_i) = -dH_fus,i/R (1/T - 1/Tm,i) for {parts}",
+        # the model sets every activity coefficient to 1: a range is not a GREEN number
+        verdict="YELLOW",
+        provenance={
+            "engine": WAX_MODEL,
+            "dataset": "chemicals (Tm, Hfus) via tools/wax_melting.py",
+        },
+        reproduce=reproduce_command(request, payload),
+        does_not_say=(
+            "wax content, crystal structure, rheology, pour point, hardness or any "
+            "performance claim; activity coefficients are not modelled"
+        ),
+        error={"kind": "range", "lower": last, "upper": wat},
+        limits=[
+            f"melting range {last:.1f} to {wat:.1f} K for the stated mole fractions",
+            "ideal solution (gamma = 1): real wax blends need activity coefficients",
+            "n-alkanes only; a mixture CAS such as 8002-74-2 has no Hfus and is refused",
+        ],
+        gate=gate,
+    )
+
+
 ADAPTERS = {
     "solubility.aqueous": esol,
     "mixture.gamma": unifac,
+    "mixture.wax": wax,
     "alloy.phase": calphad,
     "molecule.identity": identity,
 }

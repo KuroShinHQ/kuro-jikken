@@ -36,6 +36,9 @@ SENTENCES = {
     "ambiguous name": "Iki farkli madde buldum: {a} / {b}. Hangisi?",
     "unit mismatch": "Birim belirsiz (wt% mi at% mi?). Hangisi?",
     "model != measurement": "Bu bir tahmin; olcum degil. Hata cubugu: {error}",
+    # 8th class, added 2026-10-27 (R1): none of the seven above can ask for a
+    # missing *input* (a mole fraction, a basis) without lying about why.
+    "missing input": "Hesap icin eksik girdi var: {reason}. Tamamlaninca hesaplarim.",
 }
 
 REQUIRED = (
@@ -182,7 +185,8 @@ def refusal(
 
 
 NO_DATA_HINTS = ("no hansen entry", "no melting data", "not found", "not declared", "no gate input")
-NO_ENGINE_CAPS = {"mixture.wax"}
+# every capability in router.CAPS with a non-empty engine list now has an adapter
+NO_ENGINE_CAPS = set()
 
 
 def from_plan(plan: dict) -> dict:

@@ -18,7 +18,7 @@ REQUEST = "etanol suda ne kadar cozunur"
 def test_every_adapter_has_units():
     assert set(E.ADAPTERS) <= set(A.UNITS)
     for _cid, _w, engines, _gate, _unit in R.CAPS:
-        if engines and _cid != "mixture.wax":
+        if engines:
             assert _cid in E.ADAPTERS
 
 
@@ -135,3 +135,51 @@ def test_unifac_refuses_when_the_request_asks_for_cosmo():
     assert out["verdict"] == "RED" and out["value"] is None
     assert out["reason"] == "no engine"
     assert "cOSMO" in out["limits"][0]
+
+
+# --- R1: mixture.wax now has an adapter -----------------------------------
+
+def test_wax_blend_is_a_yellow_range():
+    """Ideal SLE: WAT and last-solid bound the range; never GREEN."""
+    payload = {"casrn": ["112-95-8", "630-02-4"], "x": [0.5, 0.5]}
+    plan = R.plan("mumun erime araligi nedir", payload)
+    out = E.wax("mumun erime araligi nedir", plan, payload)
+    assert out["verdict"] == "YELLOW"
+    assert out["unit"] == "kelvin"
+    assert out["value"] == pytest.approx(326.7, abs=0.1)
+    assert out["error"]["lower"] == pytest.approx(302.2, abs=0.1)
+    assert out["error"]["kind"] == "range"
+    assert out["provenance"]["engine"].startswith("ideal solid-liquid")
+
+
+def test_wax_pure_component_returns_its_melting_point():
+    payload = {"casrn": ["112-95-8"]}
+    plan = R.plan("mumun erime araligi nedir", payload)
+    out = E.wax("mumun erime araligi nedir", plan, payload)
+    assert out["verdict"] == "YELLOW"
+    assert out["error"]["lower"] == pytest.approx(out["value"], abs=0.05)
+
+
+def test_wax_blend_without_fractions_asks_for_them():
+    """Equimolar would be an invented composition: ask, do not guess."""
+    payload = {"casrn": ["112-95-8", "630-02-4"]}
+    plan = R.plan("mumun erime araligi nedir", payload)
+    out = E.wax("mumun erime araligi nedir", plan, payload)
+    assert out["verdict"] == "RED" and out["value"] is None
+    assert out["reason"] == "missing input"
+    assert "mole fractions" in out["limits"][0]
+
+
+def test_wax_fraction_count_must_match_the_cas_count():
+    payload = {"casrn": ["112-95-8", "630-02-4"], "x": [0.5]}
+    plan = R.plan("mumun erime araligi nedir", payload)
+    out = E.wax("mumun erime araligi nedir", plan, payload)
+    assert out["verdict"] == "RED" and out["reason"] == "missing input"
+
+
+def test_wax_dict_payload_reaches_the_gate():
+    """{cas: x} form must not be a RED 'no CAS number' from the gate."""
+    import gates
+
+    rec = gates.check("gate.wax", {"112-95-8": 0.5, "630-02-4": 0.5})
+    assert rec["verdict"] == "PASS"

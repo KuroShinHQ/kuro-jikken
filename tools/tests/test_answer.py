@@ -113,7 +113,13 @@ def test_missing_data_is_not_out_of_domain():
     assert out["limits"] == ["no Hansen entry for CAS 8009-03-8"]
 
 
-def test_gate_pass_but_no_engine_is_still_a_refusal():
+def test_gate_pass_but_no_engine_is_still_a_refusal(monkeypatch):
+    """A capability with a gate but no adapter must refuse, never crash.
+
+    Since R1 every routed capability has an adapter, so the guard is exercised
+    by marking one capability engine-less for the duration of the test.
+    """
+    monkeypatch.setattr(A, "NO_ENGINE_CAPS", {"mixture.wax"})
     out = A.from_plan(R.plan("mum 40 C'de erir mi", {"casrn": ["112-92-5"]}))
     assert out["reason"] == "no engine"
 

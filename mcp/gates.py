@@ -139,7 +139,8 @@ def gate_wax(casrn_list) -> dict:
     from chemicals import Hfus, Tm
 
     if isinstance(casrn_list, dict):
-        casrn_list = casrn_list.get("casrn") or casrn_list.get("components") or []
+        inner = casrn_list.get("casrn") or casrn_list.get("components")
+        casrn_list = inner if inner else list(casrn_list.keys())
     if isinstance(casrn_list, str):
         casrn_list = [c for c in casrn_list.replace(",", " ").split() if c]
     if not isinstance(casrn_list, (list, tuple)) or not casrn_list:
