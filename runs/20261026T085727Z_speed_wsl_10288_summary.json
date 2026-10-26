@@ -1,0 +1,233 @@
+{
+  "tag": "wsl_10288",
+  "runtime": {
+    "model_path": "/mnt/c/KuroshinHQ/_hub/models/Hermes3.6-35B-A3B-Uncensored-Genesis-MTP-APEX-Compact.gguf",
+    "model_sha256": null,
+    "props_keys": [
+      "bos_token",
+      "build_info",
+      "chat_template",
+      "chat_template_caps",
+      "cors_proxy_enabled",
+      "default_generation_settings",
+      "endpoint_metrics",
+      "endpoint_props",
+      "endpoint_slots",
+      "eos_token",
+      "is_sleeping",
+      "media_marker",
+      "modalities",
+      "model_alias",
+      "model_ftype",
+      "model_path",
+      "total_slots",
+      "ui",
+      "ui_settings"
+    ],
+    "chat_template_sha256": "e57684bae4156211a55473c5a63be976a405a37ab5be5ae0e5abf1df5349c4b2",
+    "build_info": "b10288-360e1349f",
+    "base_url": "http://127.0.0.1:8099"
+  },
+  "questions": 10,
+  "rows": [
+    {
+      "mode": "A",
+      "item_id": "LNNRQIKKDKDFRV-UHFFFAOYSA-N::formula",
+      "seconds": 20.835,
+      "completion_tokens": 13,
+      "tokens_per_second": 0.624,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "MASBWURJQFFLOO-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 5.389,
+      "completion_tokens": 16,
+      "tokens_per_second": 2.969,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "QOPHKHWJLOYIDO-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 4.972,
+      "completion_tokens": 11,
+      "tokens_per_second": 2.212,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "JEYJJJXOFWNEHN-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 5.195,
+      "completion_tokens": 11,
+      "tokens_per_second": 2.117,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 5.751,
+      "completion_tokens": 7,
+      "tokens_per_second": 1.217,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "VTTDWGUAWMLHPR-UHFFFAOYSA-N::formula",
+      "seconds": 5.404,
+      "completion_tokens": 14,
+      "tokens_per_second": 2.591,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "JWBOIMRXGHLCPP-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 5.455,
+      "completion_tokens": 16,
+      "tokens_per_second": 2.933,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "CLPDGZLMLHDCOY-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 4.824,
+      "completion_tokens": 11,
+      "tokens_per_second": 2.28,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "DLJAQEIAZPTWSB-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 4.942,
+      "completion_tokens": 11,
+      "tokens_per_second": 2.226,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "JRBJSXQPQWSCCF-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 5.436,
+      "completion_tokens": 16,
+      "tokens_per_second": 2.943,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "LNNRQIKKDKDFRV-UHFFFAOYSA-N::formula",
+      "seconds": 17.55,
+      "completion_tokens": 35,
+      "tokens_per_second": 1.994,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "MASBWURJQFFLOO-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 13.665,
+      "completion_tokens": 42,
+      "tokens_per_second": 3.073,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "QOPHKHWJLOYIDO-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 17.14,
+      "completion_tokens": 55,
+      "tokens_per_second": 3.209,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "JEYJJJXOFWNEHN-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 19.013,
+      "completion_tokens": 60,
+      "tokens_per_second": 3.156,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 16.238,
+      "completion_tokens": 48,
+      "tokens_per_second": 2.956,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "VTTDWGUAWMLHPR-UHFFFAOYSA-N::formula",
+      "seconds": 16.801,
+      "completion_tokens": 53,
+      "tokens_per_second": 3.155,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "JWBOIMRXGHLCPP-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 16.087,
+      "completion_tokens": 52,
+      "tokens_per_second": 3.233,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "CLPDGZLMLHDCOY-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 14.941,
+      "completion_tokens": 43,
+      "tokens_per_second": 2.878,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "DLJAQEIAZPTWSB-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 15.945,
+      "completion_tokens": 47,
+      "tokens_per_second": 2.948,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "JRBJSXQPQWSCCF-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 14.818,
+      "completion_tokens": 45,
+      "tokens_per_second": 3.037,
+      "requests": 2,
+      "answered": true
+    }
+  ],
+  "by_mode": {
+    "A": {
+      "n": 10,
+      "seconds_total": 68.203,
+      "seconds_median": 5.396,
+      "tokens_total": 126,
+      "tokens_per_second": 1.847,
+      "answered": 10
+    },
+    "B": {
+      "n": 10,
+      "seconds_total": 162.198,
+      "seconds_median": 16.163,
+      "tokens_total": 480,
+      "tokens_per_second": 2.959,
+      "answered": 10
+    }
+  },
+  "jsonl": "C:\\KuroshinHQ\\kuro-jikken\\runs\\20261026T085727Z_speed_wsl_10288.jsonl"
+}

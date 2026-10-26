@@ -1,0 +1,63 @@
+{
+  "tag": "cachetest",
+  "runtime": {
+    "model_path": "C:\\KuroshinHQ\\_hub\\models\\Hermes3.6-35B-A3B-Uncensored-Genesis-MTP-APEX-Compact.gguf",
+    "model_sha256": "a60c9ca376578ac98fc419d12cd1fad4d47c1cfec1bbe75a162f6bbb86e554b2",
+    "props_keys": [
+      "bos_token",
+      "build_info",
+      "chat_template",
+      "chat_template_caps",
+      "cors_proxy_enabled",
+      "default_generation_settings",
+      "endpoint_metrics",
+      "endpoint_props",
+      "endpoint_slots",
+      "eos_token",
+      "is_sleeping",
+      "media_marker",
+      "modalities",
+      "model_alias",
+      "model_ftype",
+      "model_path",
+      "total_slots",
+      "ui",
+      "ui_settings"
+    ],
+    "chat_template_sha256": "e57684bae4156211a55473c5a63be976a405a37ab5be5ae0e5abf1df5349c4b2",
+    "build_info": "b10288-360e1349f",
+    "base_url": "http://127.0.0.1:8099"
+  },
+  "questions": 2,
+  "rows": [
+    {
+      "mode": "B",
+      "item_id": "LNNRQIKKDKDFRV-UHFFFAOYSA-N::formula",
+      "seconds": 7.377,
+      "completion_tokens": 35,
+      "tokens_per_second": 4.745,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "MASBWURJQFFLOO-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 7.704,
+      "completion_tokens": 42,
+      "tokens_per_second": 5.451,
+      "requests": 2,
+      "answered": true
+    }
+  ],
+  "by_mode": {
+    "B": {
+      "n": 2,
+      "seconds_total": 15.081,
+      "seconds_median": 7.54,
+      "tokens_total": 77,
+      "tokens_per_second": 5.106,
+      "answered": 2
+    }
+  },
+  "jsonl": "C:\\KuroshinHQ\\kuro-jikken\\runs\\20261026T081237Z_speed_cachetest.jsonl"
+}

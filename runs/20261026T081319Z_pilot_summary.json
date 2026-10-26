@@ -1,0 +1,347 @@
+{
+  "run_id": "20261026T081319Z_pilot",
+  "split": "pilot",
+  "runtime": {
+    "model_path": "C:\\KuroshinHQ\\_hub\\models\\Hermes3.6-35B-A3B-Uncensored-Genesis-MTP-APEX-Compact.gguf",
+    "model_sha256": "a60c9ca376578ac98fc419d12cd1fad4d47c1cfec1bbe75a162f6bbb86e554b2",
+    "props_keys": [
+      "bos_token",
+      "build_info",
+      "chat_template",
+      "chat_template_caps",
+      "cors_proxy_enabled",
+      "default_generation_settings",
+      "endpoint_metrics",
+      "endpoint_props",
+      "endpoint_slots",
+      "eos_token",
+      "is_sleeping",
+      "media_marker",
+      "modalities",
+      "model_alias",
+      "model_ftype",
+      "model_path",
+      "total_slots",
+      "ui",
+      "ui_settings"
+    ],
+    "chat_template_sha256": "e57684bae4156211a55473c5a63be976a405a37ab5be5ae0e5abf1df5349c4b2",
+    "build_info": "b10288-360e1349f",
+    "base_url": "http://127.0.0.1:8099"
+  },
+  "by_mode": {
+    "A": {
+      "items": 35,
+      "correct": 18,
+      "error_rate": 0.485714,
+      "categories": {
+        "chemistry_knowledge_error": 17
+      },
+      "mean_seconds": 2.712,
+      "mean_tool_calls": 0.0,
+      "verification_failed": 0
+    },
+    "B": {
+      "items": 35,
+      "correct": 35,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 11.482,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "C": {
+      "items": 35,
+      "correct": 35,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 13.921,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    }
+  },
+  "by_property": {
+    "formula": {
+      "items": 15,
+      "correct": 13,
+      "error_rate": 0.133333,
+      "categories": {
+        "chemistry_knowledge_error": 2
+      },
+      "mean_seconds": 10.018,
+      "mean_tool_calls": 0.667,
+      "verification_failed": 0
+    },
+    "molecular_weight": {
+      "items": 15,
+      "correct": 11,
+      "error_rate": 0.266667,
+      "categories": {
+        "chemistry_knowledge_error": 4
+      },
+      "mean_seconds": 9.867,
+      "mean_tool_calls": 0.667,
+      "verification_failed": 0
+    },
+    "heavy_atom_count": {
+      "items": 15,
+      "correct": 11,
+      "error_rate": 0.266667,
+      "categories": {
+        "chemistry_knowledge_error": 4
+      },
+      "mean_seconds": 8.815,
+      "mean_tool_calls": 0.667,
+      "verification_failed": 0
+    },
+    "ring_count": {
+      "items": 15,
+      "correct": 14,
+      "error_rate": 0.066667,
+      "categories": {
+        "chemistry_knowledge_error": 1
+      },
+      "mean_seconds": 9.093,
+      "mean_tool_calls": 0.667,
+      "verification_failed": 0
+    },
+    "hbd_lipinski": {
+      "items": 15,
+      "correct": 13,
+      "error_rate": 0.133333,
+      "categories": {
+        "chemistry_knowledge_error": 2
+      },
+      "mean_seconds": 8.754,
+      "mean_tool_calls": 0.667,
+      "verification_failed": 0
+    },
+    "hba_lipinski": {
+      "items": 15,
+      "correct": 13,
+      "error_rate": 0.133333,
+      "categories": {
+        "chemistry_knowledge_error": 2
+      },
+      "mean_seconds": 9.068,
+      "mean_tool_calls": 0.667,
+      "verification_failed": 0
+    },
+    "rotatable_bonds": {
+      "items": 15,
+      "correct": 13,
+      "error_rate": 0.133333,
+      "categories": {
+        "chemistry_knowledge_error": 2
+      },
+      "mean_seconds": 9.988,
+      "mean_tool_calls": 0.667,
+      "verification_failed": 0
+    }
+  },
+  "by_mode_property": {
+    "A:formula": {
+      "items": 5,
+      "correct": 3,
+      "error_rate": 0.4,
+      "categories": {
+        "chemistry_knowledge_error": 2
+      },
+      "mean_seconds": 3.127,
+      "mean_tool_calls": 0.0,
+      "verification_failed": 0
+    },
+    "A:molecular_weight": {
+      "items": 5,
+      "correct": 1,
+      "error_rate": 0.8,
+      "categories": {
+        "chemistry_knowledge_error": 4
+      },
+      "mean_seconds": 2.839,
+      "mean_tool_calls": 0.0,
+      "verification_failed": 0
+    },
+    "A:heavy_atom_count": {
+      "items": 5,
+      "correct": 1,
+      "error_rate": 0.8,
+      "categories": {
+        "chemistry_knowledge_error": 4
+      },
+      "mean_seconds": 2.301,
+      "mean_tool_calls": 0.0,
+      "verification_failed": 0
+    },
+    "A:ring_count": {
+      "items": 5,
+      "correct": 4,
+      "error_rate": 0.2,
+      "categories": {
+        "chemistry_knowledge_error": 1
+      },
+      "mean_seconds": 2.577,
+      "mean_tool_calls": 0.0,
+      "verification_failed": 0
+    },
+    "A:hbd_lipinski": {
+      "items": 5,
+      "correct": 3,
+      "error_rate": 0.4,
+      "categories": {
+        "chemistry_knowledge_error": 2
+      },
+      "mean_seconds": 2.711,
+      "mean_tool_calls": 0.0,
+      "verification_failed": 0
+    },
+    "A:hba_lipinski": {
+      "items": 5,
+      "correct": 3,
+      "error_rate": 0.4,
+      "categories": {
+        "chemistry_knowledge_error": 2
+      },
+      "mean_seconds": 2.363,
+      "mean_tool_calls": 0.0,
+      "verification_failed": 0
+    },
+    "A:rotatable_bonds": {
+      "items": 5,
+      "correct": 3,
+      "error_rate": 0.4,
+      "categories": {
+        "chemistry_knowledge_error": 2
+      },
+      "mean_seconds": 3.063,
+      "mean_tool_calls": 0.0,
+      "verification_failed": 0
+    },
+    "B:formula": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 12.641,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "B:molecular_weight": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 12.626,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "B:heavy_atom_count": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 10.782,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "B:ring_count": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 11.061,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "B:hbd_lipinski": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 9.509,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "B:hba_lipinski": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 11.134,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "B:rotatable_bonds": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 12.621,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "C:formula": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 14.285,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "C:molecular_weight": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 14.136,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "C:heavy_atom_count": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 13.362,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "C:ring_count": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 13.639,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "C:hbd_lipinski": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 14.04,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "C:hba_lipinski": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 13.707,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    },
+    "C:rotatable_bonds": {
+      "items": 5,
+      "correct": 5,
+      "error_rate": 0.0,
+      "categories": {},
+      "mean_seconds": 14.28,
+      "mean_tool_calls": 1.0,
+      "verification_failed": 0
+    }
+  }
+}

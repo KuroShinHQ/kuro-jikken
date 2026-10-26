@@ -1,0 +1,233 @@
+{
+  "tag": "windows_10288_no_think",
+  "runtime": {
+    "model_path": "C:\\KuroshinHQ\\_hub\\models\\Hermes3.6-35B-A3B-Uncensored-Genesis-MTP-APEX-Compact.gguf",
+    "model_sha256": "a60c9ca376578ac98fc419d12cd1fad4d47c1cfec1bbe75a162f6bbb86e554b2",
+    "props_keys": [
+      "bos_token",
+      "build_info",
+      "chat_template",
+      "chat_template_caps",
+      "cors_proxy_enabled",
+      "default_generation_settings",
+      "endpoint_metrics",
+      "endpoint_props",
+      "endpoint_slots",
+      "eos_token",
+      "is_sleeping",
+      "media_marker",
+      "modalities",
+      "model_alias",
+      "model_ftype",
+      "model_path",
+      "total_slots",
+      "ui",
+      "ui_settings"
+    ],
+    "chat_template_sha256": "e57684bae4156211a55473c5a63be976a405a37ab5be5ae0e5abf1df5349c4b2",
+    "build_info": "b10288-360e1349f",
+    "base_url": "http://127.0.0.1:8099"
+  },
+  "questions": 10,
+  "rows": [
+    {
+      "mode": "A",
+      "item_id": "LNNRQIKKDKDFRV-UHFFFAOYSA-N::formula",
+      "seconds": 5.806,
+      "completion_tokens": 13,
+      "tokens_per_second": 2.239,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "MASBWURJQFFLOO-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 5.853,
+      "completion_tokens": 16,
+      "tokens_per_second": 2.734,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "QOPHKHWJLOYIDO-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 6.087,
+      "completion_tokens": 7,
+      "tokens_per_second": 1.15,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "JEYJJJXOFWNEHN-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 6.792,
+      "completion_tokens": 11,
+      "tokens_per_second": 1.62,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 6.054,
+      "completion_tokens": 7,
+      "tokens_per_second": 1.156,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "VTTDWGUAWMLHPR-UHFFFAOYSA-N::formula",
+      "seconds": 6.581,
+      "completion_tokens": 14,
+      "tokens_per_second": 2.127,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "JWBOIMRXGHLCPP-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 6.355,
+      "completion_tokens": 16,
+      "tokens_per_second": 2.518,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "CLPDGZLMLHDCOY-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 6.416,
+      "completion_tokens": 11,
+      "tokens_per_second": 1.714,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "DLJAQEIAZPTWSB-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 6.481,
+      "completion_tokens": 11,
+      "tokens_per_second": 1.697,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "JRBJSXQPQWSCCF-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 6.368,
+      "completion_tokens": 16,
+      "tokens_per_second": 2.513,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "LNNRQIKKDKDFRV-UHFFFAOYSA-N::formula",
+      "seconds": 19.78,
+      "completion_tokens": 35,
+      "tokens_per_second": 1.77,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "MASBWURJQFFLOO-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 19.784,
+      "completion_tokens": 42,
+      "tokens_per_second": 2.123,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "QOPHKHWJLOYIDO-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 24.291,
+      "completion_tokens": 55,
+      "tokens_per_second": 2.264,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "JEYJJJXOFWNEHN-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 26.457,
+      "completion_tokens": 60,
+      "tokens_per_second": 2.268,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 28.596,
+      "completion_tokens": 48,
+      "tokens_per_second": 1.679,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "VTTDWGUAWMLHPR-UHFFFAOYSA-N::formula",
+      "seconds": 54.362,
+      "completion_tokens": 53,
+      "tokens_per_second": 0.975,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "JWBOIMRXGHLCPP-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 42.415,
+      "completion_tokens": 53,
+      "tokens_per_second": 1.25,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "CLPDGZLMLHDCOY-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 43.205,
+      "completion_tokens": 43,
+      "tokens_per_second": 0.995,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "DLJAQEIAZPTWSB-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 38.256,
+      "completion_tokens": 47,
+      "tokens_per_second": 1.229,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "JRBJSXQPQWSCCF-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 44.445,
+      "completion_tokens": 45,
+      "tokens_per_second": 1.012,
+      "requests": 2,
+      "answered": true
+    }
+  ],
+  "by_mode": {
+    "A": {
+      "n": 10,
+      "seconds_total": 62.793,
+      "seconds_median": 6.362,
+      "tokens_total": 122,
+      "tokens_per_second": 1.943,
+      "answered": 10
+    },
+    "B": {
+      "n": 10,
+      "seconds_total": 341.591,
+      "seconds_median": 33.426,
+      "tokens_total": 481,
+      "tokens_per_second": 1.408,
+      "answered": 10
+    }
+  },
+  "jsonl": "C:\\KuroshinHQ\\kuro-jikken\\runs\\20261026T080440Z_speed_windows_10288_no_think.jsonl"
+}

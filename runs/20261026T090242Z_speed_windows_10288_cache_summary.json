@@ -1,0 +1,233 @@
+{
+  "tag": "windows_10288_cache",
+  "runtime": {
+    "model_path": "C:\\KuroshinHQ\\_hub\\models\\Hermes3.6-35B-A3B-Uncensored-Genesis-MTP-APEX-Compact.gguf",
+    "model_sha256": "a60c9ca376578ac98fc419d12cd1fad4d47c1cfec1bbe75a162f6bbb86e554b2",
+    "props_keys": [
+      "bos_token",
+      "build_info",
+      "chat_template",
+      "chat_template_caps",
+      "cors_proxy_enabled",
+      "default_generation_settings",
+      "endpoint_metrics",
+      "endpoint_props",
+      "endpoint_slots",
+      "eos_token",
+      "is_sleeping",
+      "media_marker",
+      "modalities",
+      "model_alias",
+      "model_ftype",
+      "model_path",
+      "total_slots",
+      "ui",
+      "ui_settings"
+    ],
+    "chat_template_sha256": "e57684bae4156211a55473c5a63be976a405a37ab5be5ae0e5abf1df5349c4b2",
+    "build_info": "b10288-360e1349f",
+    "base_url": "http://127.0.0.1:8099"
+  },
+  "questions": 10,
+  "rows": [
+    {
+      "mode": "A",
+      "item_id": "LNNRQIKKDKDFRV-UHFFFAOYSA-N::formula",
+      "seconds": 7.967,
+      "completion_tokens": 13,
+      "tokens_per_second": 1.632,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "MASBWURJQFFLOO-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 3.255,
+      "completion_tokens": 16,
+      "tokens_per_second": 4.916,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "QOPHKHWJLOYIDO-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 3.25,
+      "completion_tokens": 7,
+      "tokens_per_second": 2.154,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "JEYJJJXOFWNEHN-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 3.669,
+      "completion_tokens": 11,
+      "tokens_per_second": 2.998,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 2.81,
+      "completion_tokens": 7,
+      "tokens_per_second": 2.491,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "VTTDWGUAWMLHPR-UHFFFAOYSA-N::formula",
+      "seconds": 3.294,
+      "completion_tokens": 14,
+      "tokens_per_second": 4.251,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "JWBOIMRXGHLCPP-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 3.009,
+      "completion_tokens": 16,
+      "tokens_per_second": 5.317,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "CLPDGZLMLHDCOY-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 3.103,
+      "completion_tokens": 11,
+      "tokens_per_second": 3.545,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "DLJAQEIAZPTWSB-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 3.165,
+      "completion_tokens": 11,
+      "tokens_per_second": 3.476,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "A",
+      "item_id": "JRBJSXQPQWSCCF-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 3.016,
+      "completion_tokens": 16,
+      "tokens_per_second": 5.306,
+      "requests": 1,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "LNNRQIKKDKDFRV-UHFFFAOYSA-N::formula",
+      "seconds": 12.251,
+      "completion_tokens": 35,
+      "tokens_per_second": 2.857,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "MASBWURJQFFLOO-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 7.32,
+      "completion_tokens": 42,
+      "tokens_per_second": 5.737,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "QOPHKHWJLOYIDO-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 9.703,
+      "completion_tokens": 55,
+      "tokens_per_second": 5.668,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "JEYJJJXOFWNEHN-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 10.206,
+      "completion_tokens": 60,
+      "tokens_per_second": 5.879,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::hbd_lipinski",
+      "seconds": 10.124,
+      "completion_tokens": 48,
+      "tokens_per_second": 4.741,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "VTTDWGUAWMLHPR-UHFFFAOYSA-N::formula",
+      "seconds": 9.773,
+      "completion_tokens": 53,
+      "tokens_per_second": 5.423,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "JWBOIMRXGHLCPP-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 9.803,
+      "completion_tokens": 46,
+      "tokens_per_second": 4.692,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "CLPDGZLMLHDCOY-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 8.765,
+      "completion_tokens": 43,
+      "tokens_per_second": 4.906,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "DLJAQEIAZPTWSB-UHFFFAOYSA-N::rotatable_bonds",
+      "seconds": 10.494,
+      "completion_tokens": 47,
+      "tokens_per_second": 4.479,
+      "requests": 2,
+      "answered": true
+    },
+    {
+      "mode": "B",
+      "item_id": "JRBJSXQPQWSCCF-UHFFFAOYSA-N::molecular_weight",
+      "seconds": 9.741,
+      "completion_tokens": 45,
+      "tokens_per_second": 4.62,
+      "requests": 2,
+      "answered": true
+    }
+  ],
+  "by_mode": {
+    "A": {
+      "n": 10,
+      "seconds_total": 36.538,
+      "seconds_median": 3.208,
+      "tokens_total": 122,
+      "tokens_per_second": 3.339,
+      "answered": 10
+    },
+    "B": {
+      "n": 10,
+      "seconds_total": 98.18,
+      "seconds_median": 9.788,
+      "tokens_total": 474,
+      "tokens_per_second": 4.828,
+      "answered": 10
+    }
+  },
+  "jsonl": "C:\\KuroshinHQ\\kuro-jikken\\runs\\20261026T090242Z_speed_windows_10288_cache.jsonl"
+}
