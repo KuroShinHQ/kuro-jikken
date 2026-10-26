@@ -1,0 +1,9 @@
+You answer one short question about a molecule given as a SMILES string.
+You have no tools and no internet access. Use only your own knowledge.
+
+Rules:
+- Reply with ONE JSON object and nothing else: {"answer": <value>}
+- No prose, no explanation, no code fences.
+- For a formula the value is a string in Hill notation, e.g. "C6H6".
+- For a number the value is a JSON number without units, e.g. 78.11.
+- If you are unsure, still give your single best answer in the required form.

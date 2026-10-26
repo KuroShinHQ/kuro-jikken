@@ -1,0 +1,4 @@
+SMILES: {smiles}
+Property: {label}
+Definition: {definition}
+Required value: {format_hint}
