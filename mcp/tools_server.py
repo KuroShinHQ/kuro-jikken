@@ -134,5 +134,31 @@ def hsp_distance(cas_a: str, cas_b: str) -> dict:
     }
 
 
+@MCP.tool()
+def hsp_rank(reference_cas: str, candidate_cas: list[str]) -> dict:
+    """Rank candidates by Hansen distance to a reference; smaller is closer."""
+    ref = hsp_lookup(reference_cas)
+    rows = []
+    for cas in candidate_cas:
+        try:
+            item = hsp_lookup(cas)
+        except ValueError as exc:
+            rows.append({"casrn": cas, "error": str(exc)})
+            continue
+        ra = (
+            4.0 * (ref["delta_d"] - item["delta_d"]) ** 2
+            + (ref["delta_p"] - item["delta_p"]) ** 2
+            + (ref["delta_h"] - item["delta_h"]) ** 2
+        ) ** 0.5
+        rows.append({"casrn": cas, "ra": round(ra, 2)})
+    rows.sort(key=lambda row: row.get("ra", 1e9))
+    return {
+        "reference": reference_cas,
+        "unit": "MPa^0.5",
+        "ranking": rows,
+        "note": HSP_NOTE,
+    }
+
+
 if __name__ == "__main__":
     MCP.run()
