@@ -124,17 +124,19 @@ def test_allowed_plan_is_not_refused():
     assert A.from_plan(plan) is None
 
 
-def test_known_gap_petrolatum_reaches_the_unifac_gate_not_hsp():
-    """Golden-set row 4 is still unreachable: mixture.gamma carries only gate.unifac.
+def test_golden_row_4_now_reaches_the_hansen_gate():
+    """P3.5a closed the gap: petrolatum is refused by gate.hsp, not by UNIFAC.
 
-    Petrolatum has no Hansen entry, so the honest refusal exists (gate.hsp),
-    but the router never selects it. Multi-gate dispatch is the next step; this
-    test pins today's behaviour instead of pretending the row passes.
+    The request still needs the CAS from a resolver (P3.5b); once it has it, the
+    refusal is the honest "no data" and never a number.
     """
     import gates as G
 
-    plan = R.plan("vazelin bu kremle uyumlu mu", "8009-03-8")
+    plan = R.plan("vazelin bu kremle uyumlu mu",
+                  {"casrn": ["8009-03-8"], "smiles": ["CCO", "O"]})
     assert plan["route"]["gate"] == "gate.unifac"
     assert plan["gate"]["verdict"] == "RED"
-    assert A.from_plan(plan)["reason"] == "out of domain"
-    assert G.gate_hsp("8009-03-8")["verdict"] == "RED"  # the answer that should be used
+    assert "no Hansen entry" in plan["gate"]["reason"]
+    out = A.from_plan(plan)
+    assert out["reason"] == "no data"
+    assert G.gate_hsp("8009-03-8")["verdict"] == "RED"
