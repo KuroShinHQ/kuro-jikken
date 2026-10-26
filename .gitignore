@@ -13,3 +13,4 @@ logs/
 .env.*
 *.env
 _secrets/
+.venv_inventory/
