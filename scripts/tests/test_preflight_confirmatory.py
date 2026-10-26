@@ -139,19 +139,22 @@ def test_check_processes_none():
     assert check_processes(["explorer.exe", "python.exe"]).status == PASS
 
 
-def test_check_processes_asc_is_a_blocker():
+def test_check_processes_asc_is_recorded_not_a_blocker():
     result = check_processes(["ASCService.exe", "ASCTray.exe"])
-    assert result.status == BLOCKER
+    assert result.status == PASS
+    assert "recorded deviation" in result.detail
+    assert "ascservice" in result.detail
 
 
 def test_check_processes_llama_server_is_a_fail():
     assert check_processes(["llama-server.exe"]).status == FAIL
 
 
-def test_check_processes_blocker_wins():
+def test_check_processes_fail_is_reported_with_asc_present():
     result = check_processes(["llama-server.exe", "ASCTray.exe"])
-    assert result.status == BLOCKER
+    assert result.status == FAIL
     assert "llama-server" in result.detail
+    assert "recorded deviation" in result.detail
 
 
 def test_check_power_awake():
@@ -317,7 +320,7 @@ def test_run_checks_blocker_and_failures(tmp_path, monkeypatch):
         status=" M x",
         unpushed=8,
         port_free=False,
-        names=["ASCService.exe"],
+        names=["ASCService.exe", "llama-server.exe"],
         power="Current AC Power Setting Index: 0x00000384",
         free=1024**3,
         draft="[AUTHOR APPROVAL PENDING]",
@@ -325,7 +328,7 @@ def test_run_checks_blocker_and_failures(tmp_path, monkeypatch):
     results = {result.name: result.status for result in run_checks({}, tmp_path, system)}
     assert results["git clean and pushed"] == FAIL
     assert results["port 8099 free"] == FAIL
-    assert results["forbidden processes"] == BLOCKER
+    assert results["forbidden processes"] == FAIL
     assert results["power plan awake"] == FAIL
     assert results["disk space"] == FAIL
     assert results["author approval"] == FAIL

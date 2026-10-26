@@ -10,8 +10,8 @@ Checks, in order:
    and the three ID lists;
 2. git - working tree clean and HEAD pushed (``origin/main..HEAD`` = 0);
 3. port 8099 free;
-4. no forbidden process (Advanced SystemCare is a BLOCKER, everything else is a
-   FAIL);
+4. no forbidden process (Advanced SystemCare is a **recorded deviation**, not a
+   blocker; LM Studio, llama-server and ollama are FAILs);
 5. the power plan keeps the machine awake (standby AC timeout = 0);
 6. free disk space on the repository drive;
 7. ``docs/osf_freeze2_update_draft.md`` no longer contains
@@ -60,9 +60,6 @@ BLOCKER = "BLOCKER"
 
 # process stem -> severity; anything in this table must not be running
 FORBIDDEN_PROCESSES = {
-    "ascservice": BLOCKER,
-    "asctray": BLOCKER,
-    "advanced systemcare": BLOCKER,
     "lm studio": FAIL,
     "lms": FAIL,
     "ollama": FAIL,
@@ -73,6 +70,16 @@ FORBIDDEN_PROCESSES = {
     "razercortex": FAIL,
     "razercentralservice": FAIL,
     "razer synapse": FAIL,
+}
+
+# Recorded environment deviation, author's decision 2026-10-26: Advanced
+# SystemCare stays installed. Measured read-only before the decision: 0.000 s
+# CPU per process over 10 s, no TCP/UDP endpoint in 10 samples over 20 s. It is
+# reported in the preflight table but it does not stop the run.
+RECORDED_PROCESSES = {
+    "ascservice": "ascservice",
+    "asctray": "asctray",
+    "advanced systemcare": "advanced systemcare",
 }
 
 ROW = re.compile(r"^\|\s*(?P<label>[^|]+?)\s*\|\s*`(?P<hash>[0-9a-fA-F]{64})`\s*\|\s*$")
@@ -229,22 +236,29 @@ def check_port(free: bool) -> Result:
 
 
 def check_processes(names: Iterable[str]) -> Result:
-    running = {}
+    forbidden = {}
+    recorded = set()
     for raw in names:
         stem = raw.lower().removesuffix(".exe").strip()
         if stem in FORBIDDEN_PROCESSES:
-            running.setdefault(FORBIDDEN_PROCESSES[stem], []).append(stem)
-    if not running:
-        return Result("forbidden processes", PASS, "none running")
+            forbidden.setdefault(FORBIDDEN_PROCESSES[stem], []).append(stem)
+        elif stem in RECORDED_PROCESSES:
+            recorded.add(stem)
     parts = []
     status = PASS
-    if BLOCKER in running:
+    if BLOCKER in forbidden:
         status = BLOCKER
-        parts.append("BLOCKER: " + ", ".join(sorted(set(running[BLOCKER]))))
-    if FAIL in running:
+        parts.append("BLOCKER: " + ", ".join(sorted(set(forbidden[BLOCKER]))))
+    if FAIL in forbidden:
         if status == PASS:
             status = FAIL
-        parts.append("forbidden: " + ", ".join(sorted(set(running[FAIL]))))
+        parts.append("forbidden: " + ", ".join(sorted(set(forbidden[FAIL]))))
+    if recorded:
+        parts.append(
+            "recorded deviation, not a blocker: " + ", ".join(sorted(recorded))
+        )
+    if not parts:
+        return Result("forbidden processes", PASS, "none running")
     return Result("forbidden processes", status, "; ".join(parts))
 
 
