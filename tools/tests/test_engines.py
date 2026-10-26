@@ -109,6 +109,21 @@ def test_calphad_without_composition_basis_is_a_refusal():
     assert "x_cu / cu_wt_pct" in out["limits"][0]
 
 
+def test_calphad_zero_copper_uses_the_pure_aluminium_path():
+    """Bug 2026-10-27: x_Cu = 0 returned the bracket edge (600.34 K) as GREEN.
+
+    The binary liquidus has no bracket at x_Cu = 0, so the adapter must take the
+    validated pure-element path instead of bisecting an impossible bracket.
+    """
+    payload = {"tdb": "mc_al_v2.032.pycalphad.tdb", "elements": ["AL", "CU"], "cu_wt_pct": 0}
+    request = "Al-0 wt% Cu alasimi erir mi"
+    plan = R.plan(request, payload)
+    out = E.calphad(request, plan, payload)
+    assert out["verdict"] == "GREEN"
+    assert out["value"] == pytest.approx(933.47, abs=0.1)
+    assert "pure Al" in out["method"]
+
+
 def test_identity_answers_mw_or_logp_by_request():
     payload = {"smiles": "CCO"}
     plan = R.plan("bu molekulun MW'si kac", payload)

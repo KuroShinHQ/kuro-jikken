@@ -17,7 +17,12 @@ PHASES = ["LIQUID", "FCCAL", "THETA_AL2CU", "ALCU_E", "ALCU_ETA", "AL2CU3_D", "A
 
 
 def liquidus(db: Database, x_cu: float, low: float = 600.0, high: float = 950.0) -> float:
-    """Temperature at which the last solid disappears (bisection, 9 steps)."""
+    """Temperature at which the last solid disappears (bisection, 9 steps).
+
+    The bracket is checked first: if the alloy is not solid at ``low`` or still
+    solid at ``high``, the bisection has no answer and this raises instead of
+    returning the bracket edge (2026-10-27: x_Cu = 0 used to return 600.34 K).
+    """
 
     def solid(temperature: float) -> bool:
         result = equilibrium(
@@ -27,6 +32,13 @@ def liquidus(db: Database, x_cu: float, low: float = 600.0, high: float = 950.0)
         names = result.Phase.values.squeeze().tolist()
         amounts = result.NP.values.squeeze().tolist()
         return any(n and n != "LIQUID" and a > 1e-6 for n, a in zip(names, amounts))
+
+    if not 0.0 < x_cu < 1.0:
+        raise ValueError(f"x_Cu must be strictly between 0 and 1 (got {x_cu}); use the pure-element path")
+    if not solid(low):
+        raise ValueError(f"no solid phase at {low} K for x_Cu = {x_cu}: bracket starts above the solidus")
+    if solid(high):
+        raise ValueError(f"still solid at {high} K for x_Cu = {x_cu}: bracket ends below the liquidus")
 
     lo, hi = low, high
     for _ in range(9):

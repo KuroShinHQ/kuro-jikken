@@ -244,15 +244,28 @@ def calphad(request, plan, payload):
                 x_cu = _al_cu_mole_fraction(wt)
                 basis = f"{wt} wt% Cu = mole fraction x(Cu) = {x_cu:.5f}"
             path = C.tdb_path(str(tdb))
-            value = float(liquidus(Database(str(path)), x_cu, low=low, high=high))
-            method = "pycalphad equilibrium + bisection (9 steps), Al-Cu liquidus"
-            database = path.name
-            limits = [
-                f"liquidus of {basis}; Al-Cu database phases only",
-                "database assessment, not a measurement; no model error bar is claimed",
-            ]
-            does_not_say = "mechanical strength, creep, oxidation or corrosion"
-            engine = "pycalphad equilibrium (Al-Cu liquidus)"
+            if x_cu <= 0.0:
+                # the binary liquidus has no bracket at x_Cu = 0; pure Al is its own path
+                pure = C.melting_point(str(tdb), "AL", "FCC_A1", low, high)
+                value = float(pure["melting_k"])
+                method = pure["method"] + ", pure Al (0 % Cu)"
+                database = pure["database"]
+                limits = [
+                    "pure AL melting point (FCC_A1 -> LIQUID); the Al-Cu liquidus needs x_Cu > 0",
+                    "database assessment, not a measurement; no model error bar is claimed",
+                ]
+                does_not_say = "mechanical strength, creep, oxidation or corrosion"
+                engine = "pycalphad equilibrium + bisection (pure element)"
+            else:
+                value = float(liquidus(Database(str(path)), x_cu, low=low, high=high))
+                method = "pycalphad equilibrium + bisection (9 steps), Al-Cu liquidus"
+                database = path.name
+                limits = [
+                    f"liquidus of {basis}; Al-Cu database phases only",
+                    "database assessment, not a measurement; no model error bar is claimed",
+                ]
+                does_not_say = "mechanical strength, creep, oxidation or corrosion"
+                engine = "pycalphad equilibrium (Al-Cu liquidus)"
         else:
             needed = ("element", "solid_phase", "low_k", "high_k")
             missing = [key for key in needed if payload.get(key) in (None, "")]

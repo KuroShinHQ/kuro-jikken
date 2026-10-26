@@ -1,0 +1,445 @@
+{
+ "meta": {
+  "created": "2026-10-27T01:47:39",
+  "repo_head": "f82e2b0",
+  "request_template": "Al-{cu} wt% Cu alasimi erir mi",
+  "payload_template": "{\"tdb\": \"mc_al_v2.032.pycalphad.tdb\", \"elements\": [\"AL\", \"CU\"], \"cu_wt_pct\": {cu}}",
+  "sweep": {
+   "name": "cu",
+   "start": 0.0,
+   "end": 10.0,
+   "steps": 21
+  },
+  "engines": [
+   "pycalphad equilibrium (Al-Cu liquidus)",
+   "pycalphad equilibrium + bisection (pure element)"
+  ],
+  "points": 21,
+  "numbers": 21,
+  "refusals": 0,
+  "ledger_written": true,
+  "interpolation": "linear between points; the page must label midpoints as interpolated"
+ },
+ "points": [
+  {
+   "x": 0.0,
+   "request": "Al-0.0 wt% Cu alasimi erir mi",
+   "value": 933.47,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium + bisection (pure element)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "pure AL melting point (FCC_A1 -> LIQUID); the Al-Cu liquidus needs x_Cu > 0",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224637-10accc06"
+  },
+  {
+   "x": 0.5,
+   "request": "Al-0.5 wt% Cu alasimi erir mi",
+   "value": 931.884765625,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 0.5 wt% Cu = mole fraction x(Cu) = 0.00213; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224641-c8df986e"
+  },
+  {
+   "x": 1.0,
+   "request": "Al-1.0 wt% Cu alasimi erir mi",
+   "value": 930.517578125,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 1.0 wt% Cu = mole fraction x(Cu) = 0.00427; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224644-d1ed5c69"
+  },
+  {
+   "x": 1.5,
+   "request": "Al-1.5 wt% Cu alasimi erir mi",
+   "value": 929.150390625,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 1.5 wt% Cu = mole fraction x(Cu) = 0.00642; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224647-3cc2d453"
+  },
+  {
+   "x": 2.0,
+   "request": "Al-2.0 wt% Cu alasimi erir mi",
+   "value": 927.783203125,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 2.0 wt% Cu = mole fraction x(Cu) = 0.00859; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224650-27fdf90b"
+  },
+  {
+   "x": 2.5,
+   "request": "Al-2.5 wt% Cu alasimi erir mi",
+   "value": 926.416015625,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 2.5 wt% Cu = mole fraction x(Cu) = 0.01077; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224653-b2767d35"
+  },
+  {
+   "x": 3.0,
+   "request": "Al-3.0 wt% Cu alasimi erir mi",
+   "value": 925.048828125,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 3.0 wt% Cu = mole fraction x(Cu) = 0.01296; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224656-f5628624"
+  },
+  {
+   "x": 3.5,
+   "request": "Al-3.5 wt% Cu alasimi erir mi",
+   "value": 922.998046875,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 3.5 wt% Cu = mole fraction x(Cu) = 0.01517; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224659-a951cdb9"
+  },
+  {
+   "x": 4.0,
+   "request": "Al-4.0 wt% Cu alasimi erir mi",
+   "value": 921.630859375,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 4.0 wt% Cu = mole fraction x(Cu) = 0.01738; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224702-e579032f"
+  },
+  {
+   "x": 4.5,
+   "request": "Al-4.5 wt% Cu alasimi erir mi",
+   "value": 920.263671875,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 4.5 wt% Cu = mole fraction x(Cu) = 0.01961; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224705-a675ec0f"
+  },
+  {
+   "x": 5.0,
+   "request": "Al-5.0 wt% Cu alasimi erir mi",
+   "value": 918.896484375,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 5.0 wt% Cu = mole fraction x(Cu) = 0.02186; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224708-e6c58126"
+  },
+  {
+   "x": 5.5,
+   "request": "Al-5.5 wt% Cu alasimi erir mi",
+   "value": 917.529296875,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 5.5 wt% Cu = mole fraction x(Cu) = 0.02412; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224711-d5223314"
+  },
+  {
+   "x": 6.0,
+   "request": "Al-6.0 wt% Cu alasimi erir mi",
+   "value": 916.162109375,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 6.0 wt% Cu = mole fraction x(Cu) = 0.02639; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224714-249c7dba"
+  },
+  {
+   "x": 6.5,
+   "request": "Al-6.5 wt% Cu alasimi erir mi",
+   "value": 914.111328125,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 6.5 wt% Cu = mole fraction x(Cu) = 0.02867; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224717-5bd51507"
+  },
+  {
+   "x": 7.0,
+   "request": "Al-7.0 wt% Cu alasimi erir mi",
+   "value": 912.744140625,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 7.0 wt% Cu = mole fraction x(Cu) = 0.03097; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224720-107a5f17"
+  },
+  {
+   "x": 7.5,
+   "request": "Al-7.5 wt% Cu alasimi erir mi",
+   "value": 911.376953125,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 7.5 wt% Cu = mole fraction x(Cu) = 0.03328; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224724-111cb247"
+  },
+  {
+   "x": 8.0,
+   "request": "Al-8.0 wt% Cu alasimi erir mi",
+   "value": 910.009765625,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 8.0 wt% Cu = mole fraction x(Cu) = 0.03561; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224727-2c01f09c"
+  },
+  {
+   "x": 8.5,
+   "request": "Al-8.5 wt% Cu alasimi erir mi",
+   "value": 908.642578125,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 8.5 wt% Cu = mole fraction x(Cu) = 0.03795; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224730-0c43b955"
+  },
+  {
+   "x": 9.0,
+   "request": "Al-9.0 wt% Cu alasimi erir mi",
+   "value": 906.591796875,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 9.0 wt% Cu = mole fraction x(Cu) = 0.04030; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224733-1a83800b"
+  },
+  {
+   "x": 9.5,
+   "request": "Al-9.5 wt% Cu alasimi erir mi",
+   "value": 905.224609375,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 9.5 wt% Cu = mole fraction x(Cu) = 0.04267; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224736-fa39e69e"
+  },
+  {
+   "x": 10.0,
+   "request": "Al-10.0 wt% Cu alasimi erir mi",
+   "value": 903.857421875,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium (Al-Cu liquidus)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "liquidus of 10.0 wt% Cu = mole fraction x(Cu) = 0.04505; Al-Cu database phases only",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T224739-8df53770"
+  }
+ ]
+}
