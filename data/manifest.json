@@ -1,0 +1,195 @@
+{
+  "version": 1,
+  "generated": "2026-10-26",
+  "note": "A dataset missing here must not be used by any engine.",
+  "allowed_licences": [
+    "CC0-1.0",
+    "ODbL-1.0",
+    "MIT",
+    "citation-only",
+    "external-research"
+  ],
+  "datasets": [
+    {
+      "id": "aqsoldb_20261025",
+      "title": "AqSolDB aqueous solubility snapshot",
+      "path": "data/solubility/raw/aqsoldb_20261025.tab",
+      "in_repo": true,
+      "licence": "CC0-1.0",
+      "domain": {
+        "quantity": "aqueous logS",
+        "temperature_K": 298.15,
+        "rows": 9982
+      },
+      "used_by": [
+        "mcp/esol.py"
+      ],
+      "not_for": [
+        "non-aqueous",
+        "salts/metals",
+        "mixtures"
+      ],
+      "bytes": 3844092,
+      "sha256": "5370aa67615adb2f11806ed1aaed37c2bf91e634d36ebaf40509c16d5cede8a0"
+    },
+    {
+      "id": "pubchemqc_sigma_profiles",
+      "title": "PubChemQC sigma profiles",
+      "path": "C:\\KuroshinHQ\\_hub\\data\\formulation_sigma\\sigma_profiles_main.parquet",
+      "in_repo": false,
+      "licence": "external-research",
+      "domain": {
+        "quantity": "COSMO-SAC sigma profiles",
+        "rows": 361583,
+        "columns": 164
+      },
+      "used_by": [
+        "mcp/cosmosac_pubchemqc.py",
+        "tools/gamma_validation.py"
+      ],
+      "not_for": [
+        "molecules missing from the index",
+        "charged species",
+        "performance claims"
+      ],
+      "bytes": 122228196,
+      "sha256": "8e1c4d21acee25b04ad5e63b0c846f98524b0b5d1554d1426b9616de5a62da2c"
+    },
+    {
+      "id": "pubchemqc_sigma_index",
+      "title": "PubChemQC sigma index (InChIKey)",
+      "path": "C:\\KuroshinHQ\\_hub\\data\\formulation_sigma\\sigma_profile_index.parquet",
+      "in_repo": false,
+      "licence": "external-research",
+      "domain": {
+        "rows": 361583,
+        "columns": 11
+      },
+      "used_by": [
+        "mcp/cosmosac_pubchemqc.py"
+      ],
+      "not_for": [
+        "named lookup outside PubChemQC"
+      ],
+      "bytes": 19440344,
+      "sha256": "810e18592807da962a718753abfafaa32bf423ac6afa87dbbd9707267cea73f0"
+    },
+    {
+      "id": "sigma_refit_params",
+      "title": "COSMO-SAC refit constants",
+      "path": "C:\\KuroshinHQ\\_hub\\data\\formulation_sigma\\sequential_final_params.json",
+      "in_repo": false,
+      "licence": "MIT",
+      "domain": {
+        "quantity": "refit interaction constants"
+      },
+      "used_by": [
+        "mcp/cosmosac_pubchemqc.py"
+      ],
+      "not_for": [
+        "use with other sigma tables"
+      ],
+      "bytes": 1186,
+      "sha256": "b210b1687dec8ebe93aa60b6946ed2b3b6d57dbf542fb1d6ce2ae0edaa13a536"
+    },
+    {
+      "id": "matcalc_mc_al",
+      "title": "MatCalc open TDB mc_al_v2.032.pycalphad.tdb",
+      "path": "C:\\KuroshinHQ\\_hub\\data\\alloy_tdb_mgf\\mc_al_v2.032.pycalphad.tdb",
+      "in_repo": false,
+      "licence": "ODbL-1.0",
+      "domain": {
+        "quantity": "CALPHAD Gibbs energy"
+      },
+      "used_by": [
+        "mcp/tools_server.py"
+      ],
+      "not_for": [
+        "creep",
+        "oxidation",
+        "corrosion"
+      ],
+      "bytes": 289410,
+      "sha256": "bba064bb858e03348ca7d0455391e3527e5dbd9fac1f4c0b6bc284da2bada4ab"
+    },
+    {
+      "id": "matcalc_mc_fe",
+      "title": "MatCalc open TDB mc_fe_v2.059.pycalphad.tdb",
+      "path": "C:\\KuroshinHQ\\_hub\\data\\alloy_tdb_mgf\\mc_fe_v2.059.pycalphad.tdb",
+      "in_repo": false,
+      "licence": "ODbL-1.0",
+      "domain": {
+        "quantity": "CALPHAD Gibbs energy"
+      },
+      "used_by": [
+        "mcp/tools_server.py"
+      ],
+      "not_for": [
+        "creep",
+        "oxidation",
+        "corrosion"
+      ],
+      "bytes": 377766,
+      "sha256": "987b72085e46844acc8b2b6068acee5ddce782dee6a8a3e31a8aa03cd434c248"
+    },
+    {
+      "id": "matcalc_mc_ni",
+      "title": "MatCalc open TDB mc_ni_v2.034.pycalphad.tdb",
+      "path": "C:\\KuroshinHQ\\_hub\\data\\alloy_tdb_mgf\\mc_ni_v2.034.pycalphad.tdb",
+      "in_repo": false,
+      "licence": "ODbL-1.0",
+      "domain": {
+        "quantity": "CALPHAD Gibbs energy"
+      },
+      "used_by": [
+        "mcp/tools_server.py"
+      ],
+      "not_for": [
+        "creep",
+        "oxidation",
+        "corrosion"
+      ],
+      "bytes": 389379,
+      "sha256": "f06171558d31bb63fc1859f47467f0551836e810b32ec8789dc7e4fe0dc9fa32"
+    },
+    {
+      "id": "hsp_chemicals",
+      "title": "Hansen solubility table in chemicals 1.5.2",
+      "path": null,
+      "in_repo": false,
+      "licence": "MIT",
+      "domain": {
+        "quantity": "Hansen dD/dP/dH",
+        "key": "CASRN"
+      },
+      "used_by": [
+        "mcp/tools_server.py"
+      ],
+      "not_for": [
+        "mixtures (petrolatum, mineral oil)",
+        "polymers"
+      ]
+    },
+    {
+      "id": "gamma_inf_literature",
+      "title": "Measured gamma-infinity in water (Straver & de Loos 2005)",
+      "path": "tools/gamma_validation.py",
+      "in_repo": true,
+      "licence": "citation-only",
+      "domain": {
+        "quantity": "gamma-infinity",
+        "temperature_K": 298.15,
+        "solutes": 9
+      },
+      "used_by": [
+        "tools/gamma_validation.py"
+      ],
+      "not_for": [
+        "redistribution",
+        "other solvents"
+      ],
+      "bytes": 7949,
+      "sha256": "881e83a09d84a0b0186638195c300f9d4525858c1c5e5ae350e73905485cc036"
+    }
+  ]
+}
