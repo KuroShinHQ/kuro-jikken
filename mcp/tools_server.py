@@ -254,5 +254,18 @@ def unifac_gamma_infinity(
     }
 
 
+@MCP.tool()
+def kj_ask(request: str) -> dict:
+    """Route a free-text request to a capability and return the PLAN only.
+
+    This tool never computes a value: it says which engine, which gate and
+    which unit would be used, so the caller can see the decision before any
+    number exists. UNKNOWN/CLARIFY/RED mean: do not answer with a number.
+    """
+    from router import plan
+
+    return plan(request)
+
+
 if __name__ == "__main__":
     MCP.run()
