@@ -26,7 +26,7 @@ a file hash or a test result; an untested statement is marked `DOGRULANMADI`.
 | cOSMO-SAC (`mcp/cosmosac_pubchemqc.py`) | sigma profile -> activity coefficient, mixture ranking | performance claims; it is a model, not a measurement |
 | pycalphad + MatCalc TDB (`mcp/tools_server.py`) | phase stability, melting/solidus of an alloy from a TDB | creep, oxidation, corrosion, "stronger/durable" |
 | `chemicals` HSP (`mcp/tools_server.py`) | Hansen dD/dP/dH, Ra distance, compatibility **ranking** | occlusivity, TEWL, skin feel, stability, any performance claim |
-| `thermo` | UNIFAC activity coefficients, mixture equilibria | anything outside group-contribution validity |
+| `thermo` UNIFAC (`tools/unifac_gamma.py`, MCP `unifac_gamma`) | activity coefficients and gamma-infinity from SMILES | anything outside group-contribution validity; a missing group pair is an error, not a number |
 | HSPiT | HSP fitting, phase stability in Hansen space | measured values; unvalidated package, use for ordering only |
 
 No engine here measures anything. Every output is a **prediction with an error
@@ -68,6 +68,9 @@ request with a YELLOW engine and do not invent a number.
 | pure Ni melting | 1728.26 K (lit. 1728) | same |
 | Al-Cu liquidus, 1-17.3 at% Cu | 926.4 / 900.4 / 867.6 / 829.3 K (lit. ~928 / ~903 / ~870 / ~821) | `tools/alloy_liquidus.py` |
 | Hansen water/toluene/hexane | 15.5/16.0/42.3, 18.0/1.4/2.0, 14.9/0/0 MPa^0.5 | `hsp_lookup` |
+| UNIFAC gamma-inf, 9 solutes in water, 298 K | Dortmund median 21 % (7/9 within +/-30 %), original 64 %, COSMO-SAC 36 % | `tools/gamma_validation.py --cosmo` |
+| UNIFAC gamma-inf ethanol/water | 4.79 (Dortmund) vs 3.77 measured (+27 %) | same |
+| COSMO-SAC sanity (water in water, 7 solutes, stock vs DirectImport) | 3/3 PASS | `tools/cosmosac_sanity.py` |
 
 A new database or a new element must pass the same known-value gate before its
 numbers are reported.

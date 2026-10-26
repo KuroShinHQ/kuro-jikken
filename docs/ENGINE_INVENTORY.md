@@ -246,8 +246,13 @@ rank, it cannot promise performance.
   files), NeqSim (Apache-2.0, Java runtime, wax/WAT models).
 - **Known gap**: petrolatum, mineral oil and white wax have no Hansen entries
   (they are mixtures). `hsp_rank` therefore ranks small molecules only.
-- **UNIFAC**: `unifac_groups` returns subgroups and r/q (ugropy); the group
-  interaction matrix that turns them into activity coefficients is not wired.
+- **UNIFAC gamma (2026-10-26)**: `tools/unifac_gamma.py` returns activity
+  coefficients. Groups from ugropy, subgroup R/Q and interaction matrices from
+  `thermo 0.6.1`; Dortmund UNIFAC is the default, original UNIFAC is kept for
+  comparison. Validation `docs/GAMMA_VALIDATION.md`: aqueous gamma-infinity at
+  298 K, 9 measured solutes -> Dortmund median abs error **21 %** (7/9 within
+  +/-30 %), original UNIFAC **64 %** (systematic +50..+110 %), COSMO-SAC
+  **36 %**. A missing main-group pair raises instead of returning a number.
 - **Wax melting range**: `tools/wax_melting.py` (ideal solid-liquid equilibrium,
   YELLOW): C20/C24/C28 blend 50/30/20 gives 302.2-314.6 K.
 
