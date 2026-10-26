@@ -14,3 +14,7 @@ logs/
 *.env
 _secrets/
 .venv_inventory/
+
+data/alloy_tdb_normalized/
+data/alloy_tdb_extract/
+data/quarantine/
