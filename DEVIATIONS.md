@@ -23,10 +23,17 @@ Any deviation is dated here; primary analyses stay as registered.
 4. **Advanced SystemCare left running** by the author's decision, after a
    read-only measurement: 0.000 s CPU per process over 10 s; no TCP or UDP
    endpoint in 10 samples over 20 s. Timing numbers carry this environment note.
+5. **The Windows llama-server 10288 build is CPU only (finding, not a result).**
+   `-ngl 99` was passed but this binary has no CUDA backend; inference ran on
+   CPU (8 threads); the ~12 h estimate was measured on this same CPU setup.
+   Established before Freeze 2 from the package directory (only
+   `ggml-cpu-*.dll`; no `ggml-cuda.dll`, no `cudart64_*`/`cublas64_*`) and from
+   `llama-server-impl.dll` (0 occurrences of `ggml_cuda`, `cublas`, `CUDA0`,
+   `offloading`). Recorded in `prereg/freeze2_candidate.md`.
 
 ## 2026-10-26 — environment changes (reversible)
 
-5. **WSL systemd units masked** before benchmarking, so no LLM server starts by
+6. **WSL systemd units masked** before benchmarking, so no LLM server starts by
    itself. Units: `llama-server.service`, `openclaw.service`, `ollama.service`
    (renamed to `*.masked_20261026` and masked with `/dev/null`), plus user units
    `kuroshin-llama.service`, `openclaw-gateway.service` (renamed only).
@@ -35,11 +42,12 @@ Any deviation is dated here; primary analyses stay as registered.
    `cd /etc/systemd/system && mv llama-server.service.masked_20261026 llama-server.service`
    (same for `openclaw`, `ollama`), and in `/root/.config/systemd/user` rename the
    two `*.masked_20261026` files back.
-6. **WSL build 10288 was compiled from source** in a separate worktree
+7. **WSL build 10288 was compiled from source** in a separate worktree
    (`/root/kuroshin/engines/llama10288`, commit `360e1349f`, CUDA 12.6). The
-   existing WSL install was not modified. It was slower than Windows (1.7x), so
-   Windows is used for the run.
-7. **Two aborted speed-test attempts** (thinking on, then an interrupted run)
+   existing WSL install was not modified. Whether the WSL build used the GPU was
+   not measured; the run uses the Windows CPU-only build. It was slower than
+   Windows (1.7x), so Windows is used for the run.
+8. **Two aborted speed-test attempts** (thinking on, then an interrupted run)
    remain in `runs/` as raw evidence. Nothing under `runs/` was edited or
    deleted.
 

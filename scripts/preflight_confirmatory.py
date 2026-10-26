@@ -15,7 +15,10 @@ Checks, in order:
 5. the power plan keeps the machine awake (standby AC timeout = 0);
 6. free disk space on the repository drive;
 7. ``docs/osf_freeze2_update_draft.md`` no longer contains
-   ``[AUTHOR APPROVAL PENDING]``.
+   ``[AUTHOR APPROVAL PENDING]``;
+8. the compute backend matches the documents: no CUDA runtime next to the
+   server binary (this build is CPU only) and both documents carry the exact
+   CPU-only sentence.
 
 Exit code 0 only when every check is PASS; 2 otherwise.
 """
@@ -39,6 +42,17 @@ DEFAULT_MODELS_DIR = pathlib.Path(r"C:\KuroshinHQ\_hub\models")
 PORT = 8099
 APPROVAL_PLACEHOLDER = "[AUTHOR APPROVAL PENDING]"
 MIN_FREE_GB = 20.0
+CPU_ONLY_SENTENCE = (
+    "-ngl 99 was passed but this binary has no CUDA backend; inference ran on "
+    "CPU (8 threads); the ~12 h estimate was measured on this same CPU setup."
+)
+CUDA_DLL_PATTERNS = (
+    "ggml-cuda.dll",
+    "ggml-cuda-*.dll",
+    "cudart64_*.dll",
+    "cublas64_*.dll",
+    "cublaslt64_*.dll",
+)
 
 PASS = "PASS"
 FAIL = "FAIL"
@@ -272,7 +286,42 @@ def check_approval(draft_text: str) -> Result:
     return Result("author approval", PASS, "approval sentence present, placeholder gone")
 
 
+def _flat(text: str) -> str:
+    """Markdown wraps the sentence; compare on single spaces."""
+    return " ".join(text.split())
+
+
+def find_cuda_dlls(directory: pathlib.Path) -> list[str]:
+    """CUDA runtime files next to the server; an empty list means a CPU-only build."""
+    found: list[str] = []
+    for pattern in CUDA_DLL_PATTERNS:
+        found.extend(sorted(path.name for path in directory.glob(pattern)))
+    return found
+
+
+def check_backend(cuda_dlls: Iterable[str], documents: dict[str, str]) -> Result:
+    """The CPU-only claim must match the binary and both documents."""
+    problems = []
+    dlls = sorted(set(cuda_dlls))
+    if dlls:
+        problems.append(
+            "CUDA runtime next to the server binary: " + ", ".join(dlls)
+        )
+    for label, text in documents.items():
+        if CPU_ONLY_SENTENCE not in _flat(text):
+            problems.append(f"{label} lacks the CPU-only sentence")
+    if problems:
+        return Result("compute backend", FAIL, "; ".join(problems))
+    return Result(
+        "compute backend",
+        PASS,
+        "no CUDA runtime in the server directory; CPU-only sentence in both documents",
+    )
+
+
 def run_checks(plan: dict, models_dir: pathlib.Path, system) -> list[Result]:
+    server_path = plan.get("server_path")
+    server_dir = pathlib.Path(server_path).parent if server_path else models_dir
     results = [
         check_artefacts(artefact_list(plan, models_dir), system.sha256),
         check_git(system.git_status(), system.git_unpushed()),
@@ -281,6 +330,13 @@ def run_checks(plan: dict, models_dir: pathlib.Path, system) -> list[Result]:
         check_power(system.power_standby_ac()),
         check_disk(system.disk_free(REPO)),
         check_approval(system.read_text(DRAFT)),
+        check_backend(
+            system.list_cuda_dlls(server_dir),
+            {
+                "freeze document": system.read_text(FREEZE),
+                "draft": system.read_text(DRAFT),
+            },
+        ),
     ]
     return results
 
@@ -354,6 +410,10 @@ class RealSystem:
     @staticmethod
     def read_text(path: pathlib.Path) -> str:
         return path.read_text(encoding="utf-8")
+
+    @staticmethod
+    def list_cuda_dlls(directory: pathlib.Path) -> list[str]:
+        return find_cuda_dlls(directory)
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -16,6 +16,7 @@ All numbers below are measured; only the runtime estimate is derived.
 | Binary path | `C:\KuroshinHQ\kuroshin-kage\apps\llama\win\pkg\llama-server.exe` |
 | `llama-server.exe` SHA-256 | `029D2FF8A82149C9048893512368A2297DB7FDBEE748000DB1EE1CDB334E9B0F` |
 | `llama-server-impl.dll` SHA-256 | `E8F3F45C742FF3B59E781563277D679D2D16562DD7E1DEDD3052FDA45BEA8102` |
+| Compute | **CPU only** (8 threads): this Windows binary has no CUDA backend |
 | Endpoint | `http://127.0.0.1:8099` only (8080/8081 refused) |
 | Draft model | **disabled** (no `-md`; `dflash-draft-qwen35-bf16.gguf.disabled` never passed) |
 
@@ -24,7 +25,7 @@ All numbers below are measured; only the runtime estimate is derived.
 | parameter | value |
 |---|---|
 | context | `-c 8192` (`n_slots = 4`, `kv_unified = true`) |
-| GPU layers | `-ngl 99` |
+| GPU layers | `-ngl 99` was passed but ignored: no CUDA backend, 0 layers offloaded |
 | flash attention | `-fa on` |
 | KV cache | `-ctk q8_0 -ctv q8_0` |
 | threads | `-t 8 --threads-batch 8` |
@@ -35,6 +36,13 @@ All numbers below are measured; only the runtime estimate is derived.
 | prompt caching | `cache_prompt: true` (no effect at temperature 0) |
 | tool budget | 5 calls per question, shared with the C retry |
 | scoring | `bench/score.py`, deterministic, unchanged since `8967d06` |
+
+**Compute is CPU only.** -ngl 99 was passed but this binary has no CUDA backend;
+inference ran on CPU (8 threads); the ~12 h estimate was measured on this same
+CPU setup. Established before Freeze 2, not from any result: the package
+directory holds only `ggml-cpu-*.dll` (no `ggml-cuda.dll`, no `cudart64_*` or
+`cublas64_*`), and `llama-server-impl.dll` contains 0 occurrences of
+`ggml_cuda`, `cublas`, `CUDA0` and `offloading`.
 
 ## 3. Prompt files (SHA-256)
 

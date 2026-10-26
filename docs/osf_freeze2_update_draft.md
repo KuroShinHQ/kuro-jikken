@@ -7,8 +7,10 @@ Date written: 2026-10-26.
 ## Justification (for the OSF field)
 
 Dated Freeze 2 amendment before the confirmatory run. It fixes the final prompts,
-model artefacts, platform and sampling parameters, and records one harness decision
-that was not in the registered plan: thinking is disabled.
+model artefacts, platform and sampling parameters, and records the harness
+decisions and environment findings that were not in the registered plan:
+thinking is disabled, prompt caching is enabled and the Windows build is CPU
+only.
 
 No registered line was changed. The plan text, the scoring rules, the tolerances,
 the seven property definitions and the 250 molecule IDs are untouched. Prompts were
@@ -40,10 +42,11 @@ The estimate uses throughput only; pilot accuracy was not used.
 Of the 50 pilot IDs only the first 5 were run; the other 45 were not run and
 are disjoint from the confirmatory IDs.
 
-### 3. Windows llama-server build 10288
+### 3. Windows llama-server build 10288 (CPU only)
 
 Platform: Windows `llama-server.exe` build **10288 (360e1349f)**, Clang 20.1.8,
 `C:\KuroshinHQ\kuroshin-kage\apps\llama\win\pkg\llama-server.exe`.
+This build has no CUDA backend, so inference runs on the CPU with 8 threads.
 A WSL build of the same commit was measured for comparison and was ~1.7x slower
 (model on NTFS, 9p `/mnt/c` cost); it was not chosen.
 
@@ -56,14 +59,22 @@ Everything in `DEVIATIONS.md` dated 2026-10-26 applies to the pilot numbers:
   endpoint in 10 samples over 20 s. Pilot timings carry this environment note.
 - **WSL build 10288 was compiled from source** in a separate worktree
   (`/root/kuroshin/engines/llama10288`, commit `360e1349f`, CUDA 12.6); the
-  existing WSL install was not modified. It was 1.7x slower than Windows and was
-  not chosen.
+  existing WSL install was not modified. Whether the WSL build used the GPU was
+  not measured, and it does not affect the run, which uses the Windows CPU-only
+  build. It was 1.7x slower than Windows and was not chosen.
 - **WSL systemd units masked** before benchmarking so that no LLM server starts
   by itself: `llama-server`, `openclaw`, `ollama` (renamed `*.masked_20261026`
   and masked with `/dev/null`), plus user units `kuroshin-llama` and
   `openclaw-gateway` (renamed). Exact undo commands are in `DEVIATIONS.md`.
-- **Thinking disabled** (`enable_thinking: false`); see section 1. This is the
-  one harness decision that is not in the registered plan.
+- **Thinking disabled** (`enable_thinking: false`); see section 1. This is a
+  harness decision that is not in the registered plan.
+- **The Windows build is CPU only (finding, not a result).** -ngl 99 was passed
+  but this binary has no CUDA backend; inference ran on CPU (8 threads); the
+  ~12 h estimate was measured on this same CPU setup. Established before
+  Freeze 2: the package directory holds only `ggml-cpu-*.dll` (no
+  `ggml-cuda.dll`, no `cudart64_*` or `cublas64_*`), and
+  `llama-server-impl.dll` contains 0 occurrences of `ggml_cuda`, `cublas`,
+  `CUDA0` and `offloading`.
 - **Prompt caching enabled** (`cache_prompt: true`). Only recomputation is
   skipped; temperature is 0 and outputs are unchanged. Verified on 35 pilot
   items (5 molecules x 7 properties, mode B): answers and tool traces were
@@ -90,7 +101,8 @@ Everything in `DEVIATIONS.md` dated 2026-10-26 applies to the pilot numbers:
 | `ids_confirmatory.txt` (200) | `f5b8a2fe92e83ce89156fae5ac4672fff7048c94d0ca019638de43fe7d1adb6f` |
 | `ids_all.csv` (250) | `c7e70125248edae67b91218963035824a491feec63f5d444b570adf88055c4e9` |
 
-Settings: context 8192, `-ngl 99`, `-fa on`, KV `q8_0`, 8 threads, temperature 0,
+Settings: context 8192, `-ngl 99` passed but ignored (no CUDA backend; CPU only,
+8 threads), `-fa on`, KV `q8_0`, temperature 0,
 seed 20261026, max tokens 1024, prompt caching on, draft model disabled,
 endpoint 127.0.0.1:8099 only.
 

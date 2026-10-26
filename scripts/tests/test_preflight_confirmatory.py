@@ -10,16 +10,19 @@ import pytest
 from scripts import preflight_confirmatory as preflight
 from scripts.preflight_confirmatory import (
     BLOCKER,
+    CPU_ONLY_SENTENCE,
     FAIL,
     PASS,
     Result,
     check_approval,
     check_artefacts,
+    check_backend,
     check_disk,
     check_git,
     check_port,
     check_power,
     check_processes,
+    find_cuda_dlls,
     parse_freeze,
     parse_rows,
     run_checks,
@@ -188,6 +191,48 @@ def test_check_approval_missing_sentence_fails():
     assert check_approval("no approval here").status == FAIL
 
 
+def test_check_backend_passes_for_a_cpu_only_build():
+    documents = {"freeze": "x " + CPU_ONLY_SENTENCE + " y", "draft": CPU_ONLY_SENTENCE}
+    assert check_backend([], documents).status == PASS
+
+
+def test_check_backend_fails_when_a_cuda_runtime_is_present():
+    result = check_backend(["ggml-cuda.dll"], {"draft": CPU_ONLY_SENTENCE})
+    assert result.status == FAIL
+    assert "ggml-cuda.dll" in result.detail
+
+
+def test_check_backend_fails_when_a_document_lacks_the_sentence():
+    result = check_backend([], {"freeze": "nothing", "draft": CPU_ONLY_SENTENCE})
+    assert result.status == FAIL
+    assert "freeze" in result.detail
+
+
+def test_check_backend_tolerates_line_wrapping():
+    wrapped = CPU_ONLY_SENTENCE.replace("; ", ";\n")
+    assert check_backend([], {"draft": wrapped}).status == PASS
+
+
+def test_find_cuda_dlls_on_an_empty_directory(tmp_path):
+    assert find_cuda_dlls(tmp_path) == []
+
+
+def test_find_cuda_dlls_detects_cudart(tmp_path):
+    (tmp_path / "cudart64_12.dll").write_bytes(b"x")
+    (tmp_path / "ggml-cpu-x64.dll").write_bytes(b"x")
+    assert find_cuda_dlls(tmp_path) == ["cudart64_12.dll"]
+
+
+def test_real_documents_carry_the_cpu_only_sentence():
+    """The committed documents must stay consistent with the CPU-only build."""
+    assert CPU_ONLY_SENTENCE in " ".join(
+        preflight.FREEZE.read_text(encoding="utf-8").split()
+    )
+    assert CPU_ONLY_SENTENCE in " ".join(
+        preflight.DRAFT.read_text(encoding="utf-8").split()
+    )
+
+
 class FakeSystem:
     def __init__(self, **overrides):
         self.hashes = overrides.pop("hashes", {})
@@ -197,7 +242,11 @@ class FakeSystem:
         self.names = overrides.pop("names", ())
         self.power = overrides.pop("power", "Current AC Power Setting Index: 0x00000000")
         self.free = overrides.pop("free", 50 * 1024**3)
-        self.draft = overrides.pop("draft", "The author approves these four decisions.")
+        self.freeze = overrides.pop("freeze_text", CPU_ONLY_SENTENCE)
+        self.draft = overrides.pop(
+            "draft", "The author approves these four decisions. " + CPU_ONLY_SENTENCE
+        )
+        self.cuda_dlls = overrides.pop("cuda_dlls", ())
         if overrides:
             raise TypeError(f"unexpected overrides: {sorted(overrides)}")
 
@@ -223,7 +272,10 @@ class FakeSystem:
         return self.free
 
     def read_text(self, path):
-        return self.draft
+        return self.freeze if str(path) == str(preflight.FREEZE) else self.draft
+
+    def list_cuda_dlls(self, path):
+        return list(self.cuda_dlls)
 
 
 def _plan(tmp_path):
