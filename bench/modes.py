@@ -40,6 +40,9 @@ class ModeConfig:
     temperature: float = 0.0
     seed: int = 20261026
     max_nudges: int = 2
+    chat_template_kwargs: dict = field(
+        default_factory=lambda: {"enable_thinking": False}
+    )
 
     def params(self) -> dict:
         return {
@@ -48,6 +51,7 @@ class ModeConfig:
             "max_tokens": self.max_tokens,
             "max_tool_calls": self.max_tool_calls,
             "max_nudges": self.max_nudges,
+            "chat_template_kwargs": dict(self.chat_template_kwargs),
         }
 
 
@@ -244,6 +248,7 @@ def _inner_loop(
             temperature=config.temperature,
             seed=config.seed,
             max_tokens=config.max_tokens,
+            chat_template_kwargs=config.chat_template_kwargs,
         )
         last_text = response.text
         result.responses.append(

@@ -107,6 +107,7 @@ class LlamaClient:
         seed: int = 20261026,
         max_tokens: int = 1024,
         stop: list[str] | None = None,
+        chat_template_kwargs: dict | None = None,
     ) -> LlamaResponse:
         payload: dict[str, Any] = {
             "model": "local",
@@ -119,6 +120,8 @@ class LlamaClient:
         }
         if stop:
             payload["stop"] = stop
+        if chat_template_kwargs is not None:
+            payload["chat_template_kwargs"] = chat_template_kwargs
         started = _now()
         response = self._session.post(
             self.base_url + "/v1/chat/completions",
