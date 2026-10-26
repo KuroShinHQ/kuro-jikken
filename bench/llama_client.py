@@ -116,7 +116,7 @@ class LlamaClient:
             "seed": seed,
             "max_tokens": max_tokens,
             "stream": False,
-            "cache_prompt": False,
+            "cache_prompt": True,
         }
         if stop:
             payload["stop"] = stop
