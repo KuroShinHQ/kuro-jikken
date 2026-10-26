@@ -17,21 +17,19 @@ public MIT repository stays free of share-alike data.
 Every tool returns a dict with ``value``/``unit`` or an explicit error string.
 No number is returned without its unit and its method.
 """
-import os
 import pathlib
 import sys
 
-import pycalphad.variables as v
 from chemicals import hansen_delta_d, hansen_delta_h, hansen_delta_p
 from mcp.server.mcpserver import MCPServer
-from pycalphad import Database, equilibrium
 
-TDB_DIR = pathlib.Path(
-    os.environ.get("KJ_TDB_DIR", r"C:\KuroshinHQ\_hub\data\alloy_tdb_mgf")
-)
 TOOLS_DIR = pathlib.Path(__file__).resolve().parents[1] / "tools"
 if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
+if str(pathlib.Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+
+import calphad_engine  # noqa: E402
 
 MCP = MCPServer("kuro-jikken-tools")
 
@@ -49,23 +47,6 @@ UNIFAC_NOTE = (
 )
 
 
-def _tdb(name: str) -> pathlib.Path:
-    """Resolve a database file name inside TDB_DIR; reject path traversal."""
-    candidate = (TDB_DIR / pathlib.Path(name).name).resolve()
-    if candidate.parent != TDB_DIR.resolve():
-        raise ValueError("database must be a file name inside the database folder")
-    if not candidate.is_file():
-        raise ValueError(f"database not found: {name} (looked in {TDB_DIR})")
-    return candidate
-
-
-def _stable_phase(db: Database, element: str, phases: list[str], temperature: float) -> list[str]:
-    result = equilibrium(
-        db, [element.upper(), "VA"], phases, {v.T: float(temperature), v.P: 101325}
-    )
-    return [p for p in result.Phase.values.squeeze().tolist() if p]
-
-
 @MCP.tool()
 def alloy_melting_point(
     database: str,
@@ -77,37 +58,11 @@ def alloy_melting_point(
     """Melting temperature of a pure element from a CALPHAD database, by bisection.
 
     ``low_k`` must be solid and ``high_k`` liquid for the given database; the
-    function checks both brackets before bisecting and refuses to guess.
+    function checks both brackets before bisecting and refuses to guess. The
+    implementation lives in ``mcp/calphad_engine.py`` so that this tool and the
+    answer contract (P5a) run exactly the same code.
     """
-    path = _tdb(database)
-    phases = [solid_phase, "LIQUID"]
-    db = Database(str(path))
-    if solid_phase not in db.phases:
-        raise ValueError(f"phase {solid_phase} is not in {database}")
-    below = _stable_phase(db, element, phases, low_k)
-    above = _stable_phase(db, element, phases, high_k)
-    if "LIQUID" in below or "LIQUID" not in above:
-        raise ValueError(
-            f"bracket is not valid for {element}: {low_k} K -> {below}, "
-            f"{high_k} K -> {above}"
-        )
-    lo, hi = float(low_k), float(high_k)
-    for _ in range(12):
-        mid = (lo + hi) / 2.0
-        if "LIQUID" in _stable_phase(db, element, phases, mid):
-            hi = mid
-        else:
-            lo = mid
-    return {
-        "database": path.name,
-        "element": element.upper(),
-        "solid_phase": solid_phase,
-        "melting_k": round((lo + hi) / 2.0, 2),
-        "bracket_width_k": round(hi - lo, 4),
-        "conditions": "P = 101325 Pa, pure element (X = 1)",
-        "method": "pycalphad equilibrium + bisection, 12 steps",
-        "note": "Melting/solidus only. Creep, oxidation and corrosion are not modelled.",
-    }
+    return calphad_engine.melting_point(database, element, solid_phase, low_k, high_k)
 
 
 @MCP.tool()
