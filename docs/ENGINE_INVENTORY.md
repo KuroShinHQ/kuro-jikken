@@ -248,6 +248,8 @@ rank, it cannot promise performance.
   (they are mixtures). `hsp_rank` therefore ranks small molecules only.
 - **UNIFAC**: `unifac_groups` returns subgroups and r/q (ugropy); the group
   interaction matrix that turns them into activity coefficients is not wired.
+- **Wax melting range**: `tools/wax_melting.py` (ideal solid-liquid equilibrium,
+  YELLOW): C20/C24/C28 blend 50/30/20 gives 302.2-314.6 K.
 
 ## 11. Environment record
 
