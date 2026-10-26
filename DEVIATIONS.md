@@ -13,7 +13,10 @@ Any deviation is dated here; primary analyses stay as registered.
    definition was changed. Recorded in `prereg/freeze2_candidate.md`.
 2. **Prompt caching enabled** (`cache_prompt: true`). Only recomputation is
    skipped; temperature is 0, so outputs are unchanged. Mode B went from a
-   33.4 s median to 7.5 s on two probe items.
+   33.4 s median to 7.5 s on two probe items. Verified 2026-10-26 before
+   Freeze 2: 5 pilot molecules x 7 properties in mode B, cache on vs off,
+   answers and tool traces byte-identical (35/35 items,
+   `runs/20261026T094129Z_cachecheck_summary.json`).
 3. **Debug pilot used 5 of the 50 pilot molecules** (105 items), on the author's
    instruction to shrink the debugging run. The pilot set remains 50 molecules;
    no pilot number is reported as a result.
