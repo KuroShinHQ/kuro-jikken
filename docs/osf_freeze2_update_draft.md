@@ -108,12 +108,9 @@ endpoint 127.0.0.1:8099 only.
 
 ## Author approval
 
-[AUTHOR APPROVAL PENDING]
-
-The four decisions above (thinking disabled, N = 200, Windows llama-server 10288,
-~12 h estimate) are **not approved yet**. This draft must not be sent while this
-line stands; the approval sentence is written here, with its date, only after
-the author types the confirmation word in the session.
+The author approves the four decisions above (thinking disabled, N = 200, Windows
+llama-server build 10288, ~12 h estimate), including inference on the CPU only,
+on 2026-10-26 (confirmation word given in the session: ONAYLIYORUM).
 
 ## What this update does not do
 
