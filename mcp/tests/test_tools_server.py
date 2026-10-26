@@ -78,3 +78,24 @@ def test_unifac_rejects_bad_smiles():
     with pytest.raises(ValueError):
         T.unifac_groups("C1CC")
 
+
+def test_unifac_gamma_ethanol_water_is_physical():
+    out = T.unifac_gamma(["CCO", "O"], [0.5, 0.5])
+    assert out["unit"] == "gamma (dimensionless)"
+    assert len(out["value"]) == 2
+    assert all(value > 1.0 for value in out["value"])
+    assert "Dortmund" in out["model"]
+
+
+def test_unifac_gamma_infinity_dortmund_ethanol():
+    out = T.unifac_gamma_infinity(["CCO", "O"])
+    # measured 3.77 (Straver & de Loos 2005); Dortmund 4.79, original 7.62
+    assert 4.0 < out["value"][0] < 5.5
+    assert out["solvent"] == "O"
+
+
+def test_unifac_gamma_missing_pair_is_an_error_not_a_number():
+    out = T.unifac_gamma_infinity(["CSC", "O"], version=0)
+    assert out["value"] is None
+    assert "no UNIFAC interaction" in out["error"]
+

@@ -19,6 +19,7 @@ No number is returned without its unit and its method.
 """
 import os
 import pathlib
+import sys
 
 import pycalphad.variables as v
 from chemicals import hansen_delta_d, hansen_delta_h, hansen_delta_p
@@ -28,11 +29,23 @@ from pycalphad import Database, equilibrium
 TDB_DIR = pathlib.Path(
     os.environ.get("KJ_TDB_DIR", r"C:\KuroshinHQ\_hub\data\alloy_tdb_mgf")
 )
+TOOLS_DIR = pathlib.Path(__file__).resolve().parents[1] / "tools"
+if str(TOOLS_DIR) not in sys.path:
+    sys.path.insert(0, str(TOOLS_DIR))
+
 MCP = MCPServer("kuro-jikken-tools")
 
 HSP_NOTE = (
     "Hansen parameters in MPa^0.5 (chemicals returns Pa^0.5, divided by 1000). "
     "Ranking only: no performance, safety or sensory claim follows from a distance."
+)
+
+UNIFAC_NOTE = (
+    "gamma is dimensionless. Version 1 (Dortmund) is the default and stays "
+    "within about +/-25 % of measured aqueous gamma-infinity for alcohols and "
+    "ketones; version 0 (original UNIFAC) overshoots by +50..+110 %. A missing "
+    "main-group pair is returned as an error, never as a number. "
+    "See docs/GAMMA_VALIDATION.md."
 )
 
 
@@ -164,9 +177,8 @@ def hsp_rank(reference_cas: str, candidate_cas: list[str]) -> dict:
 def unifac_groups(smiles: str) -> dict:
     """UNIFAC subgroup decomposition (ugropy): counts, r and q for one molecule.
 
-    This is the first half of an activity-coefficient calculation. The second
-    half (the group interaction matrix) is not wired yet, so no gamma is
-    returned here and none should be invented downstream.
+    This is the inventory view. Use ``unifac_gamma`` (or
+    ``unifac_gamma_infinity``) for actual activity coefficients.
     """
     from ugropy import unifac
 
@@ -180,8 +192,65 @@ def unifac_groups(smiles: str) -> dict:
         "r": round(result.r, 4),
         "q": round(result.q, 4),
         "source": "ugropy 3.2.5, UNIFAC subgroup table",
-        "note": "Groups and r/q only. Activity coefficients need the group "
-        "interaction matrix, which is not wired yet.",
+        "note": "Groups and r/q from original UNIFAC. Activity coefficients: "
+        "unifac_gamma / unifac_gamma_infinity.",
+    }
+
+
+def _unifac_model():
+    import unifac_gamma as model
+
+    return model
+
+
+@MCP.tool()
+def unifac_gamma(
+    smiles: list[str],
+    mole_fractions: list[float],
+    temperature: float = 298.15,
+    version: int = 1,
+) -> dict:
+    """UNIFAC activity coefficients (gamma) for a liquid mixture, offline.
+
+    version 1 = Dortmund UNIFAC (default, recommended), 0 = original UNIFAC.
+    No LLM, no solvent data, no side claim: gamma only.
+    """
+    model = _unifac_model()
+    try:
+        values = model.gamma(
+            list(smiles), list(mole_fractions), temperature=float(temperature), version=int(version)
+        )
+    except ValueError as exc:
+        return {"error": str(exc), "value": None, "unit": "gamma (dimensionless)"}
+    return {
+        "value": values,
+        "unit": "gamma (dimensionless)",
+        "temperature_K": float(temperature),
+        "model": model.describe(int(version))["model"],
+        "note": UNIFAC_NOTE,
+    }
+
+
+@MCP.tool()
+def unifac_gamma_infinity(
+    smiles: list[str], temperature: float = 298.15, version: int = 1
+) -> dict:
+    """UNIFAC activity coefficients at infinite dilution, offline.
+
+    Entry k is solute k infinitely diluted in the last entry of ``smiles``.
+    """
+    model = _unifac_model()
+    try:
+        values = model.gamma_inf(list(smiles), temperature=float(temperature), version=int(version))
+    except ValueError as exc:
+        return {"error": str(exc), "value": None, "unit": "gamma (dimensionless)"}
+    return {
+        "value": values,
+        "unit": "gamma-infinity (dimensionless)",
+        "temperature_K": float(temperature),
+        "solvent": smiles[-1],
+        "model": model.describe(int(version))["model"],
+        "note": UNIFAC_NOTE,
     }
 
 
