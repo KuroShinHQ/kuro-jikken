@@ -1,6 +1,6 @@
-# OSF pre-registration - solubility sigma feature (2026-10-25)
+﻿# OSF pre-registration - solubility sigma feature (2026-10-25)
 
-Status: **SUBMITTED - PENDING ADMIN APPROVAL** (submitted 2026-10-25T16:45:45Z UTC).
+Status: **PUBLIC - APPROVED** (registered 2026-10-25T16:45:45Z UTC).
 Nothing deleted; no tag, no release, no force push. Project and registration are
 **not** zg6x2 / 8pbnu: those belong to the earlier LLM A/B/C pre-registration and
 were not touched.
@@ -20,10 +20,10 @@ were not touched.
 | Archived copy (registration storage) | `Archive of OSF Storage/solubility_sigma_feature_plan_v1.md` - **10,589 bytes**, sha256 identical |
 | `registration_responses.summary` | **409 chars**, identical to the draft text |
 | Subjects | `Physical Chemistry` (`584240da54be81056cecaac2`); OSF automatically listed its parents `Chemistry` and `Physical Sciences and Mathematics` |
-| Visibility | `registration_choice=immediate`, `embargoed=false`, `withdrawn=false`; `public=false` while pending |
+| Visibility | `public=true`, `pending_registration_approval=false`, `reviews_state=accepted`, `revision_state=approved`; embargoed=false, withdrawn=false |
 | Moderation | `pending_registration_approval=true`, `reviews_state=initial`, `revision_state=unapproved` |
-| DOI | none yet (`GET /v2/registrations/uce8d/identifiers/` -> `data: []`) |
-| Anonymous read | `GET /v2/registrations/uce8d/` -> **401** (not public while pending) |
+| DOI | **`10.17605/OSF.IO/UCE8D`** |
+| Anonymous read | `GET /v2/registrations/uce8d/` -> **200** |
 
 ## What was uploaded and verified
 
@@ -70,6 +70,13 @@ automatic approval and `date_registered` stays the submission date. There is no
 API endpoint for this approval (evidence: `docs/osf_prereg_registration.md`).
 
 Until then: registration not readable anonymously (401), no DOI.
+
+**Resolved 2026-10-26:** approval arrived, so this paragraph is historical. The
+record is now `public=true` with DOI `10.17605/OSF.IO/UCE8D` and an anonymous
+`GET` returns 200; `date_registered` is unchanged. A dated OSF *Update* on this
+record (`uce8d`) was accepted on 2026-10-26. Separate record, separate state: the
+Freeze 2 *Update* for `8pbnu` is still an unsent draft
+(`docs/osf_freeze2_update_draft.md`, `[AUTHOR APPROVAL PENDING]`).
 
 ## Token hygiene
 
