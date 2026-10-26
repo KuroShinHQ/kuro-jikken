@@ -1,0 +1,334 @@
+{
+  "check": "prompt_cache_determinism",
+  "stamp": "20261026T094129Z",
+  "molecules": [
+    "DBEIAMRYPAJZHO-UHFFFAOYSA-N",
+    "WXHDYGRKHGIEOF-UHFFFAOYSA-N",
+    "HCUZVMHXDRSBKX-UHFFFAOYSA-N",
+    "SVHOVVJFOWGYJO-UHFFFAOYSA-N",
+    "DNPSYFHJYIRREW-UHFFFAOYSA-N"
+  ],
+  "mode": "B",
+  "items": 35,
+  "answer_equal": 35,
+  "trace_equal": 35,
+  "response_texts_equal": 35,
+  "verdict": "EQUAL",
+  "rows": [
+    {
+      "item_id": "DBEIAMRYPAJZHO-UHFFFAOYSA-N::hbd_lipinski",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "0b0722ef6686784eec342f940d67378b99744a1d84827e738db1be4112bfcaf2",
+      "sha256_on": "0b0722ef6686784eec342f940d67378b99744a1d84827e738db1be4112bfcaf2"
+    },
+    {
+      "item_id": "DBEIAMRYPAJZHO-UHFFFAOYSA-N::molecular_weight",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "2aee51b06fbda5da16a5aec3e290f56db18a7529984c995e1f4f0e68c4ef487c",
+      "sha256_on": "2aee51b06fbda5da16a5aec3e290f56db18a7529984c995e1f4f0e68c4ef487c"
+    },
+    {
+      "item_id": "DNPSYFHJYIRREW-UHFFFAOYSA-N::hba_lipinski",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "0c9c19972d3e8d166f24b373d9d3f2a727e0fb72c64fdfc232a0580e1db59ade",
+      "sha256_on": "0c9c19972d3e8d166f24b373d9d3f2a727e0fb72c64fdfc232a0580e1db59ade"
+    },
+    {
+      "item_id": "SVHOVVJFOWGYJO-UHFFFAOYSA-N::ring_count",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "89a31fa10782704e513efb76e7a136ad0cef0b413c4802103a2fe944cbf85e58",
+      "sha256_on": "89a31fa10782704e513efb76e7a136ad0cef0b413c4802103a2fe944cbf85e58"
+    },
+    {
+      "item_id": "SVHOVVJFOWGYJO-UHFFFAOYSA-N::hbd_lipinski",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "c7f8583feee4fb5ad5a656c59e9b522ea813fee494ed8e71caf94c46ef57cd4b",
+      "sha256_on": "c7f8583feee4fb5ad5a656c59e9b522ea813fee494ed8e71caf94c46ef57cd4b"
+    },
+    {
+      "item_id": "HCUZVMHXDRSBKX-UHFFFAOYSA-N::heavy_atom_count",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "6a3524fac0df56702e512dace95f4b61bb23ef29b68917f5a95b00afe160e51e",
+      "sha256_on": "6a3524fac0df56702e512dace95f4b61bb23ef29b68917f5a95b00afe160e51e"
+    },
+    {
+      "item_id": "HCUZVMHXDRSBKX-UHFFFAOYSA-N::rotatable_bonds",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "c018d6ce1f1141d4dbf798c7f2b76c43e8125acd203f880f40b2f27a3ab3fd69",
+      "sha256_on": "c018d6ce1f1141d4dbf798c7f2b76c43e8125acd203f880f40b2f27a3ab3fd69"
+    },
+    {
+      "item_id": "DNPSYFHJYIRREW-UHFFFAOYSA-N::formula",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "8bff2eb02c652f59dfd2530e0d1051d1ef02b50a0a6de512907666298a9055fd",
+      "sha256_on": "8bff2eb02c652f59dfd2530e0d1051d1ef02b50a0a6de512907666298a9055fd"
+    },
+    {
+      "item_id": "DNPSYFHJYIRREW-UHFFFAOYSA-N::molecular_weight",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "dfa398d1f24f8a41327d846956291ae6b8acd8f2de579a5cc26ecae8b635ceb5",
+      "sha256_on": "dfa398d1f24f8a41327d846956291ae6b8acd8f2de579a5cc26ecae8b635ceb5"
+    },
+    {
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::rotatable_bonds",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "bbac78304a3bfb1390412a96598da20d051aee3cd7abcea24d27ba945d56d654",
+      "sha256_on": "bbac78304a3bfb1390412a96598da20d051aee3cd7abcea24d27ba945d56d654"
+    },
+    {
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::heavy_atom_count",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "5652723f77f71432d50b2f1e025c86407aeb140e352f4856c569d93f6aae9939",
+      "sha256_on": "5652723f77f71432d50b2f1e025c86407aeb140e352f4856c569d93f6aae9939"
+    },
+    {
+      "item_id": "DNPSYFHJYIRREW-UHFFFAOYSA-N::rotatable_bonds",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "13232170c359f0c0ad90466bcad5bb115828ac300a2214155509aadaa855841d",
+      "sha256_on": "13232170c359f0c0ad90466bcad5bb115828ac300a2214155509aadaa855841d"
+    },
+    {
+      "item_id": "DBEIAMRYPAJZHO-UHFFFAOYSA-N::hba_lipinski",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "252e49524566fb9fac1b0483bac69495ff71d9e4ea7e434e3ae1e4f65d7ea568",
+      "sha256_on": "252e49524566fb9fac1b0483bac69495ff71d9e4ea7e434e3ae1e4f65d7ea568"
+    },
+    {
+      "item_id": "DBEIAMRYPAJZHO-UHFFFAOYSA-N::ring_count",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "55488b6ccbf82b9e96ae791b683a255595df1a1c9f1d14f741e73b74d8928a43",
+      "sha256_on": "55488b6ccbf82b9e96ae791b683a255595df1a1c9f1d14f741e73b74d8928a43"
+    },
+    {
+      "item_id": "SVHOVVJFOWGYJO-UHFFFAOYSA-N::rotatable_bonds",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "9fc1428d5032b66ccb742f2baefd304246b48c40a61b86cfa10116c8fb18e3f4",
+      "sha256_on": "9fc1428d5032b66ccb742f2baefd304246b48c40a61b86cfa10116c8fb18e3f4"
+    },
+    {
+      "item_id": "SVHOVVJFOWGYJO-UHFFFAOYSA-N::heavy_atom_count",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "6327a7701ff0c846fdc5add2ede20920114650f86c7bd0d177fb4e9633e4104d",
+      "sha256_on": "6327a7701ff0c846fdc5add2ede20920114650f86c7bd0d177fb4e9633e4104d"
+    },
+    {
+      "item_id": "SVHOVVJFOWGYJO-UHFFFAOYSA-N::formula",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "b31b6b8ae38fba5ad8bd2b2ac8bb5bab6cf8dc5c6e656910842273699557e133",
+      "sha256_on": "b31b6b8ae38fba5ad8bd2b2ac8bb5bab6cf8dc5c6e656910842273699557e133"
+    },
+    {
+      "item_id": "HCUZVMHXDRSBKX-UHFFFAOYSA-N::molecular_weight",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "cefc390bcf09a2e74b3b44f3ae4e2b49aa761fd3f20365ae8b24ccadf138ac81",
+      "sha256_on": "cefc390bcf09a2e74b3b44f3ae4e2b49aa761fd3f20365ae8b24ccadf138ac81"
+    },
+    {
+      "item_id": "DNPSYFHJYIRREW-UHFFFAOYSA-N::hbd_lipinski",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "879f3f7f0853c348ec4ad0ab720d844e2c4d6ada76f889e7a79582802e3fbc0e",
+      "sha256_on": "879f3f7f0853c348ec4ad0ab720d844e2c4d6ada76f889e7a79582802e3fbc0e"
+    },
+    {
+      "item_id": "HCUZVMHXDRSBKX-UHFFFAOYSA-N::hba_lipinski",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "eb83e0210131579ed85c4732b1defcec276652c52b1ef954c04ee9598e74f3ac",
+      "sha256_on": "eb83e0210131579ed85c4732b1defcec276652c52b1ef954c04ee9598e74f3ac"
+    },
+    {
+      "item_id": "DBEIAMRYPAJZHO-UHFFFAOYSA-N::rotatable_bonds",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "2b35dc12e3c1c17b92aac46082d9d3accc1ccce7edc2e171cb5f0ce2857e7f88",
+      "sha256_on": "2b35dc12e3c1c17b92aac46082d9d3accc1ccce7edc2e171cb5f0ce2857e7f88"
+    },
+    {
+      "item_id": "SVHOVVJFOWGYJO-UHFFFAOYSA-N::molecular_weight",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "5f8ac9c52e0bf148bb3694ef35c57faccc1cfc01561351f70cea5c12386b1e06",
+      "sha256_on": "5f8ac9c52e0bf148bb3694ef35c57faccc1cfc01561351f70cea5c12386b1e06"
+    },
+    {
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::ring_count",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "ee3fd7982e7e62587813483fff86eced4979e9181eea0de3d693aaecf0e3f4f5",
+      "sha256_on": "ee3fd7982e7e62587813483fff86eced4979e9181eea0de3d693aaecf0e3f4f5"
+    },
+    {
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::hbd_lipinski",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "d821d42c71ba4f9e4ed67bf4e503a2bd3b623c40644060982bcc2af2c12df14d",
+      "sha256_on": "d821d42c71ba4f9e4ed67bf4e503a2bd3b623c40644060982bcc2af2c12df14d"
+    },
+    {
+      "item_id": "HCUZVMHXDRSBKX-UHFFFAOYSA-N::hbd_lipinski",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "f14476327c7c8b4f3e400a8644963c45aad74b2a2086e59e123e936bd46f0410",
+      "sha256_on": "f14476327c7c8b4f3e400a8644963c45aad74b2a2086e59e123e936bd46f0410"
+    },
+    {
+      "item_id": "DNPSYFHJYIRREW-UHFFFAOYSA-N::heavy_atom_count",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "a21075e3090c02d8dd7a0309924dac9f917e724bca373f4cc11ab649a6961df9",
+      "sha256_on": "a21075e3090c02d8dd7a0309924dac9f917e724bca373f4cc11ab649a6961df9"
+    },
+    {
+      "item_id": "SVHOVVJFOWGYJO-UHFFFAOYSA-N::hba_lipinski",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "24bf53d58b9fdacdab8fa989e39720030d7a2d1c2699bf1f68842cfc931bc5d3",
+      "sha256_on": "24bf53d58b9fdacdab8fa989e39720030d7a2d1c2699bf1f68842cfc931bc5d3"
+    },
+    {
+      "item_id": "DBEIAMRYPAJZHO-UHFFFAOYSA-N::formula",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "d2a43250d83feb7c45076b6882c7eb9c712d2f18cfa76ee60b9a05e46fde84e8",
+      "sha256_on": "d2a43250d83feb7c45076b6882c7eb9c712d2f18cfa76ee60b9a05e46fde84e8"
+    },
+    {
+      "item_id": "DBEIAMRYPAJZHO-UHFFFAOYSA-N::heavy_atom_count",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "a4fa96784d386e43ee6811119228d2e8ca76523aa15e2f4360ee530e781603c1",
+      "sha256_on": "a4fa96784d386e43ee6811119228d2e8ca76523aa15e2f4360ee530e781603c1"
+    },
+    {
+      "item_id": "HCUZVMHXDRSBKX-UHFFFAOYSA-N::ring_count",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "2dd06c8c0ac851081ac90966825edd821f64b3c902f0dae8f989cd3ac68640f3",
+      "sha256_on": "2dd06c8c0ac851081ac90966825edd821f64b3c902f0dae8f989cd3ac68640f3"
+    },
+    {
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::hba_lipinski",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "e65b3210d3006f658891ad67bd5ef37470dbe336fa7990a0bb16c49c88bb7d44",
+      "sha256_on": "e65b3210d3006f658891ad67bd5ef37470dbe336fa7990a0bb16c49c88bb7d44"
+    },
+    {
+      "item_id": "DNPSYFHJYIRREW-UHFFFAOYSA-N::ring_count",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "f75384c9ec1983c5a807312d7ef3d55cf711d51a8db55a69fe72b367c6715b6a",
+      "sha256_on": "f75384c9ec1983c5a807312d7ef3d55cf711d51a8db55a69fe72b367c6715b6a"
+    },
+    {
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::molecular_weight",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "695ae2a2f6fb0d05837f0cf1280bb07e66a09e4d513c83e107ba05b57b5df83a",
+      "sha256_on": "695ae2a2f6fb0d05837f0cf1280bb07e66a09e4d513c83e107ba05b57b5df83a"
+    },
+    {
+      "item_id": "HCUZVMHXDRSBKX-UHFFFAOYSA-N::formula",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "9887769231de1de01197ac49327bcf0f9138b9367c26da1ec4a194872468d3c0",
+      "sha256_on": "9887769231de1de01197ac49327bcf0f9138b9367c26da1ec4a194872468d3c0"
+    },
+    {
+      "item_id": "WXHDYGRKHGIEOF-UHFFFAOYSA-N::formula",
+      "answer_equal": true,
+      "trace_equal": true,
+      "response_texts_equal": true,
+      "differing": [],
+      "sha256_off": "52f43a812085b2ed35f46bba7f062afa3766f95c2cb0506271547cac0aa5898e",
+      "sha256_on": "52f43a812085b2ed35f46bba7f062afa3766f95c2cb0506271547cac0aa5898e"
+    }
+  ]
+}
