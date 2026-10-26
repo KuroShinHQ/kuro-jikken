@@ -66,6 +66,7 @@ request with a YELLOW engine and do not invent a number.
 | pure Al melting | 933.47 K (lit. 933.47) | `alloy_melting_point(...)` |
 | pure Fe melting | 1810.95 K (lit. 1811) | same |
 | pure Ni melting | 1728.26 K (lit. 1728) | same |
+| Al-Cu liquidus, 1-17.3 at% Cu | 926.4 / 900.4 / 867.6 / 829.3 K (lit. ~928 / ~903 / ~870 / ~821) | `tools/alloy_liquidus.py` |
 | Hansen water/toluene/hexane | 15.5/16.0/42.3, 18.0/1.4/2.0, 14.9/0/0 MPa^0.5 | `hsp_lookup` |
 
 A new database or a new element must pass the same known-value gate before its

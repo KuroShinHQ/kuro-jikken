@@ -232,7 +232,24 @@ rank, it cannot promise performance.
 | OPTIMADE client | **YELLOW** | official client MIT; no official MCP; each provider's data licence must be recorded |
 | HSPiT | **YELLOW** | MIT but v0.1.x, no validation, no bundled HSP data |
 
-## 10. Environment record
+## 10. Additions 2026-10-26 (engines wired, sources checked live)
+
+- **MatCalc TDBs usable in pycalphad**: the vendor files do not parse; the
+  pre-modified copies from the Materials Genome Foundation 2023 workshop
+  repository do (`mc_al_v2.032`, `mc_fe_v2.059`, `mc_ni_v2.034`). Kept outside
+  this repository (ODbL 1.0 + DbCL 1.0). Validation: `docs/ALLOY_VALIDATION.md`.
+- **Installed for engines** (`.venv_inventory`, all MIT): `chemicals 1.5.2`,
+  `thermo 0.6.1`, `HSPiPy 1.1.8`; `ugropy 3.2.5` already present.
+- **Excluded**: OpenCalphad (GitHub API reports no licence file); NIST phase
+  pages are a pointer only, no open data download.
+- **Candidates, not installed**: `openCOSMO-RS_py` (LGPL-3.0, needs ORCA COSMO
+  files), NeqSim (Apache-2.0, Java runtime, wax/WAT models).
+- **Known gap**: petrolatum, mineral oil and white wax have no Hansen entries
+  (they are mixtures). `hsp_rank` therefore ranks small molecules only.
+- **UNIFAC**: `unifac_groups` returns subgroups and r/q (ugropy); the group
+  interaction matrix that turns them into activity coefficients is not wired.
+
+## 11. Environment record
 
 - venv: `.venv_inventory` (isolated, created 2026-10-26).
 - installed: `pycalphad 0.11.2`, `pymatgen 2026.10.24`, `mp-api 0.47.0`
