@@ -57,13 +57,20 @@ def classify(request: str) -> dict:
             "verdict": "RED" if red else "YELLOW", "matched": score}
 
 
-def plan(request: str) -> dict:
+def plan(request: str, payload=None) -> dict:
     """Plan-only: what would run, in what order, with which gate. No computation."""
     route = classify(request)
     steps = []
+    gate_result = None
+    if route["gate"] and payload is not None:
+        from gates import check
+
+        gate_result = check(route["gate"], payload)
     for engine in route["engines"]:
-        steps.append({"engine": engine, "gate": route["gate"], "status": "planned"})
+        steps.append({"engine": engine, "gate": route["gate"],
+                      "gate_result": gate_result, "status": "planned"})
     return {"request": request, "route": route, "steps": steps,
+            "gate": gate_result,
             "note": "plan only: no number is produced here"}
 
 
