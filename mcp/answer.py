@@ -201,6 +201,13 @@ def from_plan(plan: dict) -> dict:
     if capability in NO_ENGINE_CAPS:
         return refusal("no engine", capability=capability, gate=plan.get("gate"))
     gate = plan.get("gate")
+    if gate is None and route.get("gate"):
+        return refusal(
+            "no data",
+            capability=capability,
+            reason="no identifiers were resolved for this request",
+            gate=None,
+        )
     if gate and gate.get("verdict") == "RED":
         reason = str(gate.get("reason", "")).lower()
         kind = "no data" if any(h in reason for h in NO_DATA_HINTS) else "out of domain"

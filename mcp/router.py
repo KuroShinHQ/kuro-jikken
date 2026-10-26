@@ -136,6 +136,11 @@ def plan(request: str, payload=None) -> dict:
 
         gate_results = [(gid, check(gid, sliced)) for gid, sliced in gate_payloads(route, payload)]
         gate_result = aggregate_gates(gate_results)
+        if not gate_results:
+            gate_result = {
+                "verdict": "RED", "pass": False, "results": [],
+                "reason": f"no gate input for {route['gate']} (need smiles/casrn/tdb)",
+            }
     for engine in route["engines"]:
         steps.append({"engine": engine, "gate": route["gate"],
                       "gate_result": gate_result, "status": "planned"})
