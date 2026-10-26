@@ -41,3 +41,28 @@ def test_unknown_gate_is_red():
 def test_gate_refuses_bad_payload_instead_of_crashing():
     assert G.gate_unifac("8009-03-8")["verdict"] == "RED"
     assert G.check("gate.esol", "not a smiles")["verdict"] == "RED"
+
+
+def test_cosmo_needs_a_known_inchikey():
+    assert G.gate_cosmo("LFQSCWFLJHTTHZ-UHFFFAOYSA-N")["verdict"] == "PASS"
+    assert G.gate_cosmo("AAAAAAAAAAAAAA-AAAAAAAAAA-N")["verdict"] == "RED"
+    assert G.gate_cosmo("not-an-inchikey")["verdict"] == "RED"
+
+
+TDB_DIR = pathlib.Path(r"C:\KuroshinHQ\_hub\data\alloy_tdb_mgf")
+
+
+@pytest.mark.skipif(not TDB_DIR.is_dir(), reason="MGF databases are outside the repo")
+def test_calphad_checks_declared_elements():
+    tdb = "mc_al_v2.032.pycalphad.tdb"
+    assert G.gate_calphad({"tdb": tdb, "elements": ["AL", "CU"]})["verdict"] == "PASS"
+    assert G.gate_calphad({"tdb": tdb, "elements": ["ZZ"]})["verdict"] == "RED"
+    assert G.gate_calphad("../../secret.tdb")["verdict"] == "RED"
+
+
+def test_wax_refuses_mixtures_without_hfus():
+    assert G.gate_wax(["8009-03-8"])["verdict"] == "RED"  # petrolatum: Tm only
+    assert G.gate_wax(["112-92-5"])["verdict"] == "PASS"  # stearyl alcohol
+    assert G.gate_wax({"casrn": ["8009-03-8"]})["verdict"] == "RED"
+    assert G.check("gate.wax", [])["verdict"] == "RED"
+    assert G.check("gate.wax", ["00-00-0"])["verdict"] == "RED"
