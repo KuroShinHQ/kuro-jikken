@@ -1,9 +1,7 @@
-"""Best-effort normaliser for vendor TDB files (experimental, not science).
+"""Best-effort normaliser for MatCalc TDB files (experimental, not science).
 
-Drops vendor commands, decodes legacy bytes, strips N REF tags and HMVA
-parameters and expands the FUN/PARA abbreviations. It writes a copy; the
-downloaded originals are never edited. If pycalphad still refuses a file, the
-file stays unusable - the report says so instead of hiding it.
+Removes only vendor additions; never invents thermodynamic data. A file that
+still fails to load is reported as failed, never silently patched.
 """
 import pathlib
 import re
@@ -11,8 +9,18 @@ import re
 DROP = ('REFERENCE_ELEMENT', 'ADD_COMPOSITION_SET', 'ATTACH_CONTRIBUTION',
         'DATABASE_INFO', 'ASSESSED_SYSTEMS', 'VERSION_DATE',
         'TEMPERATURE_LIMITS', 'DEFINE_SYSTEM_DEFAULT', 'DEFAULT_COMMAND',
-        'LIST_OF_REFERENCES')
-REF = re.compile(r'\s+N\s+REF:\S+')
+        'LIST_OF_REFERENCES', 'CONST')
+REF_TAG = re.compile(r'\s+N\s+REF:\S+')
+PHASE_PROSE = re.compile(r'>\s*[^>]*>>', re.S)
+
+
+def decode(raw: bytes) -> str:
+    for codec in ('utf-8', 'cp1252'):
+        try:
+            return raw.decode(codec)
+        except UnicodeDecodeError:
+            pass
+    return raw.decode('latin-1')
 
 
 def normalise(text: str) -> str:
@@ -22,30 +30,33 @@ def normalise(text: str) -> str:
         if token in DROP:
             continue
         lines.append(line)
-    out = []
+    commands = []
     for command in '\n'.join(lines).split('!'):
         if not command.strip() or 'HMVA' in command.upper():
             continue
-        command = REF.sub('', command).replace('%', '')
+        command = REF_TAG.sub('', command).replace('%', '')
         head = command.strip().upper()
-        if head.startswith('PARA '):
-            command = command.replace('PARA ', 'PARAMETER ', 1)
+        if head.startswith('TYPE_DEF '):
+            command = command.replace('TYPE_DEF ', 'TYPE_DEFINITION ', 1)
         elif head.startswith('FUN '):
             command = command.replace('FUN ', 'FUNCTION ', 1)
-        out.append(command)
-    return '\n!\n'.join(out) + '\n!\n'
+        elif head.startswith('PARA '):
+            command = command.replace('PARA ', 'PARAMETER ', 1)
+        if '>' in command and '>>' in command:
+            command = PHASE_PROSE.sub('> >>', command)
+        commands.append(command)
+    return '\n!\n'.join(commands) + '\n!\n'
 
 
-def main() -> None:
-    source = pathlib.Path('data/alloy_tdb')
-    target = pathlib.Path('data/alloy_tdb_normalized')
-    target.mkdir(exist_ok=True)
-    for path in sorted(source.glob('*.tdb')):
-        text = path.read_bytes().decode('latin-1')
-        out = target / (path.stem + '.norm.tdb')
-        out.write_text(normalise(text), encoding='utf-8')
-        print(path.name, '->', out.name)
+def convert(source: pathlib.Path, target: pathlib.Path) -> pathlib.Path:
+    out = target / (source.stem + '.norm.tdb')
+    out.write_text(normalise(decode(source.read_bytes())), encoding='utf-8')
+    return out
 
 
 if __name__ == '__main__':
-    main()
+    src = pathlib.Path('data/alloy_tdb')
+    dst = pathlib.Path('data/alloy_tdb_normalized')
+    dst.mkdir(exist_ok=True)
+    for path in sorted(src.glob('*.tdb')):
+        print(path.name, '->', convert(path, dst).name)
