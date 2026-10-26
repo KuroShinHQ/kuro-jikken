@@ -1,8 +1,9 @@
 """Replay one router ledger entry: `python tools/replay_router.py <entry-id>`.
 
 Exit codes: 0 = plan+gate+answer reproduce, 1 = drift detected, 2 = entry or
-ledger missing. The engines are not invoked here, so the number is only compared
-when a compute function is supplied by the caller (later phase).
+ledger missing. By default the engines are not invoked, so the number is not
+compared; ``--compute`` wires ``pipeline.compute`` and compares the number
+within the tolerance stated in ``ledger.VALUE_REL_TOL``/``VALUE_ABS_TOL``.
 """
 import argparse
 import json
@@ -12,6 +13,12 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "mcp"))
 
 import ledger  # noqa: E402
+import pipeline  # noqa: E402
+
+
+def compute_answer(entry: dict) -> dict:
+    """The engine path used by ``--compute``: plan -> gate -> engine -> answer."""
+    return pipeline.compute(entry["request"], entry.get("payload"))[1]
 
 
 def main() -> int:
@@ -19,6 +26,11 @@ def main() -> int:
     parser.add_argument("entry_id", help="ledger id, e.g. 20261026T203312-1a2b3c4d")
     parser.add_argument("--dir", default=None, help="ledger directory (default: runs/router)")
     parser.add_argument("--list", action="store_true", help="only list the newest entries")
+    parser.add_argument(
+        "--compute",
+        action="store_true",
+        help="recompute the number through the engines and compare it",
+    )
     args = parser.parse_args()
 
     if args.list:
@@ -28,7 +40,11 @@ def main() -> int:
         return 0
 
     try:
-        result = ledger.replay(args.entry_id, root=args.dir)
+        result = ledger.replay(
+            args.entry_id,
+            root=args.dir,
+            compute=compute_answer if args.compute else None,
+        )
     except KeyError as exc:
         print(f"[MISSING] {exc}", file=sys.stderr)
         return 2

@@ -79,3 +79,15 @@ def test_plan_and_answer_agree_on_capability(tmp_path):
     out = P.ask(*ESOL, path=tmp_path / "20261026.jsonl")
     assert out["capability"] == out["answer"]["capability"] == "solubility.aqueous"
     assert out["plan"]["gate"]["verdict"] == "PASS"
+
+
+def test_replay_with_pipeline_compute_reproduces_the_number(tmp_path):
+    out = P.ask(*ESOL, path=tmp_path / "20261026.jsonl")
+    result = L.replay(
+        out["ledger"],
+        root=tmp_path,
+        compute=lambda entry: P.compute(entry["request"], entry.get("payload"))[1],
+    )
+    assert result["plan_same"] is True
+    assert result["value_same"] is True
+    assert result["ok"] is True

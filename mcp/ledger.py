@@ -5,13 +5,16 @@ request in ``runs/router/YYYYMMDD.jsonl`` (or ``KJ_RUNS_DIR``); a line is never
 rewritten, and ``replay`` re-derives the plan from the stored request so that a
 changed router or gate shows up as a concrete diff instead of a silent drift.
 
-Replay scope, stated plainly: plan and gate are recomputed; the number is only
-recomputed when the caller passes a ``compute`` callable (the engines are wired
-in a later phase). ``value_same`` is ``None`` in that case - never a fake True.
+Replay scope, stated plainly: plan and gate are always recomputed; the number is
+recomputed only when the caller passes a ``compute`` callable (``tools/
+replay_router.py --compute`` wires ``pipeline.compute``). Without it
+``value_same`` is ``None`` - never a fake True. With it, the number is compared
+within ``VALUE_REL_TOL``/``VALUE_ABS_TOL`` and a larger difference is drift.
 """
 import datetime
 import hashlib
 import json
+import math
 import os
 import pathlib
 import subprocess
@@ -26,6 +29,23 @@ REQUIRED = ("request", "capability", "plan", "gates", "answer", "commit")
 RUNS_DIR = pathlib.Path(
     os.environ.get("KJ_RUNS_DIR", str(pathlib.Path(__file__).resolve().parents[1] / "runs" / "router"))
 )
+
+# A recomputed number is compared with a stated tolerance instead of exact
+# equality: the engines are deterministic on one machine, but a library upgrade
+# may move the last bits. Anything larger than this is drift, not rounding.
+VALUE_REL_TOL = 1e-9
+VALUE_ABS_TOL = 1e-12
+
+
+def same_value(old, new, rel_tol: float = VALUE_REL_TOL, abs_tol: float = VALUE_ABS_TOL) -> bool:
+    """True when two stored numbers are the same number within tolerance."""
+    if old is None or new is None:
+        return old is None and new is None
+    try:
+        return math.isclose(float(old), float(new), rel_tol=rel_tol, abs_tol=abs_tol)
+    except (TypeError, ValueError):
+        return False
+
 
 
 def _now() -> str:
@@ -148,8 +168,8 @@ def replay(entry_id, *, compute=None, root=None) -> dict:
     """Recompute plan+gate for a stored request and compare with the ledger.
 
     ``compute`` is an optional callable ``entry -> answer dict``; when given, the
-    number, unit and verdict are compared too. When omitted, ``value_same`` is
-    None (the engines are not invoked by replay).
+    number (within ``same_value`` tolerance), unit and verdict are compared too.
+    When omitted, ``value_same`` is None (the engines are not invoked).
     """
     import answer as A
 
@@ -167,7 +187,22 @@ def replay(entry_id, *, compute=None, root=None) -> dict:
     if compute is not None:
         fresh = compute(entry)
         A.validate(fresh)
-        for key in ("value", "unit", "verdict"):
+        old_value = entry["answer"].get("value")
+        new_value = fresh.get("value")
+        if not same_value(old_value, new_value):
+            diff = None
+            try:
+                diff = abs(float(new_value) - float(old_value))
+            except (TypeError, ValueError):
+                diff = None
+            answer_diffs["value"] = {
+                "ledger": old_value,
+                "now": new_value,
+                "abs_diff": diff,
+                "rel_tol": VALUE_REL_TOL,
+                "abs_tol": VALUE_ABS_TOL,
+            }
+        for key in ("unit", "verdict"):
             if fresh.get(key) != entry["answer"].get(key):
                 answer_diffs[key] = {"ledger": entry["answer"].get(key), "now": fresh.get(key)}
         value_same = not answer_diffs

@@ -156,3 +156,39 @@ def test_find_reports_missing_ids(tmp_path):
     _append(tmp_path)
     with pytest.raises(KeyError):
         L.find("nope", root=tmp_path)
+
+def test_same_value_tolerance_is_stated_not_assumed():
+    assert L.same_value(-0.1247458, -0.1247458)
+    assert L.same_value(-0.1247458, -0.1247458000001)
+    assert not L.same_value(-0.1247458, -0.1247)
+    assert L.same_value(None, None)
+    assert not L.same_value(None, 1.0)
+
+
+def test_replay_with_compute_reproduces_the_number(tmp_path):
+    entry = _append(tmp_path)
+    out = L.replay(entry["id"], root=tmp_path, compute=lambda stored: {**stored["answer"]})
+    assert out["value_same"] is True and out["ok"] is True
+    assert out["answer_diffs"] == {}
+
+
+def test_replay_with_compute_flags_a_changed_number(tmp_path):
+    entry = _append(tmp_path)
+
+    def drifted(stored):
+        return {**stored["answer"], "value": stored["answer"]["value"] + 0.01}
+
+    out = L.replay(entry["id"], root=tmp_path, compute=drifted)
+    assert out["value_same"] is False and out["ok"] is False
+    assert out["answer_diffs"]["value"]["abs_diff"] == pytest.approx(0.01)
+    assert out["answer_diffs"]["value"]["rel_tol"] == L.VALUE_REL_TOL
+
+
+def test_tolerance_absorbs_last_bit_rounding(tmp_path):
+    entry = _append(tmp_path)
+
+    def rounded(stored):
+        return {**stored["answer"], "value": stored["answer"]["value"] + 1e-13}
+
+    out = L.replay(entry["id"], root=tmp_path, compute=rounded)
+    assert out["value_same"] is True and out["ok"] is True
