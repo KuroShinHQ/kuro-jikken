@@ -60,10 +60,11 @@ Committed **before any model call** (`b2b52b3`, 2026-10-26 10:38:47 +0300).
 Selection: AqSolDB 9.982 rows -> 7.542 in-domain -> `random.Random(20261026).sample(sorted_by_inchikey, 250)`.
 First 50 = pilot, next 200 = confirmatory.
 
-## 5. Pilot (debug only; 5 of the 50 pilot molecules)
+## 5. Pilot (debugging only — NOT a result; do not cite these numbers)
 
 Run `20261026T081319Z_pilot` (5 molecules x 7 properties x 3 modes = 105 items).
-Pilot accuracy is **not** a result and was not used for any Freeze 2 choice.
+These figures are for debugging only. **They are not a result**, not a preprint
+number, and were not used for any Freeze 2 choice.
 
 | mode | correct | mean s/item | tool calls/item | verification failures |
 |---|---|---|---|---|
