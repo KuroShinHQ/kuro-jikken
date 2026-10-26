@@ -61,3 +61,20 @@ def test_pure_aluminium_melting_matches_literature():
         pytest.skip("MatCalc databases not present")
     value = T.alloy_melting_point("mc_al_v2.032.pycalphad.tdb", "AL", "FCC_A1", 930.0, 936.0)
     assert 933.0 < value["melting_k"] < 934.0
+
+
+def test_unifac_groups_ethanol():
+    out = T.unifac_groups("CCO")
+    assert out["subgroups"] == {"CH3": 1, "CH2": 1, "OH": 1}
+
+
+def test_unifac_r_q_match_published_table():
+    out = T.unifac_groups("CCCCCC")
+    assert abs(out["r"] - 4.4998) < 0.001
+    assert abs(out["q"] - 3.856) < 0.001
+
+
+def test_unifac_rejects_bad_smiles():
+    with pytest.raises(ValueError):
+        T.unifac_groups("C1CC")
+

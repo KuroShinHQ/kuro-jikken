@@ -160,5 +160,30 @@ def hsp_rank(reference_cas: str, candidate_cas: list[str]) -> dict:
     }
 
 
+@MCP.tool()
+def unifac_groups(smiles: str) -> dict:
+    """UNIFAC subgroup decomposition (ugropy): counts, r and q for one molecule.
+
+    This is the first half of an activity-coefficient calculation. The second
+    half (the group interaction matrix) is not wired yet, so no gamma is
+    returned here and none should be invented downstream.
+    """
+    from ugropy import unifac
+
+    try:
+        result = unifac.get_groups(smiles, "smiles")
+    except Exception as exc:  # ugropy raises several types for a bad structure
+        raise ValueError(f"UNIFAC decomposition failed: {exc}") from exc
+    return {
+        "smiles": smiles,
+        "subgroups": dict(result.subgroups),
+        "r": round(result.r, 4),
+        "q": round(result.q, 4),
+        "source": "ugropy 3.2.5, UNIFAC subgroup table",
+        "note": "Groups and r/q only. Activity coefficients need the group "
+        "interaction matrix, which is not wired yet.",
+    }
+
+
 if __name__ == "__main__":
     MCP.run()
