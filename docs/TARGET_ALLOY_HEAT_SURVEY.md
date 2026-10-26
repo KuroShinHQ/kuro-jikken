@@ -17,6 +17,12 @@ Sources: matcalc.at open-databases page (mc_*), opencalphad.com/databases.php
 (COST507.zip, solders.zip). Element sets and phase counts extracted from the
 files (regex over ELEMENT/PHASE lines), not from vendor claims.
 
+**Tracked vs quarantined.** Only `mc_al.tdb`, `mc_fe.tdb` and `mc_ni.tdb`
+(MatCalc, ODbL 1.0) are tracked. `COST507.tdb` and `solders.tdb` have an
+**UNCLEAR** licence: they were moved to the local, git-ignored
+`data/quarantine/` and are not reachable from the repository history. They are
+exploration-only and must not be published or pushed.
+
 Element sets:
 - mc_fe: Al B C Co Cr Cu Fe H Hf La Mn Mo N Nb Ni O P Pd S Si Ta Ti V W Y
 - mc_ni: Al B C Co Cr Cu Fe Hf La Mn Mo N Nb Ni O S Si Ti V W Y Zr
