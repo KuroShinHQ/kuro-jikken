@@ -205,6 +205,18 @@ zero numbers produced without a gate record.
 | **P4** | ledger + replay | `runs/router/*.jsonl`, `kj_ask --replay` | replay reproduces value and verdict bit-for-bit | 0.5 day |
 | **P5** | optional engines | VLE/azeotrope (thermo + gate), biology gateway (only with licence + validation), OPTIMADE reader | new golden rows must be added first | after P4 |
 
+Sub-phases added while executing the plan (2026-10-26). The v1 table above is
+left as written; this table is the record of the extension:
+
+| Sub-phase | Work | Deliverable | Evidence | Status |
+|---|---|---|---|---|
+| **P3.5a** | multi-gate dispatch | `router.gate_payloads` + `router.aggregate_gates`; extra `gate.hsp` for mixtures with a CAS | `5badce6`, DEVAM 246, suite 379 | done |
+| **P3.5b** | identity resolver | `mcp/resolver.py` (CAS / SMILES / TR names / mixtures, explicit ambiguity) | `13e3a3e`, DEVAM 247, suite 391 | done |
+| **P5a** | engine adapters + one call | `mcp/engines.py`, `mcp/pipeline.py`, `tools/ask.py` | `165acc4`, DEVAM 249, suite 412 | done |
+| **P5b** | replay with real compute | `ledger.same_value` (1e-9/1e-12), `replay_router.py --compute` | `041ebf8`, DEVAM 250, suite 417 | done |
+| **P5c** | numeric golden set | `tools/tests/test_golden_numbers.py` (20 rows: 6 numbers + 14 refusals) | `59b977a`, DEVAM 251, suite 440 | done |
+| **P5d** | MCP surface | `kj_ask(request, payload, plan_only)`, `kj_replay(entry_id, recompute)` | `64acef0`, DEVAM 252, suite 444, stdio 9 tools | done |
+
 Order is deliberate: manifest -> live MCP -> router -> gates -> contract ->
 ledger. Building engines before P2 repeats today's problem (nice tools, no
 single door), and skipping P0.5 keeps the door locked.
