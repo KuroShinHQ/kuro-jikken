@@ -119,6 +119,19 @@ def main():
     engine_dir = Path(args.engine_dir) if args.engine_dir else sigma_dir / "engine" / "COSMOSAC"
     cache = Path(args.cache) if args.cache else sigma_dir / "engine" / "_cache_sanity"
 
+    # The compiled extension lives in the cCOSMO build tree; without it on
+    # sys.path the very first check fails with ModuleNotFoundError instead of a
+    # real result (found 2026-10-26 while re-running this script).
+    if not (engine_dir / "easy_COSMOSAC.py").is_file():
+        print(f"cCOSMO engine not found: {engine_dir}")
+        return 2
+    builds = sorted(engine_dir.glob("build/*/Release"))
+    if not builds:
+        print(f"cCOSMO build not found under {engine_dir / 'build'}")
+        return 2
+    sys.path.insert(0, str(builds[0]))
+    sys.path.insert(0, str(engine_dir))
+
     profiles = PubChemQCProfiles(
         sigma_parquet=sigma_dir / "sigma_profiles_main.parquet",
         index_parquet=sigma_dir / "sigma_profile_index.parquet",
