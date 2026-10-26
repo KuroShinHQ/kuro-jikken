@@ -95,5 +95,16 @@ From the pilot means: per molecule = 7 x (2.712 + 11.482 + 13.921) = **196.8 s**
 Throughput only. Pilot accuracy (A 18/35) was not used to choose the platform,
 the context size, the sampling parameters or N.
 
+## 9. Provenance
+
+| item | value |
+|---|---|
+| Harness commit at candidate time | `a94e36b` |
+| `bench/score.py` SHA-256 | `31DD71265919336CE4ADC299846C33B8A43BB181250F615CAEC7A5BC065B65FF` |
+| Raw pilot log | `runs/20261026T081319Z_pilot.jsonl` |
+| Raw platform logs | `runs/20261026T085727Z_speed_wsl_10288.jsonl`, `runs/20261026T090242Z_speed_windows_10288_cache.jsonl` |
+| Environment note | Advanced SystemCare was running (0.000 s CPU / no sockets measured); see `DEVIATIONS.md` |
+
+
 
 
