@@ -1,5 +1,31 @@
 # OSF pre-registration submission (2026-10-25)
 
+## Gate re-check 2026-10-26 (entry to the LLM A/B/C pilot)
+
+Read-only re-verification before the pilot harness work. No token was used for the
+reads below (the registration is public).
+
+| item | value observed on 2026-10-26 | source |
+|---|---|---|
+| `public` | **true** | `GET https://api.osf.io/v2/registrations/8pbnu/` -> 200 |
+| `pending_registration_approval` | **false** | same |
+| `reviews_state` / `revision_state` | **accepted** / **approved** | same |
+| `date_registered` | **2026-10-25T12:10:01.617746** (unchanged) | same |
+| DOI | **10.17605/OSF.IO/8PBNU** | `GET .../8pbnu/identifiers/` -> 1 identifier, `category: doi` |
+| DOI resolves | **302 -> https://osf.io/8pbnu/** | `GET https://doi.org/10.17605/OSF.IO/8PBNU` |
+| Title | kuro-jikken: LLM modes A/B/C (pre-registration) | same |
+| Local prereg SHA-256 | **EE039AC64277839043929BF5A3DC96D7F16353ABA79EE5672AC8986AD01B1525** (= expectation) | `Get-FileHash prereg/llm_modes_plan_v1.md` |
+
+Note: the v2 registration object reports `attributes.doi = null`; the DOI is exposed by the
+`identifiers` endpoint (and resolves). This is an OSF API shape difference, not a missing DOI.
+
+The Freeze-1 gate (registration public + approved, before any benchmark run) is **satisfied**.
+
+The environment gate that day was **NOT** satisfied: `ASCService` (PID 2980) and `ASCTray`
+(PID 22840) were running, and the author's instruction is to stop the pilot start in that
+case. No model was started.
+
+
 Status: **APPROVED — PUBLIC** (approved 2026-10-25T12:55:08Z, ~45 min after submit,
 by the admin approval link in the OSF notification email).
 Nothing was deleted; no tag, no release, no force push.
