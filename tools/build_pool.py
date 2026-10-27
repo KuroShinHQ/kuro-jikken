@@ -88,8 +88,19 @@ PHASE_LINE = re.compile(r"^\s*PHASE\s+([A-Za-z0-9_#\-]+)")
 ELEMENT_LINE = re.compile(r"^\s*ELEMENT\s+([A-Z][A-Z0-9]*)")
 
 
+def _normalised_bytes(path: pathlib.Path) -> bytes:
+    """Content bytes with CRLF folded to LF.
+
+    The TDB files are text; a checkout on a machine with different line-ending
+    settings must not change the pinned size or hash (first seen on the Linux CI
+    runner). The databases themselves are parsed by pycalphad, which does not
+    care about the ending.
+    """
+    return path.read_bytes().replace(b"\r\n", b"\n")
+
+
 def _sha256(path: pathlib.Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(_normalised_bytes(path)).hexdigest()
 
 
 def _dump(path: pathlib.Path, obj) -> str:
@@ -225,7 +236,7 @@ def build_alloy_phases() -> dict:
         entries.append({
             "database": path.stem,
             "path": path.relative_to(ROOT).as_posix(),
-            "bytes": path.stat().st_size,
+            "bytes": len(_normalised_bytes(path)),
             "sha256": _sha256(path),
             "elements": sorted(elements),
             "element_count": len(elements),

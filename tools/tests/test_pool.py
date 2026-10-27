@@ -101,8 +101,9 @@ def test_alloy_pool_points_at_the_databases_and_keeps_no_coefficients():
     for entry in pool["entries"]:
         path = ROOT / entry["path"]
         assert path.is_file()
-        assert entry["bytes"] == path.stat().st_size
-        assert entry["sha256"] == hashlib.sha256(path.read_bytes()).hexdigest()
+        data = path.read_bytes().replace(b"\r\n", b"\n")
+        assert entry["bytes"] == len(data)
+        assert entry["sha256"] == hashlib.sha256(data).hexdigest()
         assert entry["element_count"] == len(entry["elements"]) > 0
         assert entry["phase_count"] == len(entry["phases"]) > 0
         assert "VA" not in entry["elements"]

@@ -10,7 +10,7 @@
    "file": "data/pool/alloy_phases.json",
    "licence": "ODbL-1.0 + DbCL-1.0",
    "role": "phase catalogue for alloy.phase: filter, never order (R5 verdict MEASURED_NOT_DECLARED)",
-   "sha256": "7aa77ab738685e331d12f3a7bc5e19e433c2f863c54cbb8ddcf961bffbc88514"
+   "sha256": "6f78c85ab6c118f64dfa35aea56f128223f5ad861d66b940ee024e8630077583"
   },
   "hsp": {
    "bytes": 325420,

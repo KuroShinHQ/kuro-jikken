@@ -222,7 +222,7 @@
    "sha256": "87ec595f2caae189227ed11d5598c899b436b866ccfefea91304ca57188817c4"
   },
   {
-   "bytes": 489296,
+   "bytes": 476667,
    "database": "mc_fe",
    "element_count": 25,
    "elements": [
@@ -389,10 +389,10 @@
     "YALO3",
     "ZET"
    ],
-   "sha256": "aa02077eac3f602dd7479cbeafb09b450e282716752b3ae2b1fc3a57d9c64865"
+   "sha256": "db9dcd0a5227286c8f65ed9bf2cdf37af90b67c8c92fb8bdad9a23f4b4fc4239"
   },
   {
-   "bytes": 416720,
+   "bytes": 406033,
    "database": "mc_ni",
    "element_count": 22,
    "elements": [
@@ -523,7 +523,7 @@
     "Y2O3_H",
     "ZET"
    ],
-   "sha256": "84ba813156e1f7d8bde495d74420319afec03572b981f6b56103807f305313ab"
+   "sha256": "edbd04dad523ec39cd7d2c04ab8c170dcf8e3c8e57c6157de12de85b3ae55cc1"
   }
  ],
  "generated": "2026-10-27",

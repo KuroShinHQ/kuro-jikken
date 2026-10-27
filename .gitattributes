@@ -1,7 +1,6 @@
 # Byte-pinned data. data/calibration.json records the size and sha256 of the
-# locked ESOL predictions, and data/pool/alloy_phases.json records bytes and
-# sha256 of the TDB files. A checkout that rewrites line endings changes those
-# bytes and makes the audit fail (first seen on the Linux CI runner), so the
-# line endings of these two families are pinned instead of normalised.
+# locked ESOL predictions, so a checkout that rewrites line endings would change
+# those bytes and make the audit fail (first seen on the Linux CI runner). The
+# TDB files are hashed after CRLF->LF folding in tools/build_pool.py, so they
+# need no rule here.
 validation/solubility/*.csv text eol=crlf
-data/alloy_tdb/*.tdb text eol=crlf
