@@ -101,3 +101,34 @@ def test_replay_with_pipeline_compute_reproduces_the_number(tmp_path):
     assert result["plan_same"] is True
     assert result["value_same"] is True
     assert result["ok"] is True
+
+
+TDB = "mc_al_v2.032.pycalphad.tdb"
+
+
+def test_sentence_supplies_the_composition_basis():
+    """R2: "Al-5 wt% Cu" and "Al-5 at% Cu" are two different alloys, and the
+    sentence says which one. Before this, both answered RED "unit mismatch"
+    because the payload only carried the TDB."""
+    _, wt = P.compute("Al-5 wt% Cu alasimi erir mi", {"tdb": TDB})
+    _, at = P.compute("Al-5 at% Cu alasimi erir mi", {"tdb": TDB})
+    assert wt["value"] == pytest.approx(918.9, abs=0.1)
+    assert at["value"] == pytest.approx(900.44, abs=0.1)
+    assert "wt% Cu" in wt["limits"][0]
+    assert "at% Cu" in at["limits"][0]
+
+
+def test_sentence_without_a_basis_still_refuses():
+    """No basis in the sentence and none in the payload -> one question, not a guess."""
+    _, ans = P.compute("Al-5% Cu alasimi erir mi", {"tdb": TDB})
+    assert ans["verdict"] == "RED" and ans["reason"] == "unit mismatch"
+
+
+def test_explicit_payload_wins_over_the_sentence():
+    """A caller that states cu_pct/basis is never overruled by the parser."""
+    _, ans = P.compute(
+        "Al-5 wt% Cu alasimi erir mi",
+        {"tdb": TDB, "cu_pct": 2, "basis": "wt"},
+    )
+    assert ans["value"] == pytest.approx(927.78, abs=0.5)
+
