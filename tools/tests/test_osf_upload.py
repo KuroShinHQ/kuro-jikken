@@ -68,6 +68,7 @@ def test_token_never_in_output(monkeypatch, capsys):
     cap = capsys.readouterr()
     assert "TEST_ONLY_FAKE_TOKEN_0123456789abcdef" not in (cap.out + cap.err)
 
+@pytest.mark.skipif(sys.platform != "win32", reason="the token is read from the Windows registry")
 def test_mismatch_blocks_public(monkeypatch, capsys):
     monkeypatch.setattr(O, "new_session", lambda: RecordingSession())
     monkeypatch.setattr(O, "list_files", lambda s, n: {"plan.md": {"size": 999, "hashes": {}}})

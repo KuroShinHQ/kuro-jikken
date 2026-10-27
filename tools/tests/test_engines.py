@@ -1,10 +1,16 @@
 """P5a adapter tests: a gate-passed plan becomes one honest answer, or a refusal."""
+import os
 import pathlib
 import sys
 
 import pytest
 
 pytest.importorskip("pint")
+
+TDB_DIR = pathlib.Path(os.environ.get("KJ_TDB_DIR", r"C:\KuroshinHQ\_hub\data\alloy_tdb_mgf"))
+requires_tdb = pytest.mark.skipif(
+    not TDB_DIR.is_dir(), reason="MGF databases stay outside the repo (ODbL); set KJ_TDB_DIR"
+)
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / "mcp"))
 
@@ -109,6 +115,7 @@ def test_calphad_without_composition_basis_is_a_refusal():
     assert "x_cu / cu_wt_pct" in out["limits"][0]
 
 
+@requires_tdb
 def test_calphad_zero_copper_uses_the_pure_aluminium_path():
     """Bug 2026-10-27: x_Cu = 0 returned the bracket edge (600.34 K) as GREEN.
 
@@ -124,6 +131,7 @@ def test_calphad_zero_copper_uses_the_pure_aluminium_path():
     assert "pure Al" in out["method"]
 
 
+@requires_tdb
 def test_calphad_zero_copper_with_another_element_is_refused():
     """0 % Cu is only 'pure aluminium' when the element set says Al-Cu.
 
@@ -139,6 +147,7 @@ def test_calphad_zero_copper_with_another_element_is_refused():
     assert "pure MG" in out["limits"][0]
 
 
+@requires_tdb
 def test_calphad_basis_wt_and_at_are_different_numbers():
     """R2: 5 wt% Cu and 5 at% Cu are different alloys, and the same question
     without a basis is one question, not a guess."""
@@ -161,6 +170,7 @@ def test_calphad_basis_wt_and_at_are_different_numbers():
     assert "wt% mi at% mi" in out_none["sentence"]
 
 
+@requires_tdb
 def test_calphad_error_is_the_bisection_bracket_not_a_model_claim():
     """R3: every CALPHAD number carries a +-K bar.
 

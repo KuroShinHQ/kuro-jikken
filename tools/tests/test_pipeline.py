@@ -1,10 +1,16 @@
 """P5a orchestration tests: plan -> gate -> engine -> build -> ledger, one call."""
+import os
 import pathlib
 import sys
 
 import pytest
 
 pytest.importorskip("pint")
+
+TDB_DIR = pathlib.Path(os.environ.get("KJ_TDB_DIR", r"C:\KuroshinHQ\_hub\data\alloy_tdb_mgf"))
+requires_tdb = pytest.mark.skipif(
+    not TDB_DIR.is_dir(), reason="MGF databases stay outside the repo (ODbL); set KJ_TDB_DIR"
+)
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / "mcp"))
 
@@ -106,6 +112,7 @@ def test_replay_with_pipeline_compute_reproduces_the_number(tmp_path):
 TDB = "mc_al_v2.032.pycalphad.tdb"
 
 
+@requires_tdb
 def test_sentence_supplies_the_composition_basis():
     """R2: "Al-5 wt% Cu" and "Al-5 at% Cu" are two different alloys, and the
     sentence says which one. Before this, both answered RED "unit mismatch"
@@ -118,12 +125,14 @@ def test_sentence_supplies_the_composition_basis():
     assert "at% Cu" in at["limits"][0]
 
 
+@requires_tdb
 def test_sentence_without_a_basis_still_refuses():
     """No basis in the sentence and none in the payload -> one question, not a guess."""
     _, ans = P.compute("Al-5% Cu alasimi erir mi", {"tdb": TDB})
     assert ans["verdict"] == "RED" and ans["reason"] == "unit mismatch"
 
 
+@requires_tdb
 def test_explicit_payload_wins_over_the_sentence():
     """A caller that states cu_pct/basis is never overruled by the parser."""
     _, ans = P.compute(

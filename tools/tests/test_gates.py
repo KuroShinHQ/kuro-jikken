@@ -1,4 +1,5 @@
 """Tests for mcp/gates.py: every gate must refuse with a reason, never guess."""
+import os
 import pathlib
 import sys
 
@@ -44,6 +45,9 @@ def test_gate_refuses_bad_payload_instead_of_crashing():
 
 
 def test_cosmo_needs_a_known_inchikey():
+    index = pathlib.Path(os.environ.get("KURO_SIGMA_DIR", r"C:\KuroshinHQ\_hub\data\formulation_sigma")) / "sigma_profile_index.parquet"
+    if not index.is_file():
+        pytest.skip("PubChemQC sigma index stays outside the repo")
     assert G.gate_cosmo("LFQSCWFLJHTTHZ-UHFFFAOYSA-N")["verdict"] == "PASS"
     assert G.gate_cosmo("AAAAAAAAAAAAAA-AAAAAAAAAA-N")["verdict"] == "RED"
     assert G.gate_cosmo("not-an-inchikey")["verdict"] == "RED"

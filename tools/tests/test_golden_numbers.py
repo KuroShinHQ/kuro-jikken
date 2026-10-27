@@ -5,12 +5,18 @@ answer must be, and "no number" is an answer. Values are regression pins of
 what the engine returns (the tolerance states how far a recomputation may
 drift); accuracy claims live in validation/, not here.
 """
+import os
 import pathlib
 import sys
 
 import pytest
 
 pytest.importorskip("pint")
+
+TDB_DIR = pathlib.Path(os.environ.get("KJ_TDB_DIR", r"C:\KuroshinHQ\_hub\data\alloy_tdb_mgf"))
+requires_tdb = pytest.mark.skipif(
+    not TDB_DIR.is_dir(), reason="MGF databases stay outside the repo (ODbL); set KJ_TDB_DIR"
+)
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / "mcp"))
 
@@ -62,6 +68,8 @@ ROWS = [
 @pytest.mark.parametrize("row", ROWS, ids=[f"row{r[0]}" for r in ROWS])
 def test_golden_row(row):
     number, request, payload, verdict, reason, value, tolerance, unit = row
+    if number == 6 and not TDB_DIR.is_dir():
+        pytest.skip("row 6 is Al-Cu: the MGF database stays outside the repo")
     plan, ans = P.compute(request, payload)
     assert ans["verdict"] == verdict, f"row {number}: {ans.get('reason')}"
     if verdict == "RED":
@@ -79,6 +87,8 @@ def test_golden_row(row):
 
 
 def test_every_golden_row_is_stored_with_its_gate(tmp_path):
+    if not TDB_DIR.is_dir():
+        pytest.skip("row 6 needs the MGF database")
     path = tmp_path / "golden.jsonl"
     ids = [P.ask(row[1], row[2], path=path)["ledger"] for row in ROWS]
     entries = L.read(path)
@@ -94,6 +104,8 @@ def test_every_golden_row_is_stored_with_its_gate(tmp_path):
 
 
 def test_golden_numbers_replay_bit_for_bit(tmp_path):
+    if not TDB_DIR.is_dir():
+        pytest.skip("row 6 needs the MGF database")
     path = tmp_path / "golden.jsonl"
     numbers = [row for row in ROWS if row[5] is not None]
     for row in numbers:

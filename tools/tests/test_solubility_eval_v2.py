@@ -428,6 +428,10 @@ def test_overlap_keys_reads_only_id_and_inchikey(tmp_path):
 
 
 def test_make_profiles_import_path_in_fresh_interpreter(tmp_path):
+    import os as _os
+    params = Path(_os.environ.get("KURO_SIGMA_DIR", r"C:\KuroshinHQ\_hub\data\formulation_sigma")) / "sequential_final_params.json"
+    if not params.is_file():
+        pytest.skip("PubChemQC params stay outside the repo")
     """main()'s exact import path must work in a clean interpreter, with no
     sys.modules faking and no conftest state (the venv also ships the official
     `mcp` package, which used to shadow the repo's mcp/ directory)."""
