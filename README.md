@@ -119,7 +119,7 @@ the physics engines need a different one.
 | Server | Environment | Exposes |
 |---|---|---|
 | `mcp/server.py` | `.venv` (frozen) | `parse_smiles`, `formula`, `molecular_weight`, `heavy_atom_count`, `ring_count`, `hbd_lipinski`, `hbd_plain`, `hba_lipinski`, `hba_plain`, `esol_predict` — **10 tools** |
-| `mcp/tools_server.py` | `.venv_inventory` | `alloy_melting_point`, `hsp_lookup`, `hsp_distance`, `hsp_rank`, `unifac_groups`, `unifac_gamma`, `unifac_gamma_infinity`, `kj_ask`, `kj_replay` — **9 tools** |
+| `mcp/tools_server.py` | `.venv_inventory` | `alloy_melting_point`, `hsp_lookup`, `hsp_distance`, `hsp_rank`, `unifac_groups`, `unifac_gamma`, `unifac_gamma_infinity`, `kj_ask`, `kj_replay`, `kj_recipe` - **10 tools** |
 
 The ten property tools return `value`, `unit`, `method`, `rdkit_version` and a matched
 `error_bar`. The router answers (`kj_ask`) go further and must carry the full contract from

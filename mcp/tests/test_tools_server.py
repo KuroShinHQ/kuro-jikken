@@ -99,3 +99,38 @@ def test_unifac_gamma_missing_pair_is_an_error_not_a_number():
     assert out["value"] is None
     assert "no UNIFAC interaction" in out["error"]
 
+
+def test_kj_recipe_passes_a_repo_recipe():
+    out = T.kj_recipe("data/recipes/mint_lemon.json")
+    assert out["verdict"] == "PASS"
+    assert out["steps"] == 5
+    assert out["equation"] is None
+    assert out["note"].startswith("procedure only")
+
+
+def test_kj_recipe_accepts_the_document_itself():
+    import json
+
+    path = pathlib.Path(__file__).resolve().parents[2] / "data" / "recipes" / "silver_tarnish.json"
+    doc = json.loads(path.read_text(encoding="utf-8-sig"))
+    out = T.kj_recipe(doc)
+    assert out["verdict"] == "PASS"
+    assert out["equation"]["balanced"] is True
+
+
+def test_kj_recipe_red_is_a_result_not_an_exception():
+    doc = {
+        "schema": "kj-recipe/1",
+        "id": "bad",
+        "kind": "food",
+        "title": "Cold cure",
+        "claim_boundary": "x",
+        "ingredients": [],
+        "steps": [],
+        "safety": [],
+        "does_not_say": [],
+        "sources": [],
+    }
+    out = T.kj_recipe(doc)
+    assert out["verdict"] == "RED"
+    assert out["reason"]

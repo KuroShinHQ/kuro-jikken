@@ -45,6 +45,8 @@ const lab = new Lab({
 })
 // the kit's prompt is branded for machines; this page is the /kj procedure lane
 lab.$('.lab-prompt b').textContent = '/kj'
+// the standard audit hook: shot.mjs and the probes read window.__lab
+window.__lab = lab
 
 // ---------------------------------------------------------------- the parts
 const P = []

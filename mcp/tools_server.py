@@ -247,5 +247,36 @@ def kj_replay(entry_id: str, recompute: bool = True) -> dict:
     return replay(entry_id, compute=compute)
 
 
+@MCP.tool()
+def kj_recipe(
+    recipe: dict | str,
+    markdown: bool = False,
+    check_http: bool = False,
+) -> dict:
+    """Audit a procedure document against the kj-recipe/1 contract (P1).
+
+    ``recipe`` is either a path to a recipe JSON (repo-relative or absolute) or
+    the document itself. The tool checks the source ids, the mandatory claim
+    boundary, the atom balance of a declared equation and the Turkish mirror.
+    It never computes chemistry and returns no number: a failure is a normal
+    result, ``verdict = "RED"`` with the reason, not an exception.
+
+    ``markdown=True`` adds the rendered document; ``check_http=True`` fetches
+    every cited URL (a 403 is reported as a bot wall, not as a dead page).
+    """
+    from recipe import RecipeError, check_urls, load, render_markdown, validate
+
+    try:
+        doc = load(recipe) if isinstance(recipe, str) else recipe
+        report = validate(doc)
+    except RecipeError as exc:
+        return {"schema": "kj-recipe/1", "verdict": "RED", "reason": str(exc)}
+    if check_http:
+        report["http"] = check_urls(doc)
+    if markdown:
+        report["markdown"] = render_markdown(doc)
+    return report
+
+
 if __name__ == "__main__":
     MCP.run()

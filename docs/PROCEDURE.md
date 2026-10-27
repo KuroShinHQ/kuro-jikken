@@ -31,6 +31,11 @@ choice of this recipe (a 5-minute steep), not a measured fact.
 .venv_inventory\Scripts\python.exe tools\recipe_page.py --all --check               # exit 1 on a stale page
 ```
 
+The same gate is on the MCP surface: `kj_recipe(recipe, markdown=False, check_http=False)`
+in `mcp/tools_server.py` (`kj-tools`, 10 tools). `recipe` is a path or the document
+itself; a bad document comes back as `{"verdict": "RED", "reason": ...}`, not as an
+exception, and the tool never returns a chemistry number.
+
 The page generator embeds the whole JSON (`const R = ...; // kj-recipe-json`), so
 the page and the gated document cannot drift. `--check` compares the generated
 bytes with the file on disk.
@@ -49,11 +54,17 @@ fixed refusal sentence with an em dash.
 ## Evidence
 
 * `pytest mcp/tests/test_recipe.py tools/tests/test_recipe_page.py -q` -> 18 passed
+* `pytest mcp/tests/test_tools_server.py -q` (inventory env) -> 15 passed, including
+  the three `kj_recipe` tests (PASS, document-as-dict, RED-is-a-result)
 * `tools/recipe_page.py --all --check` -> exit 0, `stale: false` for both
-* `docs/../.opencode/skills/lab/labs/recipe_*.html` + `shot.mjs` PNGs
-* `--check-urls` report: 200 on NIST/IARC/WHO/LibreTexts/UW-Madison; CDC and
-  Canada are behind bot walls or slow from this machine (403/timeout), so the
-  page keeps the citation and the reader opens it by hand.
+* live MCP handshake (`tools/list`) -> **10 tools**, `kj_recipe` among them; a call
+  with `mint_lemon.json` returns `PASS`
+* `shot.mjs` on both pages -> mint 54 parts / 27 356 tris / 61 fps, silver
+  25 parts / 16 086 tris / 61 fps; PNGs in `%TEMP%\opencode\labshots\`
+* `--check-urls` (2026-10-27): 6 fetches HTTP 200 (NIST, IARC, WHO x2, LibreTexts,
+  UW-Madison); CDC x2 and NIOSH 403 (bot wall); Canada.ca timeout twice (30/45 s).
+  The page keeps the citation and the reader opens it by hand.
+* full consistency report: `docs/RECIPE_VALIDATION.md`
 
 ## What this lane does not do
 
