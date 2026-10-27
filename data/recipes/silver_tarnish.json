@@ -1,0 +1,161 @@
+{
+  "schema": "kj-recipe/1",
+  "id": "silver-tarnish-cell",
+  "kind": "household-chemistry",
+  "servings": 1,
+  "title": "Electrochemical removal of silver tarnish",
+  "page_title": "Gümüş kararma",
+  "summary": "Line a non-metal bowl with aluminium foil, add baking soda and hot water, and let the silver sulfide tarnish move onto the aluminium.",
+  "claim_boundary": "Household chemistry demonstration on silver. It removes silver sulfide tarnish; it does not repair scratches, worn plating, glued joints or structural damage, and it does not make an item sterile or food-safe.",
+  "equation": {
+    "text": "3 Ag2S(s) + 2 Al(s) + 6 H2O(l) -> 6 Ag(s) + 2 Al(OH)3(s) + 3 H2S(g)",
+    "source": "libretexts",
+    "note": "Net redox step, balanced by mcp/recipe.py. The cited page gives the electrochemical mechanism and the follow-up NaHCO3 + H2S -> NaHS + H2O + CO2."
+  },
+  "ingredients": [
+    {
+      "name": "aluminium foil",
+      "amount": 1,
+      "unit": "sheet",
+      "source": "design"
+    },
+    {
+      "name": "baking soda (NaHCO3)",
+      "amount": 10,
+      "unit": "g",
+      "source": "design"
+    },
+    {
+      "name": "hot water",
+      "amount": 500,
+      "unit": "ml",
+      "source": "design"
+    },
+    {
+      "name": "tarnished silver item",
+      "amount": 1,
+      "unit": "item",
+      "source": "design"
+    }
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "action": "Line a non-metal bowl with aluminium foil, shiny side up.",
+      "source": "libretexts"
+    },
+    {
+      "n": 2,
+      "action": "Put the silver on the foil; it must touch the aluminium.",
+      "source": "libretexts"
+    },
+    {
+      "n": 3,
+      "action": "Add the baking soda, then pour hot water over it.",
+      "temperature_c": 80,
+      "temperature_role": "setpoint",
+      "source": "uw-madison",
+      "note": "80 C is below boiling to reduce splashing; the cited demo uses hot or boiling water."
+    },
+    {
+      "n": 4,
+      "action": "Wait 5 to 10 minutes; bubbles at the tarnished areas mean the reaction is running.",
+      "minutes": 10,
+      "source": "design",
+      "note": "The cited demo reports CO2 bubbles at the tarnished areas; the 5-10 min window is a design choice."
+    },
+    {
+      "n": 5,
+      "action": "Rinse with distilled water and dry with a soft cloth.",
+      "source": "cci-97"
+    }
+  ],
+  "safety": [
+    {
+      "text": "Do not use a metal bowl or a metal utensil; the aluminium must be the only sacrificial metal.",
+      "source": "libretexts"
+    },
+    {
+      "text": "Ventilate the room: hydrogen sulfide smells of rotten eggs and is toxic at high concentrations.",
+      "source": "niosh-h2s"
+    },
+    {
+      "text": "Hot water can scald; keep children away.",
+      "source": "who-burns"
+    },
+    {
+      "text": "Do not use this on silver-plated items with worn plating, or on items with glued parts.",
+      "source": "cci-97"
+    },
+    {
+      "text": "Repeated treatment removes a little silver; not for museum or antique pieces.",
+      "source": "cci-97"
+    }
+  ],
+  "does_not_say": [
+    "that the item is sterile or food-safe after treatment",
+    "that scratches, wear or plating damage are repaired",
+    "that the method is safe for every alloy, plated object or antique"
+  ],
+  "sources": [
+    {
+      "id": "libretexts",
+      "title": "Chemistry LibreTexts (UC Davis): Cleaning silverware - electrochemical reaction",
+      "url": "https://chem.libretexts.org/Courses/University_of_California_Davis/UCDemos/Cleaning_Silverware__Electrochemical_Reaction",
+      "accessed": "2026-10-27",
+      "licence": "CC BY-NC-SA 4.0; facts used, no text copied"
+    },
+    {
+      "id": "uw-madison",
+      "title": "UW-Madison demo: removing tarnish from silver",
+      "url": "https://demolab.chem.wisc.edu/electrochemistry-removing-tarnish-from-silver-using-an-electrochemical-cell/",
+      "accessed": "2026-10-27",
+      "licence": "site terms; demonstration description"
+    },
+    {
+      "id": "cci-97",
+      "title": "Canadian Conservation Institute Note 9/7: care of silver",
+      "url": "https://www.canada.ca/en/conservation-institute/services/conservation-preservation-publications/canadian-conservation-institute-notes/care-silver.html",
+      "accessed": "2026-10-27",
+      "licence": "Government of Canada; facts used, no text copied"
+    },
+    {
+      "id": "niosh-h2s",
+      "title": "NIOSH: hydrogen sulfide",
+      "url": "https://www.cdc.gov/niosh/topics/hydrogensulfide/default.html",
+      "accessed": "2026-10-27",
+      "licence": "US government work (NIOSH)"
+    },
+    {
+      "id": "who-burns",
+      "title": "WHO fact sheet: Burns",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/burns",
+      "accessed": "2026-10-27",
+      "licence": "CC BY-NC-SA 3.0 IGO (WHO)"
+    }
+  ],
+  "tr": {
+    "title": "Gümüş kararmasını elektrokimyasal temizleme",
+    "summary": "Metal olmayan bir kabı alüminyum folyo ile kapla, karbonat ve sıcak su ekle; gümüş sülfür kararması alüminyuma taşınsın.",
+    "claim_boundary": "Gümüş üzerinde ev kimyası gösterimi. Yalnızca gümüş sülfür kararmasını giderir; çizik, aşınmış kaplama, yapıştırılmış parça veya yapısal hasarı onarmaz; eşyayı steril veya gıdaya uygun hale getirmez.",
+    "steps": [
+      "Metal olmayan bir kabı alüminyum folyo ile kapla, parlak yüzü yukarı gelsin.",
+      "Gümüşü folyonun üzerine koy; alüminyuma değmesi gerekir.",
+      "Karbonatı ekle, sonra üzerine sıcak su dök.",
+      "5-10 dakika bekle; kararmış bölgelerde kabarcık çıkması tepkimenin çalıştığını gösterir.",
+      "Distile suyla durula ve yumuşak bir bezle kurula."
+    ],
+    "safety": [
+      "Metal kap veya metal kaşık kullanma; tek fedakâr metal alüminyum olmalı.",
+      "Odayı havalandır: hidrojen sülfür çürük yumurta gibi kokar ve yüksek derişimde zehirlidir.",
+      "Sıcak su yakar; çocukları uzak tut.",
+      "Kaplaması aşınmış gümüş kaplama eşyalarda veya yapıştırılmış parçası olanlarda kullanma.",
+      "Tekrarlanan işlem az da olsa gümüşü alır; müze veya antika parçalar için uygun değildir."
+    ],
+    "does_not_say": [
+      "işlemden sonra eşyanın steril veya gıdaya uygun olduğunu",
+      "çizik, aşınma veya kaplama hasarının onarıldığını",
+      "yöntemin her alaşım, kaplama veya antika için güvenli olduğunu"
+    ]
+  }
+}

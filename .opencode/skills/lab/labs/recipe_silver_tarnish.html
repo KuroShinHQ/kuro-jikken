@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gümüş kararmasını elektrokimyasal temizleme · kuro-jikken</title>
+<meta name="description" content="household-chemistry procedure gated by mcp/recipe.py; 5 steps, 5 sources">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* the kit's title is sized for short machine names; a recipe title is longer */
+  .lab-title { font-size: clamp(30px, 3.0vw, 56px) !important; }
+  .lab-title i { font-size: 0.62em !important; line-height: 1.05 !important; }
+  .lab-pills { opacity: 0.72; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<script type="module" src="../kit/lab-kit.js"></script>
+<script type="module">
+const { THREE, Lab, MAT, GEO, clamp, fmt } = window.LabKit
+
+// The whole recipe, copied by tools/recipe_page.py from the gated document.
+// No number on this page is typed by hand: steps, temperatures and sources all
+// come from this object, and `--check` fails when the page and the file differ.
+const R = {"schema":"kj-recipe/1","id":"silver-tarnish-cell","kind":"household-chemistry","servings":1,"title":"Electrochemical removal of silver tarnish","page_title":"Gümüş kararma","summary":"Line a non-metal bowl with aluminium foil, add baking soda and hot water, and let the silver sulfide tarnish move onto the aluminium.","claim_boundary":"Household chemistry demonstration on silver. It removes silver sulfide tarnish; it does not repair scratches, worn plating, glued joints or structural damage, and it does not make an item sterile or food-safe.","equation":{"text":"3 Ag2S(s) + 2 Al(s) + 6 H2O(l) -> 6 Ag(s) + 2 Al(OH)3(s) + 3 H2S(g)","source":"libretexts","note":"Net redox step, balanced by mcp/recipe.py. The cited page gives the electrochemical mechanism and the follow-up NaHCO3 + H2S -> NaHS + H2O + CO2."},"ingredients":[{"name":"aluminium foil","amount":1,"unit":"sheet","source":"design"},{"name":"baking soda (NaHCO3)","amount":10,"unit":"g","source":"design"},{"name":"hot water","amount":500,"unit":"ml","source":"design"},{"name":"tarnished silver item","amount":1,"unit":"item","source":"design"}],"steps":[{"n":1,"action":"Line a non-metal bowl with aluminium foil, shiny side up.","source":"libretexts"},{"n":2,"action":"Put the silver on the foil; it must touch the aluminium.","source":"libretexts"},{"n":3,"action":"Add the baking soda, then pour hot water over it.","temperature_c":80,"temperature_role":"setpoint","source":"uw-madison","note":"80 C is below boiling to reduce splashing; the cited demo uses hot or boiling water."},{"n":4,"action":"Wait 5 to 10 minutes; bubbles at the tarnished areas mean the reaction is running.","minutes":10,"source":"design","note":"The cited demo reports CO2 bubbles at the tarnished areas; the 5-10 min window is a design choice."},{"n":5,"action":"Rinse with distilled water and dry with a soft cloth.","source":"cci-97"}],"safety":[{"text":"Do not use a metal bowl or a metal utensil; the aluminium must be the only sacrificial metal.","source":"libretexts"},{"text":"Ventilate the room: hydrogen sulfide smells of rotten eggs and is toxic at high concentrations.","source":"niosh-h2s"},{"text":"Hot water can scald; keep children away.","source":"who-burns"},{"text":"Do not use this on silver-plated items with worn plating, or on items with glued parts.","source":"cci-97"},{"text":"Repeated treatment removes a little silver; not for museum or antique pieces.","source":"cci-97"}],"does_not_say":["that the item is sterile or food-safe after treatment","that scratches, wear or plating damage are repaired","that the method is safe for every alloy, plated object or antique"],"sources":[{"id":"libretexts","title":"Chemistry LibreTexts (UC Davis): Cleaning silverware - electrochemical reaction","url":"https://chem.libretexts.org/Courses/University_of_California_Davis/UCDemos/Cleaning_Silverware__Electrochemical_Reaction","accessed":"2026-10-27","licence":"CC BY-NC-SA 4.0; facts used, no text copied"},{"id":"uw-madison","title":"UW-Madison demo: removing tarnish from silver","url":"https://demolab.chem.wisc.edu/electrochemistry-removing-tarnish-from-silver-using-an-electrochemical-cell/","accessed":"2026-10-27","licence":"site terms; demonstration description"},{"id":"cci-97","title":"Canadian Conservation Institute Note 9/7: care of silver","url":"https://www.canada.ca/en/conservation-institute/services/conservation-preservation-publications/canadian-conservation-institute-notes/care-silver.html","accessed":"2026-10-27","licence":"Government of Canada; facts used, no text copied"},{"id":"niosh-h2s","title":"NIOSH: hydrogen sulfide","url":"https://www.cdc.gov/niosh/topics/hydrogensulfide/default.html","accessed":"2026-10-27","licence":"US government work (NIOSH)"},{"id":"who-burns","title":"WHO fact sheet: Burns","url":"https://www.who.int/news-room/fact-sheets/detail/burns","accessed":"2026-10-27","licence":"CC BY-NC-SA 3.0 IGO (WHO)"}],"tr":{"title":"Gümüş kararmasını elektrokimyasal temizleme","summary":"Metal olmayan bir kabı alüminyum folyo ile kapla, karbonat ve sıcak su ekle; gümüş sülfür kararması alüminyuma taşınsın.","claim_boundary":"Gümüş üzerinde ev kimyası gösterimi. Yalnızca gümüş sülfür kararmasını giderir; çizik, aşınmış kaplama, yapıştırılmış parça veya yapısal hasarı onarmaz; eşyayı steril veya gıdaya uygun hale getirmez.","steps":["Metal olmayan bir kabı alüminyum folyo ile kapla, parlak yüzü yukarı gelsin.","Gümüşü folyonun üzerine koy; alüminyuma değmesi gerekir.","Karbonatı ekle, sonra üzerine sıcak su dök.","5-10 dakika bekle; kararmış bölgelerde kabarcık çıkması tepkimenin çalıştığını gösterir.","Distile suyla durula ve yumuşak bir bezle kurula."],"safety":["Metal kap veya metal kaşık kullanma; tek fedakâr metal alüminyum olmalı.","Odayı havalandır: hidrojen sülfür çürük yumurta gibi kokar ve yüksek derişimde zehirlidir.","Sıcak su yakar; çocukları uzak tut.","Kaplaması aşınmış gümüş kaplama eşyalarda veya yapıştırılmış parçası olanlarda kullanma.","Tekrarlanan işlem az da olsa gümüşü alır; müze veya antika parçalar için uygun değildir."],"does_not_say":["işlemden sonra eşyanın steril veya gıdaya uygun olduğunu","çizik, aşınma veya kaplama hasarının onarıldığını","yöntemin her alaşım, kaplama veya antika için güvenli olduğunu"]}}; // kj-recipe-json
+const TR = R.tr || {}
+const N = R.steps.length
+
+// ---------------------------------------------------------------- the lab
+const lab = new Lab({
+  prompt: TR.title || R.title,
+  no: 1, title: "Gümüş kararma", sub: 'bir tarif, bir iddia degil',
+  size: 0.44,
+  view: { az: 36, el: 26, dist: 2.3, target: [0, 0.045, 0] },
+  ground: -0.002,
+  cut: { a: [0, 0, 1], b: [0, 1, 0], reach: 0.18 },
+  pills: ['kj-recipe/1', R.id, `${R.sources.length} sources`],
+})
+// the kit's prompt is branded for machines; this page is the /kj procedure lane
+lab.$('.lab-prompt b').textContent = '/kj'
+
+// ---------------------------------------------------------------- the parts
+const P = []
+function part(group, geo, mat, o) {
+  const m = lab.mesh(geo, mat, o)
+  P.push({ group, name: o.name })
+  return m
+}
+
+function buildScene(lab, THREE, MAT, GEO, part) {
+  // base ---------------------------------------------------------------- (3)
+  part('base', GEO.rbox(0.44, 0.016, 0.30, 0.014), MAT.satin({ color: [0.19, 0.17, 0.15], roughness: 0.7 }), { name: 'Slate board', pos: [0, -0.008, 0] })
+  part('base', GEO.rbox(0.11, 0.008, 0.070, 0.006), MAT.satin({ color: [0.62, 0.58, 0.50], roughness: 0.75 }), { name: 'Folded towel', pos: [0.150, 0.004, 0.090] })
+  part('base', GEO.rbox(0.10, 0.004, 0.060, 0.004), MAT.satin({ color: [0.70, 0.66, 0.58], roughness: 0.8 }), { name: 'Towel fold', pos: [0.150, 0.010, 0.090] })
+
+  // shallow glass dish: the foil and the silver must be visible
+  const bowlX = -0.060
+  part('mechanism', GEO.shell([[0.000, 0.002], [0.060, 0.004], [0.100, 0.014], [0.116, 0.048]], 0.004, 80), MAT.glass({ roughness: 0.05, thickness: 0.004 }), { name: 'Glass dish', pos: [bowlX, 0, 0] })
+  part('mechanism', GEO.tube(0.116, 0.112, 0.004, 80), MAT.glass({ roughness: 0.05 }), { name: 'Dish rim', pos: [bowlX, 0.048, 0] })
+  part('mechanism', GEO.disc(0.110, 0.002, 0.0005, 64), MAT.fluid({ color: [0.55, 0.75, 0.85], transparent: true, opacity: 0.18, roughness: 0.05 }), { name: 'Hot water', pos: [bowlX, 0.040, 0] })
+
+  // foil and silver ----------------------------------------------------- (6)
+  part('mechanism', GEO.rbox(0.135, 0.0016, 0.105, 0.0012), MAT.aluminium(), { name: 'Aluminium foil', pos: [bowlX, 0.010, 0], rot: [0, 0.06, 0] })
+  for (const [k, x, z, a] of [[0, -0.045, -0.020, 0.4], [1, 0.010, 0.018, -0.7], [2, 0.052, -0.030, 1.2]]) {
+    part('mechanism', GEO.pipe([[bowlX + x - 0.020, 0.0135, z], [bowlX + x, 0.0145, z + 0.008], [bowlX + x + 0.020, 0.0135, z]], 0.0009, { seg: 10, radial: 5 }), MAT.aluminium(), { name: `Foil crease ${k + 1}` })
+  }
+  part('mechanism', GEO.pipe([[bowlX + 0.030, 0.017, 0.010], [bowlX + 0.090, 0.030, 0.028], [bowlX + 0.120, 0.020, 0.050]], 0.0032, { seg: 24, radial: 8 }), MAT.steel(), { name: 'Silver spoon handle' })
+  part('mechanism', GEO.disc(0.017, 0.003, 0.001, 40), MAT.steel(), { name: 'Silver spoon bowl', pos: [bowlX + 0.024, 0.017, 0.008] })
+  const tarnish = part('subject', GEO.disc(0.014, 0.0008, 0.0002, 40), MAT.satin({ color: [0.20, 0.14, 0.08], transparent: true, opacity: 0.85 }), { name: 'Silver sulfide tarnish', pos: [bowlX + 0.024, 0.0188, 0.008] })
+
+  // baking soda --------------------------------------------------------- (4)
+  part('mechanism', GEO.rbox(0.060, 0.080, 0.032, 0.003), MAT.satin({ color: [0.93, 0.91, 0.84] }), { name: 'Baking soda box', pos: [0.160, 0.042, -0.095] })
+  part('mechanism', GEO.rbox(0.061, 0.020, 0.033, 0.002), MAT.satin({ color: [0.35, 0.55, 0.70] }), { name: 'Soda label', pos: [0.160, 0.048, -0.095] })
+  part('mechanism', GEO.rbox(0.060, 0.004, 0.032, 0.001), MAT.satin({ color: [0.80, 0.78, 0.72] }), { name: 'Soda box top', pos: [0.160, 0.084, -0.095] })
+  part('mechanism', GEO.lathe([[0.000, 0.000], [0.022, 0.006], [0.012, 0.018], [0.000, 0.020]], 32), MAT.satin({ color: [0.96, 0.95, 0.90] }), { name: 'Soda mound', pos: [0.130, 0.003, -0.058] })
+
+  // bubbles ------------------------------------------------------------- (7)
+  const bubbleMat = MAT.glass({ roughness: 0.02 })
+  const bubbles = []
+  for (let k = 0; k < 7; k++) {
+    bubbles.push(part('subject', new THREE.SphereGeometry(0.0022, 10, 7), bubbleMat, {
+      name: `Bubble ${k + 1}`, pos: [bowlX - 0.035 + (k % 3) * 0.030, 0.018 + (k % 4) * 0.006, -0.030 + Math.floor(k / 3) * 0.028],
+    }))
+  }
+
+  const stations = [
+    [bowlX, 0, 0], [bowlX + 0.045, 0, 0.010], [0.160, 0, -0.080], [bowlX, 0, 0], [0.150, 0, 0.090],
+  ]
+
+  let bubblesOn = false
+  return {
+    stations,
+    onStep(i) {
+      bubblesOn = i === 2 || i === 3
+      for (const b of bubbles) b.visible = bubblesOn
+      tarnish.material.opacity = i <= 1 ? 0.85 : i <= 3 ? 0.45 : 0.05
+    },
+    tick(sdt) {
+      if (!bubblesOn) return
+      for (const b of bubbles) {
+        if (!b.visible) continue
+        b.position.y += sdt * 0.010
+        if (b.position.y > 0.044) b.position.y = 0.016
+      }
+    },
+  }
+}
+
+const built = buildScene(lab, THREE, MAT, GEO, part)
+
+// the active-step marker: one ring, moved to the station of the current step
+const ring = lab.mesh(GEO.tube(0.125, 0.125 - 0.005, 0.0022, 64), MAT.glow({ emissive: [1, 0.55, 0.12], emissiveIntensity: 1.6 }), {
+  name: 'Active step ring', pos: [0, 0.004, 0],
+})
+
+// ---------------------------------------------------------------- the number
+lab.hero({ label: 'Sicaklik / temperature', unit: '°C', max: 110, digits: 0 })
+
+let current = 0
+const side = lab.$('.lab-side')
+
+// the step text sits between the hero and the slider
+const callout = document.createElement('div')
+callout.style.cssText = [
+  'margin-top:0.85em', 'padding-top:0.7em',
+  'border-top:1px solid rgba(0,0,0,0.14)',
+  'max-width:23em',
+].join(';')
+side.insertBefore(callout, lab.$('.lab-ctls'))
+
+// the claim boundary is part of the interface, not a footnote
+const boundary = document.createElement('div')
+boundary.style.cssText = [
+  'margin-top:0.9em', 'padding:0.55em 0.65em',
+  'border-left:3px solid #b45309', 'background:rgba(180,83,9,0.07)',
+  'font:500 11px/1.5 Inter,system-ui,sans-serif', 'color:#5b3a12',
+  'max-width:23em',
+].join(';')
+side.insertBefore(boundary, lab.$('.lab-ctls'))
+
+const prov = document.createElement('div')
+prov.style.cssText = [
+  'margin-top:1.0em', 'padding-top:0.65em',
+  'border-top:1px solid rgba(0,0,0,0.14)',
+  'font:500 10px/1.6 "JetBrains Mono",ui-monospace,monospace',
+  'letter-spacing:0.01em', 'color:#6f6c66', 'max-width:23em',
+].join(';')
+side.appendChild(prov)
+
+function show(i) {
+  current = i
+  const step = R.steps[i]
+  const trStep = (TR.steps && TR.steps[i]) || step.action
+  const note = step.note ? `<div style="margin-top:0.35em;color:#7a766e;font-size:10.5px">${step.note}</div>` : ''
+  callout.innerHTML = [
+    `<div style="font:600 10px/1.4 "JetBrains Mono",monospace;letter-spacing:0.08em;color:#8a857c">STEP ${i + 1} / ${N}</div>`,
+    `<div style="font:400 15px/1.35 "Instrument Serif",serif;margin-top:0.25em;color:#1c1b19">${trStep}</div>`,
+    `<div style="font:500 10px/1.5 "JetBrains Mono",monospace;color:#6f6c66;margin-top:0.3em">kaynak / source: ${step.source}</div>`,
+    note,
+  ].join('')
+  const station = built.stations[i] || [0, 0, 0]
+  ring.position.set(station[0], 0.004, station[2])
+  built.onStep(i)
+  if (step.temperature_c !== undefined) {
+    lab.setHero(step.temperature_c, {
+      state: step.temperature_role === 'limit' ? 'limit (cited)' : 'target setpoint',
+      sub: `step ${i + 1} / ${N} · source ${step.source}`,
+    })
+  } else {
+    lab.setHero(0, { state: 'no temperature in this step', sub: `step ${i + 1} / ${N} · source ${step.source}` })
+    lab._hv.textContent = '\u2014'
+    lab._hb.firstElementChild.style.width = '0%'
+  }
+  boundary.innerHTML = `<b>Sinir / boundary</b><br>${TR.claim_boundary || R.claim_boundary}`
+  prov.innerHTML = [
+    `<b style="color:#3d3a35">kj-recipe/1</b> · ${R.id}`,
+    `procedure · targets, not measured · mcp/recipe.py`,
+  ].join('<br>')
+}
+
+// the kit's assembly restores a queued hero after the build; enforce the dash
+// for steps that have no temperature until the user moves the slider again
+lab.onTick(() => {
+  if (lab._building || lab.broken) return
+  const step = R.steps[current]
+  if (step.temperature_c === undefined) {
+    lab._hv.textContent = '\u2014'
+    lab._hb.firstElementChild.style.width = '0%'
+  }
+})
+
+const stepSlider = lab.slider({
+  id: 'step', label: 'Adim / step', min: 1, max: N, step: 1, value: 1, digits: 0,
+  ends: ['1', String(N)], onInput(value) {
+    if (lab.broken) lab.resetBreak()
+    show(clamp(Math.round(Number(value)), 1, N) - 1)
+  },
+})
+
+// ---------------------------------------------------------------- break it
+const REFUSAL = {
+  sentence: 'Bu bir tarif; hastaligi tedavi etmez, ilacin yerine gecmez. Sayi yok.',
+  reason: 'procedure lane: no medical claim, no number',
+}
+lab.breakIt({
+  label: R.kind === 'food' ? 'Ask it to cure the flu' : 'Ask it to fix a scratch',
+  run() {
+    lab.setHero(0, { state: 'refused', sub: REFUSAL.reason, bad: true })
+    lab._hv.textContent = '\u2014'
+    lab._hb.firstElementChild.style.width = '0%'
+    callout.innerHTML = `<div style="font:600 10px/1.4 "JetBrains Mono",monospace;color:#8d2b22">REFUSED</div><div style="font:400 15px/1.35 "Instrument Serif",serif;margin-top:0.25em">${REFUSAL.sentence}</div>`
+    boundary.innerHTML = `<b>Sinir / boundary</b><br>${TR.claim_boundary || R.claim_boundary}`
+  },
+  reset() { show(current) },
+})
+
+// ---------------------------------------------------------------- the text
+const safety = (TR.safety || R.safety.map((s) => s.text)).map((t) => `<li>${t}</li>`).join('')
+const dns = (TR.does_not_say || R.does_not_say).map((t) => `<li>${t}</li>`).join('')
+const sources = R.sources.map((s) => `<li><code>${s.id}</code> — ${s.title} — <a href="${s.url}">${s.url}</a> (${s.accessed})</li>`).join('')
+lab.how(
+  `<b>Bu sayfa bir tarif, bir motor degil.</b> Sayilar hedef (setpoint) veya kaynakli `
+  + `sinirdir (limit); hicbiri olcum degildir. Belge <code>mcp/recipe.py</code> kapisindan gecer: `
+  + `her adim bir kaynak kimligi ya da acikca <code>design</code> tasir, tip iddiasi `
+  + `<code>claim_boundary</code> disinda yasaktir. `
+  + `<b>Kiril nokta:</b> "gribi tedavi etsin" dersen sayfa sayi uretmez; sabit ret cumlesini gosterir.`
+  + `<div style="margin-top:0.7em"><b>Guvenlik</b><ul>${safety}</ul></div>`
+  + `<div style="margin-top:0.5em"><b>Bu tarif ne soylemiyor</b><ul>${dns}</ul></div>`
+  + `<div style="margin-top:0.5em"><b>Kaynaklar</b><ul>${sources}</ul></div>`,
+  [
+    'lane: procedure (kj-recipe/1) — no engine, no surrogate',
+    'claim gate: cure/treat/prevent words only inside claim_boundary/does_not_say',
+    'temperature_role: setpoint may be design; limit must cite a source',
+  ],
+)
+
+show(0)
+lab.start()
+
+// ---------------------------------------------------------------- performance
+lab.ao.enabled = false
+lab.renderer.shadowMap.type = THREE.PCFSoftShadowMap
+lab.scene.traverse((o) => {
+  if (o.isLight && o.shadow) {
+    o.shadow.mapSize.set(1024, 1024)
+    o.shadow.map?.dispose()
+    o.shadow.map = null
+    o.shadow.camera.near = 5
+    o.shadow.camera.far = 12
+    o.shadow.camera.updateProjectionMatrix()
+    o.shadow.bias = -0.0006
+    o.shadow.normalBias = 0.035
+  }
+  if (o.material) o.material.needsUpdate = true
+})
+lab.renderer.shadowMap.needsUpdate = true
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+{
+  "schema": "kj-recipe/1",
+  "id": "mint-lemon-warm-drink",
+  "kind": "food",
+  "servings": 1,
+  "title": "Warm mint-lemon drink",
+  "page_title": "Nane-limon",
+  "summary": "Boil the water, steep the mint off the heat, add lemon, and cool below the drinking-temperature limit before serving.",
+  "claim_boundary": "Food preparation only. This drink does not treat, cure or prevent a cold, flu or any infection; it is a warm drink, not a medicine.",
+  "ingredients": [
+    {
+      "name": "water",
+      "amount": 200,
+      "unit": "ml",
+      "source": "design"
+    },
+    {
+      "name": "fresh mint",
+      "amount": 5,
+      "unit": "g",
+      "source": "design"
+    },
+    {
+      "name": "lemon",
+      "amount": 2,
+      "unit": "slice",
+      "source": "design"
+    },
+    {
+      "name": "honey",
+      "amount": 5,
+      "unit": "g",
+      "source": "design",
+      "optional": true
+    }
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "action": "Bring the water to a rolling boil.",
+      "temperature_c": 100,
+      "temperature_role": "setpoint",
+      "minutes": 1,
+      "source": "nist-water",
+      "note": "Tboil = 373.15 K (100 C) at 101.325 kPa; at altitude water boils below 100 C."
+    },
+    {
+      "n": 2,
+      "action": "Take the pot off the heat, add the mint and cover it.",
+      "minutes": 5,
+      "source": "design"
+    },
+    {
+      "n": 3,
+      "action": "Add the lemon slices.",
+      "minutes": 2,
+      "source": "design"
+    },
+    {
+      "n": 4,
+      "action": "Let it cool below 65 C before drinking.",
+      "temperature_c": 65,
+      "temperature_role": "limit",
+      "source": "iarc-2016"
+    },
+    {
+      "n": 5,
+      "action": "Drink it while warm.",
+      "source": "design"
+    }
+  ],
+  "safety": [
+    {
+      "text": "Hot water and steam can scald; children are most at risk, so keep them away from the pot.",
+      "source": "who-burns"
+    },
+    {
+      "text": "Do not give honey to infants under 12 months (infant botulism risk).",
+      "source": "cdc-botulism"
+    },
+    {
+      "text": "If symptoms are severe or do not improve, seek medical care; this drink is not a medicine.",
+      "source": "design"
+    },
+    {
+      "text": "Lemon acid can irritate a sore mouth; dilute it if needed.",
+      "source": "design"
+    }
+  ],
+  "does_not_say": [
+    "that any ingredient treats, cures or prevents a viral infection",
+    "a vitamin C dose or a clinical effect",
+    "that it is safe for infants, pregnancy or chronic disease"
+  ],
+  "sources": [
+    {
+      "id": "nist-water",
+      "title": "NIST Chemistry WebBook: water, boiling point",
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=4",
+      "accessed": "2026-10-27",
+      "licence": "US government work (NIST)"
+    },
+    {
+      "id": "iarc-2016",
+      "title": "IARC press release 249: very hot beverages above 65 C",
+      "url": "https://www.iarc.who.int/wp-content/uploads/2018/07/pr249_E.pdf",
+      "accessed": "2026-10-27",
+      "licence": "IARC/WHO press release; quoted for attribution",
+      "quote": "very hot beverages (above 65 °C)"
+    },
+    {
+      "id": "who-burns",
+      "title": "WHO fact sheet: Burns",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/burns",
+      "accessed": "2026-10-27",
+      "licence": "CC BY-NC-SA 3.0 IGO (WHO)"
+    },
+    {
+      "id": "cdc-botulism",
+      "title": "CDC: About botulism (infant botulism and honey)",
+      "url": "https://www.cdc.gov/botulism/about/index.html",
+      "accessed": "2026-10-27",
+      "licence": "US government work (CDC)"
+    }
+  ],
+  "tr": {
+    "title": "Ilık nane-limon içeceği",
+    "summary": "Suyu kaynat, naneyi ocaktan indirdikten sonra demle, limonu ekle ve içmeden önce 65 °C altına soğut.",
+    "claim_boundary": "Yalnızca yiyecek/içecek hazırlığı. Bu içecek grip, soğuk algınlığı veya herhangi bir enfeksiyonu tedavi etmez, iyileştirmez, önlemez; ılık bir içecektir, ilaç değildir.",
+    "steps": [
+      "Suyu kaynama noktasına getir.",
+      "Ocağı kapat, naneyi ekle ve üstünü kapat.",
+      "Limon dilimlerini ekle.",
+      "İçmeden önce 65 °C'nin altına soğut.",
+      "Ilıkken iç."
+    ],
+    "safety": [
+      "Kaynar su ve buhar yakar; en çok çocuklar risk altında, onları tencereden uzak tut.",
+      "12 aydan küçük bebeklere bal verme (infant botulizm riski).",
+      "Belirtiler ağırsa veya geçmiyorsa hekime başvur; bu içecek ilaç değildir.",
+      "Limon asidi ağrıyan ağzı tahriş edebilir; gerekirse sulandır."
+    ],
+    "does_not_say": [
+      "herhangi bir malzemenin viral enfeksiyonu tedavi ettiğini",
+      "C vitamini dozu veya klinik bir etkisi olduğunu",
+      "bebekler, gebelik veya kronik hastalık için güvenli olduğunu"
+    ]
+  }
+}

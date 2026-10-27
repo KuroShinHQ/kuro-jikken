@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ilık nane-limon içeceği · kuro-jikken</title>
+<meta name="description" content="food procedure gated by mcp/recipe.py; 5 steps, 4 sources">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* the kit's title is sized for short machine names; a recipe title is longer */
+  .lab-title { font-size: clamp(30px, 3.0vw, 56px) !important; }
+  .lab-title i { font-size: 0.62em !important; line-height: 1.05 !important; }
+  .lab-pills { opacity: 0.72; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<script type="module" src="../kit/lab-kit.js"></script>
+<script type="module">
+const { THREE, Lab, MAT, GEO, clamp, fmt } = window.LabKit
+
+// The whole recipe, copied by tools/recipe_page.py from the gated document.
+// No number on this page is typed by hand: steps, temperatures and sources all
+// come from this object, and `--check` fails when the page and the file differ.
+const R = {"schema":"kj-recipe/1","id":"mint-lemon-warm-drink","kind":"food","servings":1,"title":"Warm mint-lemon drink","page_title":"Nane-limon","summary":"Boil the water, steep the mint off the heat, add lemon, and cool below the drinking-temperature limit before serving.","claim_boundary":"Food preparation only. This drink does not treat, cure or prevent a cold, flu or any infection; it is a warm drink, not a medicine.","ingredients":[{"name":"water","amount":200,"unit":"ml","source":"design"},{"name":"fresh mint","amount":5,"unit":"g","source":"design"},{"name":"lemon","amount":2,"unit":"slice","source":"design"},{"name":"honey","amount":5,"unit":"g","source":"design","optional":true}],"steps":[{"n":1,"action":"Bring the water to a rolling boil.","temperature_c":100,"temperature_role":"setpoint","minutes":1,"source":"nist-water","note":"Tboil = 373.15 K (100 C) at 101.325 kPa; at altitude water boils below 100 C."},{"n":2,"action":"Take the pot off the heat, add the mint and cover it.","minutes":5,"source":"design"},{"n":3,"action":"Add the lemon slices.","minutes":2,"source":"design"},{"n":4,"action":"Let it cool below 65 C before drinking.","temperature_c":65,"temperature_role":"limit","source":"iarc-2016"},{"n":5,"action":"Drink it while warm.","source":"design"}],"safety":[{"text":"Hot water and steam can scald; children are most at risk, so keep them away from the pot.","source":"who-burns"},{"text":"Do not give honey to infants under 12 months (infant botulism risk).","source":"cdc-botulism"},{"text":"If symptoms are severe or do not improve, seek medical care; this drink is not a medicine.","source":"design"},{"text":"Lemon acid can irritate a sore mouth; dilute it if needed.","source":"design"}],"does_not_say":["that any ingredient treats, cures or prevents a viral infection","a vitamin C dose or a clinical effect","that it is safe for infants, pregnancy or chronic disease"],"sources":[{"id":"nist-water","title":"NIST Chemistry WebBook: water, boiling point","url":"https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=4","accessed":"2026-10-27","licence":"US government work (NIST)"},{"id":"iarc-2016","title":"IARC press release 249: very hot beverages above 65 C","url":"https://www.iarc.who.int/wp-content/uploads/2018/07/pr249_E.pdf","accessed":"2026-10-27","licence":"IARC/WHO press release; quoted for attribution","quote":"very hot beverages (above 65 °C)"},{"id":"who-burns","title":"WHO fact sheet: Burns","url":"https://www.who.int/news-room/fact-sheets/detail/burns","accessed":"2026-10-27","licence":"CC BY-NC-SA 3.0 IGO (WHO)"},{"id":"cdc-botulism","title":"CDC: About botulism (infant botulism and honey)","url":"https://www.cdc.gov/botulism/about/index.html","accessed":"2026-10-27","licence":"US government work (CDC)"}],"tr":{"title":"Ilık nane-limon içeceği","summary":"Suyu kaynat, naneyi ocaktan indirdikten sonra demle, limonu ekle ve içmeden önce 65 °C altına soğut.","claim_boundary":"Yalnızca yiyecek/içecek hazırlığı. Bu içecek grip, soğuk algınlığı veya herhangi bir enfeksiyonu tedavi etmez, iyileştirmez, önlemez; ılık bir içecektir, ilaç değildir.","steps":["Suyu kaynama noktasına getir.","Ocağı kapat, naneyi ekle ve üstünü kapat.","Limon dilimlerini ekle.","İçmeden önce 65 °C'nin altına soğut.","Ilıkken iç."],"safety":["Kaynar su ve buhar yakar; en çok çocuklar risk altında, onları tencereden uzak tut.","12 aydan küçük bebeklere bal verme (infant botulizm riski).","Belirtiler ağırsa veya geçmiyorsa hekime başvur; bu içecek ilaç değildir.","Limon asidi ağrıyan ağzı tahriş edebilir; gerekirse sulandır."],"does_not_say":["herhangi bir malzemenin viral enfeksiyonu tedavi ettiğini","C vitamini dozu veya klinik bir etkisi olduğunu","bebekler, gebelik veya kronik hastalık için güvenli olduğunu"]}}; // kj-recipe-json
+const TR = R.tr || {}
+const N = R.steps.length
+
+// ---------------------------------------------------------------- the lab
+const lab = new Lab({
+  prompt: TR.title || R.title,
+  no: 1, title: "Nane-limon", sub: 'bir tarif, bir iddia degil',
+  size: 0.44,
+  view: { az: 32, el: 24, dist: 2.3, target: [0, 0.045, 0] },
+  ground: -0.002,
+  cut: { a: [0, 0, 1], b: [0, 1, 0], reach: 0.18 },
+  pills: ['kj-recipe/1', R.id, `${R.sources.length} sources`],
+})
+// the kit's prompt is branded for machines; this page is the /kj procedure lane
+lab.$('.lab-prompt b').textContent = '/kj'
+
+// ---------------------------------------------------------------- the parts
+const P = []
+function part(group, geo, mat, o) {
+  const m = lab.mesh(geo, mat, o)
+  P.push({ group, name: o.name })
+  return m
+}
+
+function buildScene(lab, THREE, MAT, GEO, part) {
+  // base ---------------------------------------------------------------- (4)
+  part('base', GEO.rbox(0.44, 0.016, 0.30, 0.014), MAT.satin({ color: [0.19, 0.17, 0.15], roughness: 0.7 }), { name: 'Slate board', pos: [0, -0.008, 0] })
+  part('base', GEO.disc(0.050, 0.004, 0.001, 48), MAT.satin({ color: [0.34, 0.28, 0.22], roughness: 0.6 }), { name: 'Mint saucer', pos: [-0.160, 0.002, 0.090] })
+  part('base', GEO.disc(0.046, 0.004, 0.001, 48), MAT.satin({ color: [0.34, 0.28, 0.22], roughness: 0.6 }), { name: 'Lemon saucer', pos: [0.060, 0.002, 0.110] })
+  part('base', GEO.disc(0.040, 0.004, 0.001, 48), MAT.satin({ color: [0.34, 0.28, 0.22], roughness: 0.6 }), { name: 'Mug coaster', pos: [0.145, 0.002, 0.010] })
+
+  // the pot ------------------------------------------------------------- (6)
+  const potX = -0.090
+  part('mechanism', GEO.shell([[0.000, 0.002], [0.045, 0.002], [0.062, 0.012], [0.066, 0.086]], 0.003, 72), MAT.stainless(), { name: 'Saucepan wall', pos: [potX, 0, 0] })
+  part('mechanism', GEO.disc(0.063, 0.002, 0.0006, 64), MAT.fluid({ color: [0.55, 0.75, 0.85], transparent: true, opacity: 0.55 }), { name: 'Water in the pot', pos: [potX, 0.068, 0] })
+  part('mechanism', GEO.pipe([[potX - 0.064, 0.070, 0], [potX - 0.120, 0.094, 0], [potX - 0.168, 0.070, 0]], 0.0045, { seg: 32, radial: 10 }), MAT.steelDark(), { name: 'Pot handle' })
+  part('mechanism', GEO.disc(0.068, 0.003, 0.0008, 64), MAT.stainless(), { name: 'Pot lid', pos: [potX, 0.090, 0] })
+  part('mechanism', GEO.disc(0.010, 0.007, 0.002, 24), MAT.steelDark(), { name: 'Lid knob', pos: [potX, 0.096, 0] })
+  part('mechanism', GEO.tube(0.070, 0.066, 0.004, 64), MAT.stainless(), { name: 'Pot rim', pos: [potX, 0.086, 0] })
+
+  // steam --------------------------------------------------------------- (4)
+  const steam = []
+  for (const [k, x, z, r] of [[0, -0.020, 0.010, 0.009], [1, 0.018, -0.008, 0.011], [2, -0.006, -0.022, 0.008], [3, 0.028, 0.018, 0.010], [4, 0.004, 0.000, 0.013], [5, -0.030, -0.004, 0.007]]) {
+    const m = MAT.glow({ emissive: [0.85, 0.90, 1], emissiveIntensity: 0.26, transparent: true, opacity: 0.10 })
+    steam.push(part('subject', new THREE.SphereGeometry(r, 12, 8), m, {
+      name: `Steam ${k + 1}`, pos: [potX + x, 0.105 + k * 0.018, z], scale: [1, 1.5, 1],
+    }))
+  }
+
+  // the mug ------------------------------------------------------------- (5)
+  const mugX = 0.145, mugZ = 0.010
+  part('mechanism', GEO.tube(0.034, 0.030, 0.086, 48), MAT.glass({ roughness: 0.04 }), { name: 'Glass mug', pos: [mugX, 0.043, mugZ] })
+  part('mechanism', GEO.disc(0.030, 0.002, 0.0005, 48), MAT.glass({ roughness: 0.04 }), { name: 'Mug floor', pos: [mugX, 0.003, mugZ] })
+  const tea = part('subject', GEO.disc(0.030, 0.002, 0.0005, 48), MAT.fluid({ color: [0.55, 0.30, 0.06], transparent: true, opacity: 0.7, roughness: 0.1 }), { name: 'Tea', pos: [mugX, 0.052, mugZ] })
+  part('mechanism', GEO.pipe([[mugX + 0.033, 0.062, mugZ], [mugX + 0.058, 0.055, mugZ], [mugX + 0.058, 0.024, mugZ], [mugX + 0.033, 0.020, mugZ]], 0.0035, { seg: 32, radial: 10 }), MAT.glass({ roughness: 0.04 }), { name: 'Mug handle' })
+
+  // mint ---------------------------------------------------------------- (7)
+  const leafMat = MAT.satin({ color: [0.15, 0.45, 0.18], roughness: 0.55 })
+  const veinMat = MAT.satin({ color: [0.55, 0.75, 0.45], roughness: 0.6 })
+  const leafGeo = new THREE.SphereGeometry(0.012, 20, 10)
+  function mintLeaf(x, y, z, rot) {
+    const m = part('subject', leafGeo.clone(), leafMat, { name: 'Mint leaf', pos: [x, y, z], rot: [0, rot, 0], scale: [1.5, 0.12, 0.8] })
+    if (!rot) part('subject', GEO.pipe([[x - 0.012, y + 0.001, z], [x + 0.012, y + 0.001, z]], 0.0004, { seg: 8, radial: 5 }), veinMat, { name: 'Mint vein' })
+    return m
+  }
+  mintLeaf(-0.170, 0.006, 0.094, 0.3)
+  mintLeaf(-0.150, 0.006, 0.086, -0.5)
+  mintLeaf(-0.156, 0.006, 0.104, 1.1)
+
+  // lemon --------------------------------------------------------------- (8)
+  const lemonMat = MAT.satin({ color: [0.95, 0.78, 0.12], roughness: 0.45 })
+  const pithMat = MAT.satin({ color: [0.96, 0.93, 0.82], roughness: 0.6 })
+  function lemonSlice(x, y, z, r) {
+    part('subject', GEO.disc(r, 0.003, 0.0006, 48), lemonMat, { name: 'Lemon slice', pos: [x, y, z] })
+    part('subject', GEO.tube(r, r - 0.002, 0.003, 48), pithMat, { name: 'Lemon rind', pos: [x, y, z] })
+    for (let k = 0; k < 6; k++) {
+      const a = (k / 6) * Math.PI * 2
+      part('subject', GEO.pipe([
+        [x + Math.cos(a) * 0.002, y + 0.0016, z + Math.sin(a) * 0.002],
+        [x + Math.cos(a) * (r - 0.003), y + 0.0016, z + Math.sin(a) * (r - 0.003)],
+      ], 0.0006, { seg: 8, radial: 5 }), pithMat, { name: 'Lemon segment line' })
+    }
+  }
+  lemonSlice(0.056, 0.006, 0.114, 0.026)
+  lemonSlice(0.072, 0.006, 0.104, 0.024)
+  lemonSlice(mugX + 0.004, 0.058, mugZ + 0.002, 0.023)
+
+  // honey jar and spoon ------------------------------------------------ (4)
+  part('mechanism', GEO.tube(0.022, 0.019, 0.055, 32), MAT.fluid({ color: [0.75, 0.45, 0.08], transparent: true, opacity: 0.9, roughness: 0.15 }), { name: 'Honey jar', pos: [0.185, 0.028, -0.100] })
+  part('mechanism', GEO.disc(0.023, 0.006, 0.0012, 32), MAT.steelDark(), { name: 'Honey lid', pos: [0.185, 0.058, -0.100] })
+  part('mechanism', GEO.rbox(0.030, 0.016, 0.001, 0.001), MAT.satin({ color: [0.92, 0.88, 0.78] }), { name: 'Honey label', pos: [0.185, 0.028, -0.078] })
+
+  // thermometer --------------------------------------------------------- (3)
+  part('mechanism', GEO.tube(0.0032, 0.0022, 0.140, 24), MAT.glass({ roughness: 0.04 }), { name: 'Thermometer glass', pos: [0.190, 0.070, 0.060] })
+  part('mechanism', GEO.disc(0.0050, 0.008, 0.0015, 24), MAT.ruby({ roughness: 0.1 }), { name: 'Thermometer bulb', pos: [0.190, 0.004, 0.060] })
+  part('mechanism', GEO.tube(0.0012, 0.0008, 0.080, 16), MAT.glow({ emissive: [0.9, 0.08, 0.06], emissiveIntensity: 0.8 }), { name: 'Thermometer column', pos: [0.190, 0.015, 0.060] })
+
+  const stations = [
+    [potX, 0, 0], [-0.160, 0, 0.090], [0.060, 0, 0.110], [mugX, 0, mugZ], [mugX, 0, mugZ],
+  ]
+
+  let steamOn = true
+  return {
+    stations,
+    onStep(i) {
+      steamOn = i <= 1
+      for (const s of steam) s.visible = steamOn
+      tea.material.opacity = i >= 3 ? 0.7 : 0.25
+    },
+    tick(sdt, lab) {
+      if (!steamOn) return
+      for (const s of steam) {
+        s.position.y += sdt * 0.012
+        if (s.position.y > 0.190) s.position.y = 0.108
+        s.rotation.y += sdt * 0.4
+      }
+    },
+  }
+}
+
+const built = buildScene(lab, THREE, MAT, GEO, part)
+
+// the active-step marker: one ring, moved to the station of the current step
+const ring = lab.mesh(GEO.tube(0.052, 0.052 - 0.005, 0.0022, 64), MAT.glow({ emissive: [1, 0.55, 0.12], emissiveIntensity: 1.6 }), {
+  name: 'Active step ring', pos: [0, 0.004, 0],
+})
+
+// ---------------------------------------------------------------- the number
+lab.hero({ label: 'Sicaklik / temperature', unit: '°C', max: 110, digits: 0 })
+
+let current = 0
+const side = lab.$('.lab-side')
+
+// the step text sits between the hero and the slider
+const callout = document.createElement('div')
+callout.style.cssText = [
+  'margin-top:0.85em', 'padding-top:0.7em',
+  'border-top:1px solid rgba(0,0,0,0.14)',
+  'max-width:23em',
+].join(';')
+side.insertBefore(callout, lab.$('.lab-ctls'))
+
+// the claim boundary is part of the interface, not a footnote
+const boundary = document.createElement('div')
+boundary.style.cssText = [
+  'margin-top:0.9em', 'padding:0.55em 0.65em',
+  'border-left:3px solid #b45309', 'background:rgba(180,83,9,0.07)',
+  'font:500 11px/1.5 Inter,system-ui,sans-serif', 'color:#5b3a12',
+  'max-width:23em',
+].join(';')
+side.insertBefore(boundary, lab.$('.lab-ctls'))
+
+const prov = document.createElement('div')
+prov.style.cssText = [
+  'margin-top:1.0em', 'padding-top:0.65em',
+  'border-top:1px solid rgba(0,0,0,0.14)',
+  'font:500 10px/1.6 "JetBrains Mono",ui-monospace,monospace',
+  'letter-spacing:0.01em', 'color:#6f6c66', 'max-width:23em',
+].join(';')
+side.appendChild(prov)
+
+function show(i) {
+  current = i
+  const step = R.steps[i]
+  const trStep = (TR.steps && TR.steps[i]) || step.action
+  const note = step.note ? `<div style="margin-top:0.35em;color:#7a766e;font-size:10.5px">${step.note}</div>` : ''
+  callout.innerHTML = [
+    `<div style="font:600 10px/1.4 "JetBrains Mono",monospace;letter-spacing:0.08em;color:#8a857c">STEP ${i + 1} / ${N}</div>`,
+    `<div style="font:400 15px/1.35 "Instrument Serif",serif;margin-top:0.25em;color:#1c1b19">${trStep}</div>`,
+    `<div style="font:500 10px/1.5 "JetBrains Mono",monospace;color:#6f6c66;margin-top:0.3em">kaynak / source: ${step.source}</div>`,
+    note,
+  ].join('')
+  const station = built.stations[i] || [0, 0, 0]
+  ring.position.set(station[0], 0.004, station[2])
+  built.onStep(i)
+  if (step.temperature_c !== undefined) {
+    lab.setHero(step.temperature_c, {
+      state: step.temperature_role === 'limit' ? 'limit (cited)' : 'target setpoint',
+      sub: `step ${i + 1} / ${N} · source ${step.source}`,
+    })
+  } else {
+    lab.setHero(0, { state: 'no temperature in this step', sub: `step ${i + 1} / ${N} · source ${step.source}` })
+    lab._hv.textContent = '\u2014'
+    lab._hb.firstElementChild.style.width = '0%'
+  }
+  boundary.innerHTML = `<b>Sinir / boundary</b><br>${TR.claim_boundary || R.claim_boundary}`
+  prov.innerHTML = [
+    `<b style="color:#3d3a35">kj-recipe/1</b> · ${R.id}`,
+    `procedure · targets, not measured · mcp/recipe.py`,
+  ].join('<br>')
+}
+
+// the kit's assembly restores a queued hero after the build; enforce the dash
+// for steps that have no temperature until the user moves the slider again
+lab.onTick(() => {
+  if (lab._building || lab.broken) return
+  const step = R.steps[current]
+  if (step.temperature_c === undefined) {
+    lab._hv.textContent = '\u2014'
+    lab._hb.firstElementChild.style.width = '0%'
+  }
+})
+
+const stepSlider = lab.slider({
+  id: 'step', label: 'Adim / step', min: 1, max: N, step: 1, value: 1, digits: 0,
+  ends: ['1', String(N)], onInput(value) {
+    if (lab.broken) lab.resetBreak()
+    show(clamp(Math.round(Number(value)), 1, N) - 1)
+  },
+})
+
+// ---------------------------------------------------------------- break it
+const REFUSAL = {
+  sentence: 'Bu bir tarif; hastaligi tedavi etmez, ilacin yerine gecmez. Sayi yok.',
+  reason: 'procedure lane: no medical claim, no number',
+}
+lab.breakIt({
+  label: R.kind === 'food' ? 'Ask it to cure the flu' : 'Ask it to fix a scratch',
+  run() {
+    lab.setHero(0, { state: 'refused', sub: REFUSAL.reason, bad: true })
+    lab._hv.textContent = '\u2014'
+    lab._hb.firstElementChild.style.width = '0%'
+    callout.innerHTML = `<div style="font:600 10px/1.4 "JetBrains Mono",monospace;color:#8d2b22">REFUSED</div><div style="font:400 15px/1.35 "Instrument Serif",serif;margin-top:0.25em">${REFUSAL.sentence}</div>`
+    boundary.innerHTML = `<b>Sinir / boundary</b><br>${TR.claim_boundary || R.claim_boundary}`
+  },
+  reset() { show(current) },
+})
+
+// ---------------------------------------------------------------- the text
+const safety = (TR.safety || R.safety.map((s) => s.text)).map((t) => `<li>${t}</li>`).join('')
+const dns = (TR.does_not_say || R.does_not_say).map((t) => `<li>${t}</li>`).join('')
+const sources = R.sources.map((s) => `<li><code>${s.id}</code> — ${s.title} — <a href="${s.url}">${s.url}</a> (${s.accessed})</li>`).join('')
+lab.how(
+  `<b>Bu sayfa bir tarif, bir motor degil.</b> Sayilar hedef (setpoint) veya kaynakli `
+  + `sinirdir (limit); hicbiri olcum degildir. Belge <code>mcp/recipe.py</code> kapisindan gecer: `
+  + `her adim bir kaynak kimligi ya da acikca <code>design</code> tasir, tip iddiasi `
+  + `<code>claim_boundary</code> disinda yasaktir. `
+  + `<b>Kiril nokta:</b> "gribi tedavi etsin" dersen sayfa sayi uretmez; sabit ret cumlesini gosterir.`
+  + `<div style="margin-top:0.7em"><b>Guvenlik</b><ul>${safety}</ul></div>`
+  + `<div style="margin-top:0.5em"><b>Bu tarif ne soylemiyor</b><ul>${dns}</ul></div>`
+  + `<div style="margin-top:0.5em"><b>Kaynaklar</b><ul>${sources}</ul></div>`,
+  [
+    'lane: procedure (kj-recipe/1) — no engine, no surrogate',
+    'claim gate: cure/treat/prevent words only inside claim_boundary/does_not_say',
+    'temperature_role: setpoint may be design; limit must cite a source',
+  ],
+)
+
+show(0)
+lab.start()
+
+// ---------------------------------------------------------------- performance
+lab.ao.enabled = false
+lab.renderer.shadowMap.type = THREE.PCFSoftShadowMap
+lab.scene.traverse((o) => {
+  if (o.isLight && o.shadow) {
+    o.shadow.mapSize.set(1024, 1024)
+    o.shadow.map?.dispose()
+    o.shadow.map = null
+    o.shadow.camera.near = 5
+    o.shadow.camera.far = 12
+    o.shadow.camera.updateProjectionMatrix()
+    o.shadow.bias = -0.0006
+    o.shadow.normalBias = 0.035
+  }
+  if (o.material) o.material.needsUpdate = true
+})
+lab.renderer.shadowMap.needsUpdate = true
+</script>
+</body>
+</html>
