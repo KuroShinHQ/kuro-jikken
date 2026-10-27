@@ -1,0 +1,398 @@
+{
+  "schema": "kj-calibration/1",
+  "generated": "2026-10-27",
+  "git_head": "2e21943",
+  "owner": "kuro-jikken / engine router",
+  "purpose": "One entry per property an engine can answer: the measured error of that property, the source it was measured against, and whether the number the answer declares actually covers it. screen() may rank candidates only on CALIBRATED properties.",
+  "method": "Measured error is recomputed from stored per-point rows, or (for the locked solubility set) from the 2399-row prediction CSV, by tools/calibration_check.py. A declared error bar is compared with the measured metric of the same kind. Verdicts are assigned by rule, not by hand.",
+  "verdicts": {
+    "CALIBRATED": "measured error exists and the declared bar covers it (bar = typical error, not a bound)",
+    "MEASURED_NOT_DECLARED": "a measured error exists but the answer does not declare a comparable bar (numerical bracket, research-only engine, or an explicit 'no bar')",
+    "UNCALIBRATED": "no independent measurement in this repository; the model may be used only as a range or a refusal-backed hint, never for ranking",
+    "REFERENCE_ONLY": "value comes from a compilation, not a model with a measured error; ranking heuristics only",
+    "DEFINITION": "exact by definition of the quantity, no model error"
+  },
+  "environment": {
+    "python": "3.12",
+    "packages": {
+      "pycalphad": "0.11.2",
+      "thermo": "0.6.1",
+      "ugropy": "3.2.5",
+      "rdkit": "2026.9.1",
+      "chemicals": "1.5.2",
+      "numpy": "2.5.4"
+    }
+  },
+  "entries": [
+    {
+      "id": "cal.solubility.aqueous.logs",
+      "capability": "solubility.aqueous",
+      "property": "logS, aqueous solubility at 25 C",
+      "unit": "log10(mol/L)",
+      "gate": "gate.esol",
+      "surface": "adapter",
+      "engine": {
+        "name": "ESOL (Delaney 2004), published coefficients",
+        "version": "Delaney 2004 coefficients; RDKit 2026.9.1 descriptors",
+        "code": "mcp/esol.py"
+      },
+      "dataset": {
+        "name": "AqSolDB locked split, single evaluation",
+        "n": 2399,
+        "source": "AqSolDB, DOI 10.7910/DVN/OVHAW8, CC0-1.0; split and preregistration in validation/solubility/plan.md; evaluated once 2026-10-25",
+        "license": "CC0-1.0",
+        "path": "validation/solubility/preds_locked_20261025_050126.csv",
+        "bytes": 309460,
+        "sha256": "789B4219FFCB70588C6E1D56B565F3EA48370AD646805793861A3091C3A0BAA6"
+      },
+      "declared": {
+        "kind": "rmse",
+        "value": 1.2,
+        "rounding": 0.05,
+        "where": "mcp/esol.py IN_DOMAIN_ERR (gate.esol error_bar_logS); 5.0 for out-of-domain",
+        "scope": "in-domain only (neutral, single component, no metal, MW <= 500, no phosphorus)"
+      },
+      "measured": {
+        "metric": "rmse",
+        "value": 1.2246,
+        "n": 1917,
+        "scope": "in-domain rows of the locked set, P-A (published) coefficients",
+        "domains": {
+          "in": {"n": 1917, "mae": 0.9188, "rmse": 1.2246, "bias": 0.1829, "within_1.0": 0.6385},
+          "out": {"n": 482, "mae": 2.2883, "rmse": 4.0989, "bias": 0.1989, "within_1.0": 0.4004},
+          "all": {"n": 2399, "mae": 1.1939, "rmse": 2.1387, "bias": 0.1861, "within_1.0": 0.5907}
+        },
+        "note": "the 1.2 bar is the in-domain RMSE rounded down by 0.02; out-of-domain bar 5.0 covers the measured 4.0989"
+      },
+      "verdict": "CALIBRATED",
+      "reproduce": ".venv_inventory\\Scripts\\python.exe tools\\calibration_check.py",
+      "evidence": [
+        "validation/solubility/KARNE.md",
+        "validation/solubility/results_locked.json",
+        "validation/solubility/plan.md"
+      ],
+      "limits": [
+        "neutral single-component organics in water at 25 C only",
+        "bar is a typical error (RMSE), not a worst case: 36 % of in-domain molecules are off by more than 1.0 log unit",
+        "whole-set RMSE is 2.14 and out-of-domain RMSE is 4.10; never quote 1.2 outside the in-domain group"
+      ]
+    },
+    {
+      "id": "cal.mixture.gamma.unifac",
+      "capability": "mixture.gamma",
+      "property": "gamma-infinity in water at 298 K",
+      "unit": "1",
+      "gate": "gate.unifac",
+      "surface": "adapter",
+      "engine": {
+        "name": "Dortmund UNIFAC (Gmehling, temperature dependent), version 1",
+        "version": "thermo 0.6.1 UFSG/DOUFIP2016 groups from ugropy 3.2.5",
+        "code": "tools/unifac_gamma.py"
+      },
+      "dataset": {
+        "name": "Straver & de Loos 2005, nine solutes in water",
+        "n": 9,
+        "source": "Straver & de Loos (2005) J. Chem. Eng. Data 50, 1171-1176, DOI 10.1021/je0495942; values via the NIST/TRC ThermoML record; replicates averaged in tools/gamma_validation.py",
+        "license": "published literature (citation); raw data not redistributed here"
+      },
+      "declared": {
+        "kind": "median_relative",
+        "value": 0.3,
+        "rounding": 0.0,
+        "where": "mcp/engines.py UNIFAC_RELATIVE_BAR; answer error kind 'model', lower 0.7x upper 1.3x",
+        "scope": "infinite dilution, water, 298 K"
+      },
+      "measured": {
+        "metric": "median_relative",
+        "value": 0.2131,
+        "n": 9,
+        "max_relative": 0.461,
+        "within_bar": 7,
+        "note": "bar is the typical (median) error; the tail reaches 46 % (diacetyl, a known UNIFAC gap) and 30.4 % (2-butanone)"
+      },
+      "points": [
+        {"label": "ethanol", "measured": 3.77, "computed": 4.792},
+        {"label": "1-propanol", "measured": 13.34, "computed": 13.941},
+        {"label": "acetone", "measured": 7.68, "computed": 8.043},
+        {"label": "2-butanone", "measured": 25.95, "computed": 33.831},
+        {"label": "2-pentanone", "measured": 138.5, "computed": 105.453},
+        {"label": "2-hexanone", "measured": 292.0, "computed": 334.861},
+        {"label": "diacetyl", "measured": 13.22, "computed": 7.125},
+        {"label": "dimethyl sulfide", "measured": 176.12, "computed": 141.572},
+        {"label": "acetaldehyde", "measured": 4.13, "computed": 5.01}
+      ],
+      "verdict": "CALIBRATED",
+      "reproduce": ".venv_inventory\\Scripts\\python.exe tools\\gamma_validation.py",
+      "evidence": [
+        "docs/GAMMA_VALIDATION.md"
+      ],
+      "limits": [
+        "infinite-dilution limit only: nothing here validates a full composition range, an azeotrope, a liquid-liquid split or a wax/solvent mixture",
+        "water as solvent, one temperature (298 K), one data source (one paper)",
+        "diacetyl-like adjacent carbonyls are a known model gap (about -46 %)"
+      ]
+    },
+    {
+      "id": "cal.mixture.gamma.cosmo",
+      "capability": "mixture.gamma.cosmo",
+      "property": "gamma-infinity in water at 298 K, COSMO-SAC route",
+      "unit": "1",
+      "gate": "gate.cosmo",
+      "surface": "none",
+      "engine": {
+        "name": "cCOSMO-SAC (NIST COSMOSAC-2010) with PubChemQC sigma profiles and stored refit constants",
+        "version": "mcp/cosmosac_pubchemqc.py; sigma data in _hub/data/formulation_sigma",
+        "code": "mcp/cosmosac_pubchemqc.py"
+      },
+      "dataset": {
+        "name": "Straver & de Loos 2005, nine solutes in water",
+        "n": 9,
+        "source": "Straver & de Loos (2005) J. Chem. Eng. Data 50, 1171-1176, DOI 10.1021/je0495942; sigma profiles from PubChemQC",
+        "license": "published literature (citation); synthetic sigma profiles are a re-parameterisation"
+      },
+      "declared": {
+        "kind": "none",
+        "value": null,
+        "where": "not exposed as an answer: no adapter, no MCP tool, no error bar"
+      },
+      "measured": {
+        "metric": "median_relative",
+        "value": 0.36,
+        "n": 9,
+        "max_relative": 1.094,
+        "within_bar": 3,
+        "note": "3 of 9 within 30 %; worst case 109 % (ethanol)"
+      },
+      "points": [
+        {"label": "ethanol", "measured": 3.77, "computed": 7.895},
+        {"label": "1-propanol", "measured": 13.34, "computed": 21.2},
+        {"label": "acetone", "measured": 7.68, "computed": 9.046},
+        {"label": "2-butanone", "measured": 25.95, "computed": 37.26},
+        {"label": "2-pentanone", "measured": 138.5, "computed": 93.4},
+        {"label": "2-hexanone", "measured": 292.0, "computed": 280.73},
+        {"label": "diacetyl", "measured": 13.22, "computed": 14.41},
+        {"label": "dimethyl sulfide", "measured": 176.12, "computed": 112.67},
+        {"label": "acetaldehyde", "measured": 4.13, "computed": 6.314}
+      ],
+      "verdict": "MEASURED_NOT_DECLARED",
+      "reproduce": ".venv_inventory\\Scripts\\python.exe tools\\gamma_validation.py --cosmo",
+      "evidence": [
+        "docs/GAMMA_VALIDATION.md"
+      ],
+      "limits": [
+        "research only: not reachable from an answer, so it cannot mislead a user - keep it that way until a bar exists",
+        "sigma profiles are a refit, so the comparison is 'our pipeline', not 'COSMO-SAC in general'"
+      ]
+    },
+    {
+      "id": "cal.alloy.phase.liquidus",
+      "capability": "alloy.phase",
+      "property": "liquidus / melting temperature",
+      "unit": "K",
+      "gate": "gate.calphad",
+      "surface": "adapter",
+      "engine": {
+        "name": "pycalphad equilibrium + bisection over MatCalc open databases",
+        "version": "pycalphad 0.11.2; mc_al_v2.032, mc_fe_v2.059, mc_ni_v2.034",
+        "code": "tools/alloy_liquidus.py, mcp/calphad_engine.py"
+      },
+      "dataset": {
+        "name": "Published melting points and Al-Cu liquidus, seven points",
+        "n": 7,
+        "source": "docs/ALLOY_VALIDATION.md, transcribed from the Al-Cu phase diagram; databases MatCalc open (ODbL-1.0 + DbCL-1.0) kept outside the repo in KJ_TDB_DIR",
+        "license": "ODbL-1.0 + DbCL-1.0 (databases, external); published values cited"
+      },
+      "declared": {
+        "kind": "bracket",
+        "value": 0.342,
+        "where": "mcp/engines.py error kind 'bisection bracket', lower/upper = value -/+ bracket/2; the answer limits say it is numerical resolution, NOT database or model uncertainty",
+        "scope": "numerical only; widest half-width observed 0.342 K, typical 0.10-0.20 K"
+      },
+      "measured": {
+        "metric": "max_abs",
+        "value": 8.3,
+        "n": 7,
+        "mae": 2.17,
+        "note": "pure elements 0.01-0.24 K; Al-Cu liquidus 1.6-8.3 K, worst at 17.3 at% next to the eutectic"
+      },
+      "points": [
+        {"label": "pure Al (FCC_A1)", "measured": 933.47, "computed": 933.46, "unit": "K"},
+        {"label": "pure Fe (BCC_A2)", "measured": 1811.0, "computed": 1810.96, "unit": "K"},
+        {"label": "pure Ni (FCC_A1)", "measured": 1728.0, "computed": 1728.24, "unit": "K"},
+        {"label": "Al-1 at% Cu liquidus", "measured": 928.0, "computed": 926.4, "unit": "K"},
+        {"label": "Al-5 at% Cu liquidus", "measured": 903.0, "computed": 900.4, "unit": "K"},
+        {"label": "Al-10 at% Cu liquidus", "measured": 870.0, "computed": 867.6, "unit": "K"},
+        {"label": "Al-17.3 at% Cu liquidus", "measured": 821.0, "computed": 829.3, "unit": "K"}
+      ],
+      "verdict": "MEASURED_NOT_DECLARED",
+      "reproduce": ".venv_inventory\\Scripts\\python.exe tools\\alloy_liquidus.py",
+      "evidence": [
+        "docs/ALLOY_VALIDATION.md",
+        "docs/TARGET_ALLOY_HEAT_SURVEY.md"
+      ],
+      "limits": [
+        "the answer declares only the bisection bracket (0.02-0.34 K); the database error is up to 8.3 K and is NOT in the answer",
+        "published Al-Cu values are read off a printed diagram (about +-2 K), so the 8.3 K point is partly read-off error",
+        "melting and liquidus only: no creep, oxidation, corrosion or mechanical strength"
+      ]
+    },
+    {
+      "id": "cal.mixture.wax.range",
+      "capability": "mixture.wax",
+      "property": "wax appearance / last-solid temperature range",
+      "unit": "K",
+      "gate": "gate.wax",
+      "surface": "adapter",
+      "engine": {
+        "name": "ideal solid-liquid equilibrium, activity coefficients = 1",
+        "version": "tools/wax_melting.py; Tm and Hfus from chemicals 1.5.2",
+        "code": "tools/wax_melting.py"
+      },
+      "dataset": {
+        "name": "none",
+        "n": 0,
+        "source": "no independent wax mixture data in this repository",
+        "license": "n/a"
+      },
+      "declared": {
+        "kind": "range",
+        "value": null,
+        "where": "mcp/engines.py error kind 'range', lower = last solid, upper = wax appearance; this is the physical melting range, not a model uncertainty",
+        "scope": "always YELLOW"
+      },
+      "measured": {
+        "metric": "none",
+        "value": null,
+        "n": 0,
+        "note": "unvalidated by construction: gamma = 1 ignores every interaction in the mixture"
+      },
+      "verdict": "UNCALIBRATED",
+      "reproduce": ".venv_inventory\\Scripts\\python.exe tools\\wax_melting.py",
+      "evidence": [
+        "tools/tests/test_wax_melting.py"
+      ],
+      "limits": [
+        "range only, never a single melting point",
+        "no activity coefficients, no rheology, no wax content, no pour point, no performance claim",
+        "cannot be used to rank candidates against each other"
+      ]
+    },
+    {
+      "id": "cal.molecule.identity.mw",
+      "capability": "molecule.identity",
+      "property": "average molecular weight",
+      "unit": "g/mol",
+      "gate": "gate.structure",
+      "surface": "adapter",
+      "engine": {
+        "name": "RDKit Descriptors.MolWt",
+        "version": "rdkit 2026.9.1",
+        "code": "mcp/engines.py"
+      },
+      "dataset": {
+        "name": "IUPAC average atomic weights",
+        "n": 0,
+        "source": "definitional: sum of average atomic weights of the structure as drawn",
+        "license": "n/a"
+      },
+      "declared": {
+        "kind": "definition",
+        "value": 0.0,
+        "where": "mcp/engines.py error kind 'definition', lower = upper = value"
+      },
+      "measured": {
+        "metric": "none",
+        "value": null,
+        "n": 0,
+        "note": "no measurement needed; exact given the structure and the atomic weight table"
+      },
+      "verdict": "DEFINITION",
+      "reproduce": ".venv_inventory\\Scripts\\python.exe tools\\ask.py \"ethanol molecular weight\" --payload \"{\\\"smiles\\\": \\\"CCO\\\"}\" --no-write",
+      "evidence": [
+        "tools/tests/test_engines.py"
+      ],
+      "limits": [
+        "average mass, not monoisotopic and not measured mass",
+        "implicit hydrogens included; the structure as drawn is the only input"
+      ]
+    },
+    {
+      "id": "cal.molecule.identity.logp",
+      "capability": "molecule.identity",
+      "property": "Crippen logP",
+      "unit": "1",
+      "gate": "gate.structure",
+      "surface": "adapter",
+      "engine": {
+        "name": "RDKit Crippen.MolLogP",
+        "version": "rdkit 2026.9.1",
+        "code": "mcp/engines.py"
+      },
+      "dataset": {
+        "name": "none",
+        "n": 0,
+        "source": "no measured logP set in this repository",
+        "license": "n/a"
+      },
+      "declared": {
+        "kind": "none",
+        "value": null,
+        "where": "mcp/engines.py returns no error bar for logP (only for molecular weight)"
+      },
+      "measured": {
+        "metric": "none",
+        "value": null,
+        "n": 0,
+        "note": "Crippen logP is an atom-contribution model; its literature error is about 0.5 log units but this repo has not measured it"
+      },
+      "verdict": "UNCALIBRATED",
+      "reproduce": ".venv_inventory\\Scripts\\python.exe tools\\ask.py \"ethanol logP\" --payload \"{\\\"smiles\\\": \\\"CCO\\\", \\\"property\\\": \\\"logp\\\"}\" --no-write",
+      "evidence": [
+        "tools/tests/test_engines.py"
+      ],
+      "limits": [
+        "no error bar is declared: do not rank on logP and do not present it as a measured partition coefficient",
+        "logD at a pH, permeability and formulation behaviour are out of scope"
+      ]
+    },
+    {
+      "id": "cal.chemical.hansen.hsp",
+      "capability": "chemical.hansen",
+      "property": "Hansen solubility parameters (dD, dP, dH) and distance Ra",
+      "unit": "MPa^0.5",
+      "gate": "gate.hsp",
+      "surface": "tool",
+      "engine": {
+        "name": "chemicals package Hansen tables (Hansen 2007 compilation)",
+        "version": "chemicals 1.5.2",
+        "code": "mcp/tools_server.py hsp_lookup / hsp_distance / hsp_rank"
+      },
+      "dataset": {
+        "name": "Hansen parameter compilation",
+        "n": 0,
+        "source": "values carried by the chemicals package; per-value provenance and measurement conditions are not recorded",
+        "license": "compilation, see chemicals package"
+      },
+      "declared": {
+        "kind": "none",
+        "value": null,
+        "where": "gate.hsp returns 'ranking only'; no error bar is attached to Ra"
+      },
+      "measured": {
+        "metric": "none",
+        "value": null,
+        "n": 0,
+        "note": "no measured compatibility or solubility set in this repository"
+      },
+      "verdict": "REFERENCE_ONLY",
+      "reproduce": ".venv_inventory\\Scripts\\python.exe -c \"import sys; sys.path[:0]=['mcp','tools']; import tools_server; print(tools_server.hsp_distance('64-17-5','67-56-1'))\"",
+      "evidence": [
+        "mcp/tests/test_tools_server.py"
+      ],
+      "limits": [
+        "ranking heuristic only: a small Ra does not prove miscibility, and Ra ignores temperature and concentration",
+        "substances with no Hansen entry (petrolatum, waxes, polymers) must stay RED"
+      ]
+    }
+  ]
+}

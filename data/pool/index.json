@@ -1,0 +1,34 @@
+{
+ "builder": "tools/build_pool.py",
+ "check": "python tools/build_pool.py --check",
+ "generated": "2026-10-27",
+ "note": "generated file: edit the builder, not the JSON",
+ "pools": {
+  "alloy_phases": {
+   "bytes": 7999,
+   "count": 3,
+   "file": "data/pool/alloy_phases.json",
+   "licence": "ODbL-1.0 + DbCL-1.0",
+   "role": "phase catalogue for alloy.phase: filter, never order (R5 verdict MEASURED_NOT_DECLARED)",
+   "sha256": "7aa77ab738685e331d12f3a7bc5e19e433c2f863c54cbb8ddcf961bffbc88514"
+  },
+  "hsp": {
+   "bytes": 325420,
+   "count": 1294,
+   "file": "data/pool/hsp.json",
+   "licence": "MIT",
+   "role": "reference-only: annotate or filter a candidate, never order it (R5 verdict REFERENCE_ONLY)",
+   "sha256": "59f7f5f1dedd351f7692991d1641f13f47e67e997bf29382e5f1612d283b1fea"
+  },
+  "melting": {
+   "bytes": 5138,
+   "count": 18,
+   "file": "data/pool/melting.json",
+   "licence": "MIT",
+   "role": "range input for mixture.wax only: feasibility, never a single melting point or a ranking (R5 verdict UNCALIBRATED)",
+   "sha256": "85948360ac26e0a4b84f204a2c3662d0c60724c4f7da0fbd31bf6d9604dbddba"
+  }
+ },
+ "ranking": "a pool entry is not a ranking right: see data/calibration.json (R5)",
+ "schema": "kj-pool/1"
+}

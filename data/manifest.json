@@ -163,11 +163,33 @@
         "key": "CASRN"
       },
       "used_by": [
-        "mcp/tools_server.py"
+        "mcp/tools_server.py",
+        "tools/build_pool.py"
       ],
       "not_for": [
         "mixtures (petrolatum, mineral oil)",
         "polymers"
+      ]
+    },
+    {
+      "id": "chemicals_thermal",
+      "title": "Tm/Hfus tables in chemicals 1.5.2 (OPEN_NTBKM and other compilations)",
+      "path": null,
+      "in_repo": false,
+      "licence": "MIT",
+      "domain": {
+        "quantity": "melting temperature and enthalpy of fusion",
+        "key": "CASRN"
+      },
+      "used_by": [
+        "tools/wax_melting.py",
+        "tools/build_pool.py"
+      ],
+      "not_for": [
+        "mixtures (petrolatum and paraffin wax have no Hfus)",
+        "wax content",
+        "rheology",
+        "performance claims"
       ]
     },
     {

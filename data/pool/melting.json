@@ -1,0 +1,224 @@
+{
+ "count": 18,
+ "curated_cas": 20,
+ "entries": [
+  {
+   "casrn": "544-76-3",
+   "curated_name": "hexadecane",
+   "formula": "C16H34",
+   "group": "n-alkane",
+   "hfus_j_mol": 53360.0,
+   "mw_g_mol": 226.44,
+   "name": "hexadecane",
+   "smiles": "CCCCCCCCCCCCCCCC",
+   "tm_k": 291.15
+  },
+  {
+   "casrn": "593-45-3",
+   "curated_name": "octadecane",
+   "formula": "C18H38",
+   "group": "n-alkane",
+   "hfus_j_mol": 61700.0,
+   "mw_g_mol": 254.49,
+   "name": "octadecane",
+   "smiles": "CCCCCCCCCCCCCCCCCC",
+   "tm_k": 301.15
+  },
+  {
+   "casrn": "112-95-8",
+   "curated_name": "eicosane",
+   "formula": "C20H42",
+   "group": "n-alkane",
+   "hfus_j_mol": 69900.0,
+   "mw_g_mol": 282.55,
+   "name": "eicosane",
+   "smiles": "CCCCCCCCCCCCCCCCCCCC",
+   "tm_k": 309.9
+  },
+  {
+   "casrn": "629-97-0",
+   "curated_name": "docosane",
+   "formula": "C22H46",
+   "group": "n-alkane",
+   "hfus_j_mol": 48800.0,
+   "mw_g_mol": 310.6,
+   "name": "docosane",
+   "smiles": "CCCCCCCCCCCCCCCCCCCCCC",
+   "tm_k": 317.55
+  },
+  {
+   "casrn": "646-31-1",
+   "curated_name": "tetracosane",
+   "formula": "C24H50",
+   "group": "n-alkane",
+   "hfus_j_mol": 54400.0,
+   "mw_g_mol": 338.65,
+   "name": "tetracosane",
+   "smiles": "CCCCCCCCCCCCCCCCCCCCCCCC",
+   "tm_k": 325.65
+  },
+  {
+   "casrn": "630-02-4",
+   "curated_name": "octacosane",
+   "formula": "C28H58",
+   "group": "n-alkane",
+   "hfus_j_mol": 65100.0,
+   "mw_g_mol": 394.76,
+   "name": "octacosane",
+   "smiles": "CCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+   "tm_k": 336.4
+  },
+  {
+   "casrn": "630-03-5",
+   "curated_name": "nonacosane",
+   "formula": "C29H60",
+   "group": "n-alkane",
+   "hfus_j_mol": 66900.0,
+   "mw_g_mol": 408.79,
+   "name": "nonacosane",
+   "smiles": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+   "tm_k": 338.0
+  },
+  {
+   "casrn": "638-68-6",
+   "curated_name": "triacontane",
+   "formula": "C30H62",
+   "group": "n-alkane",
+   "hfus_j_mol": 68300.0,
+   "mw_g_mol": 422.81,
+   "name": "triacontane",
+   "smiles": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+   "tm_k": 339.15
+  },
+  {
+   "casrn": "544-85-4",
+   "curated_name": "dotriacontane",
+   "formula": "C32H66",
+   "group": "n-alkane",
+   "hfus_j_mol": 75800.0,
+   "mw_g_mol": 450.87,
+   "name": "dotriacontane",
+   "smiles": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+   "tm_k": 343.0
+  },
+  {
+   "casrn": "143-07-7",
+   "curated_name": "lauric acid",
+   "formula": "C12H24O2",
+   "group": "fatty acid",
+   "hfus_j_mol": 36300.0,
+   "mw_g_mol": 200.32,
+   "name": "lauric acid",
+   "smiles": "CCCCCCCCCCCC(=O)O",
+   "tm_k": 316.75
+  },
+  {
+   "casrn": "544-63-8",
+   "curated_name": "myristic acid",
+   "formula": "C14H28O2",
+   "group": "fatty acid",
+   "hfus_j_mol": 45100.0,
+   "mw_g_mol": 228.37,
+   "name": "tetradecanoic acid",
+   "smiles": "CCCCCCCCCCCCCC(=O)O",
+   "tm_k": 328.15
+  },
+  {
+   "casrn": "57-10-3",
+   "curated_name": "palmitic acid",
+   "formula": "C16H32O2",
+   "group": "fatty acid",
+   "hfus_j_mol": 53700.0,
+   "mw_g_mol": 256.42,
+   "name": "palmitic acid",
+   "smiles": "CCCCCCCCCCCCCCCC(=O)O",
+   "tm_k": 334.95
+  },
+  {
+   "casrn": "57-11-4",
+   "curated_name": "stearic acid",
+   "formula": "C18H36O2",
+   "group": "fatty acid",
+   "hfus_j_mol": 61200.0,
+   "mw_g_mol": 284.48,
+   "name": "stearic acid",
+   "smiles": "CCCCCCCCCCCCCCCCCC(=O)O",
+   "tm_k": 342.45
+  },
+  {
+   "casrn": "112-80-1",
+   "curated_name": "oleic acid",
+   "formula": "C18H34O2",
+   "group": "fatty acid",
+   "hfus_j_mol": 52721.0,
+   "mw_g_mol": 282.46,
+   "name": "oleic acid",
+   "smiles": "CCCCCCCC/C=C\\CCCCCCCC(=O)O",
+   "tm_k": 287.15
+  },
+  {
+   "casrn": "112-85-6",
+   "curated_name": "behenic acid",
+   "formula": "C22H44O2",
+   "group": "fatty acid",
+   "hfus_j_mol": 62879.0,
+   "mw_g_mol": 340.58,
+   "name": "docosanoic acid",
+   "smiles": "CCCCCCCCCCCCCCCCCCCCCC(=O)O",
+   "tm_k": 349.15
+  },
+  {
+   "casrn": "112-53-8",
+   "curated_name": "1-dodecanol",
+   "formula": "C12H26O",
+   "group": "fatty alcohol",
+   "hfus_j_mol": 40200.0,
+   "mw_g_mol": 186.33,
+   "name": "1-dodecanol",
+   "smiles": "CCCCCCCCCCCCO",
+   "tm_k": 297.15
+  },
+  {
+   "casrn": "36653-82-4",
+   "curated_name": "1-hexadecanol",
+   "formula": "C16H34O",
+   "group": "fatty alcohol",
+   "hfus_j_mol": 33600.0,
+   "mw_g_mol": 242.44,
+   "name": "1-hexadecanol",
+   "smiles": "CCCCCCCCCCCCCCCCO",
+   "tm_k": 322.65
+  },
+  {
+   "casrn": "112-92-5",
+   "curated_name": "1-octadecanol",
+   "formula": "C18H38O",
+   "group": "fatty alcohol",
+   "hfus_j_mol": 45000.0,
+   "mw_g_mol": 270.49,
+   "name": "1-octadecanol",
+   "smiles": "CCCCCCCCCCCCCCCCCCO",
+   "tm_k": 332.65
+  }
+ ],
+ "generated": "2026-10-27",
+ "licence": "MIT",
+ "pool": "melting",
+ "role": "range input for mixture.wax only: feasibility, never a single melting point or a ranking (R5 verdict UNCALIBRATED)",
+ "schema": "kj-pool/1",
+ "skipped": [
+  {
+   "casrn": "8002-74-2",
+   "group": "wax mixture",
+   "name": "paraffin wax",
+   "reason": "Hfus missing: ideal SLE needs both"
+  },
+  {
+   "casrn": "8009-03-8",
+   "group": "wax mixture",
+   "name": "petrolatum",
+   "reason": "Hfus missing: ideal SLE needs both"
+  }
+ ],
+ "source": "chemicals 1.5.2 (MIT) Tm/Hfus tables (DIPPR/TRC compilations)"
+}
