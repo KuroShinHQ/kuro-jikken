@@ -1,0 +1,9 @@
+# engine environment (formerly .venv_inventory) - pinned to the versions the
+# published numbers were produced with. requirements.txt (bench) stays as-is:
+# the bench venv is frozen for the confirmatory run.
+chemicals==1.5.2
+pycalphad==0.11.2
+thermo==0.6.1
+ugropy==3.2.5
+scipy==1.18.1
+sympy==1.14.0

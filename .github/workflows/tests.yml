@@ -1,0 +1,38 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-inventory.txt
+
+      - name: install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-inventory.txt
+
+      - name: tests
+        # KJ_TDB_DIR is not set on the runner: the CALPHAD database is ODbL
+        # share-alike data and stays out of the repository, so those tests skip
+        # instead of failing. Every number-producing test that does not need the
+        # database still runs.
+        run: python -m pytest -q
