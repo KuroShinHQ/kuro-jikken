@@ -16,12 +16,21 @@ TDB = pathlib.Path(
 PHASES = ["LIQUID", "FCCAL", "THETA_AL2CU", "ALCU_E", "ALCU_ETA", "AL2CU3_D", "AL9CU11_Z"]
 
 
-def liquidus(db: Database, x_cu: float, low: float = 600.0, high: float = 950.0) -> float:
+def liquidus(
+    db: Database,
+    x_cu: float,
+    low: float = 600.0,
+    high: float = 950.0,
+    with_bracket: bool = False,
+):
     """Temperature at which the last solid disappears (bisection, 9 steps).
 
     The bracket is checked first: if the alloy is not solid at ``low`` or still
     solid at ``high``, the bisection has no answer and this raises instead of
     returning the bracket edge (2026-10-27: x_Cu = 0 used to return 600.34 K).
+
+    ``with_bracket=True`` returns ``(value, bracket_width_k)``. The width is the
+    numerical resolution of the bisection, **not** a model or database error.
     """
 
     def solid(temperature: float) -> bool:
@@ -47,7 +56,10 @@ def liquidus(db: Database, x_cu: float, low: float = 600.0, high: float = 950.0)
             lo = mid
         else:
             hi = mid
-    return (lo + hi) / 2.0
+    value = (lo + hi) / 2.0
+    if with_bracket:
+        return value, hi - lo
+    return value
 
 
 def main() -> None:

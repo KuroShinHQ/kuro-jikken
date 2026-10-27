@@ -116,7 +116,8 @@ def esol(request, plan, payload):
         error={"kind": "model", "lower": value - bar, "upper": value + bar},
         limits=[
             "neutral single-component organic molecules in water at 25 C",
-            f"model error bar {bar} log units (locked-set RMSE)",
+            f"model error bar {bar} log units (locked-set in-domain RMSE 1.2246, n=1917; "
+            "the whole set is 2.14, so never quote this outside the in-domain group)",
         ],
         gate=gate,
     )
@@ -230,39 +231,85 @@ def calphad(request, plan, payload):
         )
     low = _float(payload, "low_k", 600.0)
     high = _float(payload, "high_k", 950.0)
+    error = None
     try:
-        if payload.get("x_cu") is not None or payload.get("cu_wt_pct") is not None:
+        if payload.get("x_cu") is not None or payload.get("cu_wt_pct") is not None or payload.get("cu_pct") is not None:
             from pycalphad import Database
 
             from alloy_liquidus import liquidus
 
             if payload.get("x_cu") is not None:
                 x_cu = float(payload["x_cu"])
-                basis = f"mole fraction x(Cu) = {x_cu}"
-            else:
+                basis_text = f"mole fraction x(Cu) = {x_cu}"
+            elif payload.get("cu_wt_pct") is not None:
                 wt = float(payload["cu_wt_pct"])
                 x_cu = _al_cu_mole_fraction(wt)
-                basis = f"{wt} wt% Cu = mole fraction x(Cu) = {x_cu:.5f}"
+                basis_text = f"{wt} wt% Cu = mole fraction x(Cu) = {x_cu:.5f}"
+            elif str(payload.get("basis") or "").strip().lower() in ("wt", "wt%", "weight"):
+                wt = float(payload["cu_pct"])
+                x_cu = _al_cu_mole_fraction(wt)
+                basis_text = f"{wt} wt% Cu = mole fraction x(Cu) = {x_cu:.5f}"
+            elif str(payload.get("basis") or "").strip().lower() in ("at", "at%", "atomic", "mol", "mole"):
+                # atomic percent in a binary IS mole percent
+                x_cu = float(payload["cu_pct"]) / 100.0
+                basis_text = f"{payload['cu_pct']} at% Cu = mole fraction x(Cu) = {x_cu:.5f}"
+            else:
+                return A.refusal(
+                    "unit mismatch",
+                    capability="alloy.phase",
+                    reason=(
+                        f"cu_pct = {payload.get('cu_pct')} does not say wt% or at%; "
+                        'add "basis": "wt" or "at"'
+                    ),
+                    gate=gate,
+                )
             path = C.tdb_path(str(tdb))
             if x_cu <= 0.0:
                 # the binary liquidus has no bracket at x_Cu = 0; pure Al is its own path
+                elements = [str(e).upper() for e in _as_list(payload.get("elements"))]
+                others = [element for element in elements if element not in ("AL", "CU")]
+                if others:
+                    return A.refusal(
+                        "missing input",
+                        capability="alloy.phase",
+                        reason=(
+                            f"0 % Cu would be pure {others[0]}, not aluminium; give "
+                            "element + solid_phase for a pure-element melting point"
+                        ),
+                        gate=gate,
+                    )
                 pure = C.melting_point(str(tdb), "AL", "FCC_A1", low, high)
                 value = float(pure["melting_k"])
+                width = float(pure.get("bracket_width_k") or 0.0)
+                error = {
+                    "kind": "bisection bracket",
+                    "lower": value - width / 2.0,
+                    "upper": value + width / 2.0,
+                }
                 method = pure["method"] + ", pure Al (0 % Cu)"
                 database = pure["database"]
                 limits = [
                     "pure AL melting point (FCC_A1 -> LIQUID); the Al-Cu liquidus needs x_Cu > 0",
-                    "database assessment, not a measurement; no model error bar is claimed",
+                    f"±{width / 2.0:.3f} K is the bisection bracket (numerical resolution), "
+                    "not database or model uncertainty",
                 ]
                 does_not_say = "mechanical strength, creep, oxidation or corrosion"
                 engine = "pycalphad equilibrium + bisection (pure element)"
             else:
-                value = float(liquidus(Database(str(path)), x_cu, low=low, high=high))
+                value, width = liquidus(
+                    Database(str(path)), x_cu, low=low, high=high, with_bracket=True
+                )
+                error = {
+                    "kind": "bisection bracket",
+                    "lower": value - width / 2.0,
+                    "upper": value + width / 2.0,
+                }
                 method = "pycalphad equilibrium + bisection (9 steps), Al-Cu liquidus"
                 database = path.name
                 limits = [
-                    f"liquidus of {basis}; Al-Cu database phases only",
-                    "database assessment, not a measurement; no model error bar is claimed",
+                    f"liquidus of {basis_text}; Al-Cu database phases only",
+                    f"±{width / 2.0:.3f} K is the bisection bracket (numerical resolution), "
+                    "not database or model uncertainty",
                 ]
                 does_not_say = "mechanical strength, creep, oxidation or corrosion"
                 engine = "pycalphad equilibrium (Al-Cu liquidus)"
@@ -288,11 +335,18 @@ def calphad(request, plan, payload):
                 float(payload["high_k"]),
             )
             value = float(out["melting_k"])
+            width = float(out.get("bracket_width_k") or 0.0)
+            error = {
+                "kind": "bisection bracket",
+                "lower": value - width / 2.0,
+                "upper": value + width / 2.0,
+            }
             method = out["method"] + ", pure element"
             database = out["database"]
             limits = [
                 f"pure {out['element']} melting point ({out['solid_phase']} -> LIQUID)",
-                "database assessment, not a measurement; no model error bar is claimed",
+                f"±{width / 2.0:.3f} K is the bisection bracket (numerical resolution), "
+                "not database or model uncertainty",
             ]
             does_not_say = "alloy behaviour, creep, oxidation or corrosion"
             engine = "pycalphad equilibrium + bisection"
@@ -309,6 +363,7 @@ def calphad(request, plan, payload):
         unit="K",
         method=method,
         verdict=_verdict(gate),
+        error=error,
         provenance={"engine": engine, "dataset": database},
         reproduce=reproduce_command(request, payload),
         does_not_say=does_not_say,

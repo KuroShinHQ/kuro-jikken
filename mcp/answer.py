@@ -184,7 +184,14 @@ def refusal(
     return answer
 
 
-NO_DATA_HINTS = ("no hansen entry", "no melting data", "not found", "not declared", "no gate input")
+NO_DATA_HINTS = (
+    "no hansen entry",
+    "no melting data",
+    "not found",
+    "not declared",
+    "no gate input",
+    "no element entry",
+)
 # every capability in router.CAPS with a non-empty engine list now has an adapter
 NO_ENGINE_CAPS = set()
 

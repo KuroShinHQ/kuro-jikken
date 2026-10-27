@@ -124,6 +124,66 @@ def test_calphad_zero_copper_uses_the_pure_aluminium_path():
     assert "pure Al" in out["method"]
 
 
+def test_calphad_zero_copper_with_another_element_is_refused():
+    """0 % Cu is only 'pure aluminium' when the element set says Al-Cu.
+
+    2026-10-27: the pure-element fallback was hard-coded to AL, so an Mg request
+    with x_cu = 0 answered 933.47 K (aluminium's melting point).
+    """
+    payload = {"tdb": "mc_al_v2.032.pycalphad.tdb", "elements": ["MG"], "x_cu": 0}
+    request = "Mg alasimi erir mi"
+    plan = R.plan(request, payload)
+    out = E.calphad(request, plan, payload)
+    assert out["verdict"] == "RED" and out["value"] is None
+    assert out["reason"] == "missing input"
+    assert "pure MG" in out["limits"][0]
+
+
+def test_calphad_basis_wt_and_at_are_different_numbers():
+    """R2: 5 wt% Cu and 5 at% Cu are different alloys, and the same question
+    without a basis is one question, not a guess."""
+    tdb = "mc_al_v2.032.pycalphad.tdb"
+    request = "Al alasimi erir mi"
+    base = {"tdb": tdb, "elements": ["AL", "CU"]}
+
+    wt = dict(base, cu_pct=5, basis="wt")
+    out_wt = E.calphad(request, R.plan(request, wt), wt)
+    at = dict(base, cu_pct=5, basis="at")
+    out_at = E.calphad(request, R.plan(request, at), at)
+    assert out_wt["value"] == pytest.approx(918.9, abs=0.1)
+    assert out_at["value"] == pytest.approx(900.44, abs=0.1)
+    assert "wt% Cu" in out_wt["limits"][0]
+    assert "at% Cu" in out_at["limits"][0]
+
+    no_basis = dict(base, cu_pct=5)
+    out_none = E.calphad(request, R.plan(request, no_basis), no_basis)
+    assert out_none["verdict"] == "RED" and out_none["reason"] == "unit mismatch"
+    assert "wt% mi at% mi" in out_none["sentence"]
+
+
+def test_calphad_error_is_the_bisection_bracket_not_a_model_claim():
+    """R3: every CALPHAD number carries a +-K bar.
+
+    2026-10-27: the answer used to say "error none claimed", so a liquidus of
+    918.9 K looked more certain than the 9-step bisection can support. The bar
+    is the bracket width and the limits say it is numerical, not model error.
+    """
+    tdb = "mc_al_v2.032.pycalphad.tdb"
+    request = "Al alasimi erir mi"
+    alloy = {"tdb": tdb, "elements": ["AL", "CU"], "cu_pct": 5, "basis": "wt"}
+    out = E.calphad(request, R.plan(request, alloy), alloy)
+    err = out["error"]
+    assert err is not None and err["kind"] == "bisection bracket"
+    assert err["lower"] <= out["value"] <= err["upper"]
+    assert err["upper"] - err["lower"] <= 1.0
+    assert "bisection bracket" in out["limits"][1]
+    assert "not database or model uncertainty" in out["limits"][1]
+
+    pure = {"tdb": tdb, "elements": ["AL"], "x_cu": 0}
+    out_pure = E.calphad("Al erir mi", R.plan("Al erir mi", pure), pure)
+    assert out_pure["error"]["lower"] <= out_pure["value"] <= out_pure["error"]["upper"]
+
+
 def test_identity_answers_mw_or_logp_by_request():
     payload = {"smiles": "CCO"}
     plan = R.plan("bu molekulun MW'si kac", payload)
