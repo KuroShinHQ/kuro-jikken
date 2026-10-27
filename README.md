@@ -7,7 +7,7 @@
 ![status](https://img.shields.io/badge/status-locked%20baseline%20%2B%20engine%20router-orange)
 ![scope](https://img.shields.io/badge/scope-benign%20molecules%20only-green)
 ![license](https://img.shields.io/badge/license-MIT-blue)
-![tests](https://img.shields.io/badge/tests-513%20passing-brightgreen)
+![tests](https://img.shields.io/badge/tests-523%20passing-brightgreen)
 
 | | |
 |---|---|
@@ -74,8 +74,9 @@ flowchart LR
    audit can point at the sentence instead of trusting the parser.
 2. **Gates** (`mcp/gates.py`) — seven applicability checks run before the engine. A gate
    can only return PASS, YELLOW or RED; a crashed gate is a RED, never a silent pass.
-3. **Engine** (`mcp/engines.py`) — five capabilities are adapted: ESOL logS, UNIFAC
-   gamma/gamma-infinity, CALPHAD melting/liquidus, wax melting range, RDKit identity.
+3. **Engine** (`mcp/engines.py`) — six capabilities are adapted: ESOL logS, UNIFAC
+   gamma/gamma-infinity, CALPHAD melting/liquidus, wax melting range, binary VLE
+   azeotrope (1 atm), RDKit identity.
 4. **Answer contract** (`mcp/answer.py`) — a number must carry `value, unit, method, error,
    limits, verdict, provenance, reproduce, does_not_say`. Anything else is a refusal.
 5. **Ledger** (`mcp/ledger.py`) — every call is appended to `runs/router/*.jsonl`;
@@ -100,13 +101,15 @@ RED request with a YELLOW engine.
 | toxicity, ADMET, LD50, carcinogenicity | RED | no engine |
 | protein binding, docking, Kd | RED | no engine |
 | TEWL, occlusivity, emulsion stability, skin feel | RED | no measurement, ranking would be fiction |
-| azeotrope, vapour pressure, boiling point | RED | VLE engine not written yet |
+| azeotrope (binary, 1 atm) | GREEN / YELLOW | V1 engine (`mcp/vle.py`), validated on two binaries; other pairs are model predictions (`docs/VLE.md`) |
+| vapour pressure, boiling point | RED | no pure-component Psat surface yet |
 | petrolatum Hansen matching (CAS 8009-03-8) | RED | no Hansen record; no surrogate allowed (DEC-20261027-R4) |
 | target with no recognisable application | CLARIFY | ask, never guess |
 
-Refusals are not free text. `mcp/answer.py` has eight fixed classes, and a test pins each
+Refusals are not free text. `mcp/answer.py` has nine fixed classes, and a test pins each
 sentence: `no engine` · `no data` · `out of domain` · `missing parameters` ·
-`ambiguous name` · `unit mismatch` · `model != measurement` · `missing input`.
+`ambiguous name` · `unit mismatch` · `model != measurement` · `missing input` ·
+`no azeotrope`.
 
 ## 5. Tools · two MCP servers (stdio)
 
@@ -148,13 +151,13 @@ databases are ODbL-1.0 + DbCL-1.0 (share-alike). Never commit them here.
 ## 6. Calibration policy (why only two properties may be ranked)
 
 `data/calibration.json` is the single place that decides what a number is allowed to claim.
-Eight entries, checked by `tools/calibration_check.py`:
+Nine entries, checked by `tools/calibration_check.py`:
 
 | Status | Count | Meaning |
 |---|---|---|
 | `CALIBRATED` | 2 | measured error against a locked set: ESOL logS, Dortmund UNIFAC gamma-infinity |
 | `MEASURED_NOT_DECLARED` | 2 | error measured but not yet declared as a capability: COSMO-SAC, CALPHAD |
-| `UNCALIBRATED` | 2 | wax melting range, logP — usable as a bound, never as a ranking |
+| `UNCALIBRATED` | 3 | wax melting range, logP, VLE azeotrope (2-point check only) — usable as a bound, never as a ranking |
 | `REFERENCE_ONLY` | 1 | Hansen parameters: context, not a sort key |
 | `DEFINITION` | 1 | molecular weight: exact by definition |
 
@@ -203,16 +206,18 @@ Where a document and a live test disagree, the live test wins.
 ## 9. Run it, verify it
 
 ```powershell
-.venv_inventory\Scripts\python -m pytest -q                          # 513 passed
+.venv_inventory\Scripts\python -m pytest -q                          # 523 passed
 .venv_inventory\Scripts\python tools\calibration_check.py --strict  # exit 0, 2 rankable
 .venv_inventory\Scripts\python tools\build_pool.py --check          # 5 files match a fresh build
 .venv_inventory\Scripts\python tools\vertical_slice.py --check      # exit 0 (document is current)
 .venv_inventory\Scripts\python mcp\screen.py "Vazelin benzeri cilt koruyucu" --limit 5
+.venv_inventory\Scripts\python mcp\vle.py ethanol water             # 351.40 K, x = 0.894
 ```
 
-The last command is the shortest end-to-end demonstration: target → pool → calibration →
+The screen command is the shortest end-to-end demonstration: target → pool → calibration →
 ranked list, with a gate trace on every row and the refusal boundary printed under it
-(`docs/S5_PETROLATUM_SLICE.md` is the rendered version).
+(`docs/S5_PETROLATUM_SLICE.md` is the rendered version). The VLE line is the second:
+two names → gate → Dortmund UNIFAC + Psat → a number with an error bar (`docs/VLE.md`).
 
 ## 10. Scope and safety
 

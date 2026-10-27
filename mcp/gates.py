@@ -167,6 +167,33 @@ def gate_wax(casrn_list) -> dict:
     )
 
 
+def gate_vle(payload) -> dict:
+    """Binary VLE: two known components, and whether this pair was validated."""
+    import vle as V
+
+    if not isinstance(payload, dict):
+        return _out("RED", "a binary VLE gate needs a payload with components")
+    components = payload.get("components")
+    if isinstance(components, str):
+        components = components.replace(",", " ").split()
+    if not isinstance(components, (list, tuple)) or len(components) != 2:
+        return _out("RED", "a binary VLE gate needs exactly two components")
+    try:
+        for name in components:
+            V.psat(name, 350.0)
+    except V.VleError as exc:
+        return _out("RED", str(exc))
+    except Exception as exc:  # a gate must refuse cleanly, never crash
+        return _out("RED", f"component could not be read: {type(exc).__name__}: {exc}")
+    pressure = float(payload.get("pressure_pa") or V.DEFAULT_PRESSURE_PA)
+    pair = V.pair_key(components)
+    if pair in V.VALIDATED:
+        if abs(pressure - V.DEFAULT_PRESSURE_PA) > 1.0:
+            return _out("YELLOW", "validated at 1 atm; this pressure is extrapolation")
+        return _out("PASS", f"validated against literature: {pair[0]}/{pair[1]} (docs/VLE.md)")
+    return _out("YELLOW", "model not validated for this pair (docs/VLE.md)")
+
+
 GATES = {
     "gate.structure": gate_structure,
     "gate.esol": gate_esol,
@@ -175,6 +202,7 @@ GATES = {
     "gate.cosmo": gate_cosmo,
     "gate.calphad": gate_calphad,
     "gate.wax": gate_wax,
+    "gate.vle": gate_vle,
 }
 
 

@@ -521,10 +521,72 @@ def wax(request, plan, payload):
     )
 
 
+def vle(request, plan, payload):
+    """Azeotropic temperature of a binary at fixed pressure (model, not measurement)."""
+    import vle as V
+
+    gate = plan.get("gate")
+    components = _as_list(payload.get("components") if isinstance(payload, dict) else None)
+    if len(components) != 2:
+        return A.refusal(
+            "missing input",
+            capability="vle.azeotrope",
+            reason="give exactly two component names, e.g. components=['ethanol','water']",
+            gate=gate,
+        )
+    pressure = _float(payload, "pressure_pa", V.DEFAULT_PRESSURE_PA)
+    try:
+        out = V.azeotrope(components, pressure)
+    except V.VleError as exc:
+        return A.refusal(
+            "missing parameters",
+            capability="vle.azeotrope",
+            reason=str(exc),
+            gate=gate,
+        )
+    if not out["azeotrope"]:
+        return A.refusal(
+            "no azeotrope",
+            capability="vle.azeotrope",
+            reason=f"{components[0]}/{components[1]} at {pressure:.0f} Pa",
+            gate=gate,
+        )
+    first, second = out["components"]
+    value = float(out["temperature_k"])
+    bar = V.DECLARED_BAR_K
+    return A.build(
+        capability="vle.azeotrope",
+        value=value,
+        unit="K",
+        method="modified Raoult's law: Dortmund UNIFAC gamma(x,T) + thermo Psat",
+        verdict=_verdict(gate),
+        provenance={
+            "engine": "Dortmund UNIFAC + thermo Psat (modified Raoult)",
+            "dataset": "DOUFIP2016 via thermo 0.6.1; validation docs/VLE.md",
+        },
+        reproduce=reproduce_command(request, payload),
+        does_not_say=(
+            "whether a real mixture separates this way at another pressure; "
+            "ternary azeotropes; distillation design or energy use"
+        ),
+        error={"kind": "model", "lower": value - bar, "upper": value + bar},
+        limits=[
+            f"binary only at {pressure:.0f} Pa; modified Raoult's law with UNIFAC gamma(x,T)",
+            f"azeotrope at x({first}) = {out['x1']:.3f} (y = {out['y1']:.3f}); "
+            f"pure boiling points {out['pure_boiling_k'][0]:.2f} / "
+            f"{out['pure_boiling_k'][1]:.2f} K",
+            "validated on ethanol/water (+0.08 K) and propan-2-ol/water (0.00 K); "
+            "other pairs are model predictions (docs/VLE.md)",
+        ],
+        gate=gate,
+    )
+
+
 ADAPTERS = {
     "solubility.aqueous": esol,
     "mixture.gamma": unifac,
     "mixture.wax": wax,
     "alloy.phase": calphad,
     "molecule.identity": identity,
+    "vle.azeotrope": vle,
 }

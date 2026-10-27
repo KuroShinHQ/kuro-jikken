@@ -11,13 +11,13 @@ CAPS = [
     ("mixture.wax", ["wax", "mum", "erime araligi"], ["wax"], "gate.wax", "K"),
     ("alloy.phase", ["alasim", "erir", "liquidus", "solidus", "tdb"], ["calphad"], "gate.calphad", "K"),
     ("molecule.identity", ["mw", "molekul agirligi", "formul", "halka", "logp"], ["rdkit"], "gate.structure", "mixed"),
+    ("vle.azeotrope", ["azeotrop", "vle"], ["unifac", "thermo"], "gate.vle", "K"),
 ]
 
 RED = [
     ("biology.binding", ["baglanir", "docking", "hedef", "kd"]),
     ("biology.toxicity", ["toksik", "admet", "ld50", "kanserojen"]),
     ("product.performance", ["tewl", "okluziv", "emulsiyon", "deri hissi"]),
-    ("vle.azeotrope", ["azeotrop", "buhar basinci", "kaynama"]),
 ]
 
 FOLD = str.maketrans("çğıöşü", "cgiosu")

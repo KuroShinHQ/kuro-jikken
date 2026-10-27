@@ -393,6 +393,48 @@
         "ranking heuristic only: a small Ra does not prove miscibility, and Ra ignores temperature and concentration",
         "substances with no Hansen entry (petrolatum, waxes, polymers) must stay RED"
       ]
+    },
+    {
+      "id": "cal.vle.azeotrope",
+      "capability": "vle.azeotrope",
+      "property": "binary azeotropic temperature at a fixed pressure",
+      "unit": "K",
+      "gate": "gate.vle",
+      "surface": "adapter",
+      "engine": {
+        "name": "modified Raoult's law: Dortmund UNIFAC gamma(x,T) + thermo Psat",
+        "version": "tools/unifac_gamma.py + thermo 0.6.1",
+        "code": "mcp/vle.py"
+      },
+      "dataset": {
+        "name": "literature azeotropes, 2 binaries",
+        "n": 2,
+        "source": "docs/VLE.md: ethanol/water 351.32 K x=0.894; propan-2-ol/water 353.52 K x=0.681",
+        "license": "n/a (literature values, not a redistributed dataset)"
+      },
+      "declared": {
+        "kind": "max_abs",
+        "value": 0.5,
+        "where": "mcp/engines.py vle adapter: error +/-0.5 K (declared model bound; the 2-point check is 0.08 K, but two points are not a locked set)",
+        "scope": "validated pairs; other pairs are YELLOW model predictions"
+      },
+      "measured": {
+        "metric": "none",
+        "value": null,
+        "n": 0,
+        "note": "2-point check (ethanol/water +0.08 K, propan-2-ol/water 0.00 K); not a locked set, so no ranking"
+      },
+      "verdict": "UNCALIBRATED",
+      "reproduce": ".venv_inventory\\Scripts\\python.exe mcp\\vle.py ethanol water",
+      "evidence": [
+        "mcp/tests/test_vle.py",
+        "tools/tests/test_golden_numbers.py row 9"
+      ],
+      "limits": [
+        "binary only, one pressure; no ternary azeotropes",
+        "modified Raoult's law: no vapour-phase non-ideality, no association model beyond UNIFAC",
+        "cannot be used to rank candidates against each other"
+      ]
     }
   ]
 }

@@ -23,6 +23,7 @@ UNITS = {
     "mixture.wax": {"K"},
     "alloy.phase": {"K"},
     "molecule.identity": {"g/mol", "1"},
+    "vle.azeotrope": {"K"},
 }
 
 # non-SI tokens: a log concentration and a dimensionless ratio
@@ -39,6 +40,9 @@ SENTENCES = {
     # 8th class, added 2026-10-27 (R1): none of the seven above can ask for a
     # missing *input* (a mole fraction, a basis) without lying about why.
     "missing input": "Hesap icin eksik girdi var: {reason}. Tamamlaninca hesaplarim.",
+    # 9th class, added 2026-10-27 (V1): the engine ran and found *no* azeotrope.
+    # That is a result, not a failure, but the contract has no number for "none".
+    "no azeotrope": "Bu ikili {reason} sartlarinda azeotrop yapmiyor; azeotrop sicakligi yok.",
 }
 
 REQUIRED = (
@@ -213,6 +217,13 @@ def from_plan(plan: dict) -> dict:
         return refusal("no engine", capability=capability, gate=plan.get("gate"))
     gate = plan.get("gate")
     if gate is None and route.get("gate"):
+        if capability == "vle.azeotrope":
+            return refusal(
+                "missing input",
+                capability=capability,
+                reason="give exactly two component names, e.g. components=['ethanol','water']",
+                gate=None,
+            )
         return refusal(
             "no data",
             capability=capability,
