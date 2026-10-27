@@ -1,5 +1,5 @@
-﻿// Vendored from AirsupHQ/machine-skill (MIT). Copyright (c) 2026 Airsup. See ../LICENSE.
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
+// Vendored from AirsupHQ/machine-skill (MIT). Copyright (c) 2026 Airsup. See ../LICENSE.
 // Turn any Machine Skill page into a film, frame exact, in one command.
 //
 //   node scripts/record.mjs examples/turbofan.html out/turbofan.mp4
@@ -19,7 +19,7 @@
 //   --gain -14      music level in LUFS (integrated), default -18 (a soft bed)
 //   --root DIR      folder to serve (default: the folder above the page, so ../kit resolves)
 import { spawn, spawnSync } from 'node:child_process'
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, writeFileSync, unlinkSync } from 'node:fs'
 import { dirname, resolve, relative, basename, join } from 'node:path'
 import { homedir } from 'node:os'
 import { serve } from './lib/serve.mjs'
@@ -74,7 +74,16 @@ if (STILLS) {
 
 const silent = OUT.replace(/\.mp4$/i, '') + '.video.mp4'
 const vf = BLUR > 1 ? ['-vf', `tmix=frames=${BLUR},select='not(mod(n\\,${BLUR}))',setpts=N/${FPS}/TB`] : []
-const ff = spawn(FFMPEG, ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS * BLUR), '-c:v', 'png', '-i', 'pipe:0', ...vf, '-r', String(FPS), '-c:v', 'libx264', '-preset', 'slow', '-crf', '15', '-pix_fmt', 'yuv420p', '-tune', 'film', '-movflags', '+faststart', silent], { stdio: ['pipe', 'inherit', 'inherit'] })
+// This laptop has no ffmpeg on PATH. The two candidates behave differently:
+//   Wondershare 3.2.5 has libx264 but its png_pipe demuxer cannot read a frame from stdin
+//     ("unspecified size", measured 2026-10-27), so it cannot take our frame stream at all.
+//   Live2D Cubism 4.4.3 decodes the pipe (png rgb24) but ships libopenh264 instead of libx264.
+// VENC=openh264 switches the encoder; the default stays machine-skill's libx264 recipe.
+const VENC = process.env.VENC || 'libx264'
+const encArgs = VENC === 'openh264'
+  ? ['-c:v', 'libopenh264', '-b:v', process.env.VBITRATE || '14M', '-pix_fmt', 'yuv420p']
+  : ['-c:v', 'libx264', '-preset', 'slow', '-crf', '15', '-pix_fmt', 'yuv420p', '-tune', 'film']
+const ff = spawn(FFMPEG, ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS * BLUR), '-c:v', 'png', '-i', 'pipe:0', ...vf, '-r', String(FPS), ...encArgs, '-movflags', '+faststart', silent], { stdio: ['pipe', 'inherit', 'inherit'] })
 const N = Math.round((TO - FROM) * FPS)
 for (let i = 0; i < N; i++) {
   for (let k = 0; k < BLUR; k++) {
@@ -113,7 +122,8 @@ if (music) {
   const r = spawnSync(FFMPEG, ['-y', '-loglevel', 'error', '-i', silent, '-i', src, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-af', af, '-c:a', 'aac', '-b:a', '192k', '-t', String(len), '-movflags', '+faststart', OUT], { stdio: 'inherit' })
   if (r.status !== 0) process.exit(5)
 } else spawnSync(FFMPEG, ['-y', '-loglevel', 'error', '-i', silent, '-c', 'copy', '-movflags', '+faststart', OUT], { stdio: 'inherit' })
-spawnSync('rm', ['-f', silent])
+// Windows has no `rm`: the silent intermediate used to survive every take (.video.mp4 left in out/)
+try { unlinkSync(silent) } catch {}
 console.log('done', OUT, `${((Date.now() - t0) / 1000).toFixed(0)} s`)
 // no pink frames, ever
 const bad = await scanFile(OUT)

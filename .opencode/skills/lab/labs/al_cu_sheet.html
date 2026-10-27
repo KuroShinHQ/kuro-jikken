@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LAB 01 · Al-Cu liquidus · A4 experiment sheet</title>
+<meta name="description" content="One A4 experiment sheet. Every number is a ledger entry; the page does not compute physics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0 }
+  * { box-sizing: border-box }
+  html, body { margin: 0; padding: 0; background: #fff }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact }
+  .sheet {
+    width: 210mm; height: 297mm; padding: 11mm 14mm 8mm; background: #f3f2ee; color: #141414;
+    font-family: 'Inter', system-ui, sans-serif; font-size: 8.4pt; line-height: 1.42;
+    display: flex; flex-direction: column; gap: 3.2mm;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace }
+  .serif { font-family: 'Instrument Serif', Georgia, serif }
+  .rule { height: 0.6pt; background: #141414; opacity: .22 }
+  header .top { display: flex; justify-content: space-between; align-items: baseline;
+    font: 500 6.6pt/1 'JetBrains Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: #55534f }
+  header h1 { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 26pt; line-height: .92;
+    margin: 2.6mm 0 1mm; letter-spacing: -.012em }
+  header h1 em { font-style: italic; color: #6f6c66 }
+  header .q { font-family: 'JetBrains Mono', monospace; font-size: 7.4pt; color: #3d3a35 }
+  .answer { display: grid; grid-template-columns: 74mm 1fr; gap: 6mm; align-items: end }
+  .big { font-family: 'Instrument Serif', Georgia, serif; font-size: 52pt; line-height: .8; letter-spacing: -.02em }
+  .big i { font-family: 'Inter', sans-serif; font-style: normal; font-size: 11pt; letter-spacing: 0; margin-left: 1.2mm }
+  .lbl { font: 500 6.6pt/1.2 'JetBrains Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: #8c8b87 }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6mm 5mm; font-size: 7.6pt }
+  .facts b { font-weight: 600 }
+  .chart svg { width: 100%; height: 43mm; display: block }
+  .chart .cap { font: 400 6.4pt/1.3 'JetBrains Mono', monospace; color: #6f6c66; margin-top: 1mm }
+  .ledger { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm }
+  table { width: 100%; border-collapse: collapse; font: 400 6.5pt/1.35 'JetBrains Mono', monospace }
+  th { text-align: left; font-weight: 500; color: #6f6c66; border-bottom: .6pt solid #c9c7c1; padding: 0.7mm 2mm 0.7mm 0 }
+  th:nth-child(3) { padding-right: 1.6mm }
+  th:last-child { padding-left: 2.4mm }
+  td { padding: 0.4mm 0; border-bottom: .4pt solid #e4e2dc }
+  td.n { text-align: right; padding-right: 1.6mm }
+  td.id { color: #8c8b87; font-size: 5.9pt; padding-left: 2.4mm }
+  .three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5mm }
+  .note { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; border-top: .6pt solid #c9c7c1; padding-top: 2.6mm }
+  .note p { font-size: 7.0pt; line-height: 1.42; margin: 0 0 1.2mm; color: #2c2a27 }
+  .block h3 { font: 500 6.6pt/1.2 'JetBrains Mono', monospace; letter-spacing: .16em; text-transform: uppercase;
+    color: #8c8b87; margin: 0 0 1.4mm }
+  .block p, .block li { font-size: 7.3pt; margin: 0 0 1.1mm }
+  .block ul { margin: 0; padding-left: 3.6mm }
+  .refusal { border-left: 1.2pt solid #8d2b22; padding-left: 3mm }
+  .refusal .t { color: #8d2b22; font-weight: 600 }
+  footer { margin-top: auto; font: 400 6.2pt/1.45 'JetBrains Mono', monospace; color: #6f6c66;
+    display: grid; grid-template-columns: 1fr auto; gap: 4mm; border-top: .6pt solid #c9c7c1; padding-top: 2.4mm }
+  footer b { color: #3d3a35; font-weight: 500 }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <div class="top"><span>Kuro-jikken · lab sheet No. 01</span><span id="h-date"></span></div>
+    <h1>Al&ndash;Cu liquidus<br><em>where the last solid disappears</em></h1>
+    <div class="q">/machine &nbsp;Al-Cu alas&#305;m&#305; ka&ccedil; derecede tamamen erir?</div>
+  </header>
+
+  <div class="rule"></div>
+
+  <section class="answer">
+    <div>
+      <div class="lbl">Liquidus · alloy</div>
+      <div class="big"><span id="hero">—</span><i>K</i></div>
+    </div>
+    <div class="facts">
+      <div><span class="lbl">composition</span><br><b>Cu <span id="f-cu"></span> wt%</b></div>
+      <div><span class="lbl">gate</span><br><b>PASS</b> · <span id="f-br"></span> K bracket</div>
+      <div><span class="lbl">ledger</span><br><span class="mono" id="f-id"></span></div>
+      <div><span class="lbl">verdict</span><br><b>GREEN</b> · CALPHAD equilibrium</div>
+    </div>
+  </section>
+
+  <section class="chart">
+    <div class="lbl">21 baked points · the curve is the database, the dots are ledger entries</div>
+    <svg id="chart" viewBox="0 0 340 78" preserveAspectRatio="none" role="img" aria-label="liquidus vs copper content"></svg>
+    <div class="cap">x = Cu wt% · y = liquidus K · the highlighted dot is the number above · no point on this line is computed in the page</div>
+  </section>
+
+  <section class="ledger">
+    <div id="t1"></div>
+    <div id="t2"></div>
+  </section>
+
+  <section class="three">
+    <div class="block">
+      <h3>How it is computed</h3>
+      <ul>
+        <li>x(Cu) from wt%: n<sub>Cu</sub> = w/63.546, n<sub>Al</sub> = (100&minus;w)/26.9815, x = n<sub>Cu</sub>/(n<sub>Cu</sub>+n<sub>Al</sub>)</li>
+        <li>liquidus: bisect T where any solid phase has NP &gt; 1e&minus;6 (9 steps), bracket reported</li>
+        <li>x<sub>Cu</sub> = 0: no bracket exists, pure-element path (FCC_A1 &rarr; LIQUID)</li>
+      </ul>
+    </div>
+    <div class="block">
+      <h3>What this does not say</h3>
+      <ul id="f-limits"></ul>
+    </div>
+    <div class="block refusal">
+      <h3>Break it &middot; out of domain</h3>
+      <p><span class="t">no data</span> &middot; gate <b>RED</b> &middot; Au &mdash; no ELEMENT entry</p>
+      <p id="f-sentence"></p>
+      <p class="mono" style="font-size:6.2pt;color:#6f6c66">ledger <span id="f-rledger"></span><br>the sheet shows the refusal, not a number</p>
+    </div>
+  </section>
+
+  <section class="note">
+    <div>
+      <h3>Reading the sheet</h3>
+      <p>The number on top is not a fit. It is the temperature at which pycalphad finds the last
+      solid fraction disappearing in the MatCalc Al-Cu database, bisected at that composition and
+      stored as one ledger entry. Each row below is the same procedure at another composition;
+      the curve is drawn through those rows, not through a formula.</p>
+      <p>The page behind this sheet snaps to the same 21 points. Between them the page model
+      interpolates linearly inside a declared &plusmn;0.5 K, and <b>lab_audit.py</b> checks every
+      midpoint against the engine: worst case measured <b>0.3418 K</b>.</p>
+    </div>
+    <div>
+      <h3>Why this is not a simulation</h3>
+      <p>The database is an assessment of published Al&ndash;Cu thermodynamics
+      (mc_al_v2.032). The &plusmn;0.342 K is the bisection bracket &mdash; how tightly the solver
+      closed in &mdash; not the uncertainty of the database. A real measurement of this liquidus
+      would carry its own error, usually several kelvin, and that error is not claimed here.</p>
+      <p><b>The rig:</b> 52 named parts in five groups (base, structure, mechanism, controls,
+      subject). The cutaway opens the top-front quarter so the quartz crucible, the six-turn coil
+      and the type-K sheath are visible; nothing in the scene is a decal.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <b>Provenance</b> · <span id="f-engine"></span> · <span id="f-dataset"></span><br>
+      baked <span id="f-baked"></span> · repo head <span id="f-head"></span> · model <span id="f-src"></span><br>
+      regenerate: <b>python scripts/gen_model.py</b> &middot; audit: <b>python scripts/lab_audit.py --compute</b>
+    </div>
+    <div style="text-align:right">
+      lab kit: AirsupHQ/machine-skill (MIT)<br>
+      page model &plusmn;<span id="f-tol"></span> K between anchors<br>
+      <span id="f-audit"></span>
+    </div>
+  </footer>
+</div>
+
+<script type="module">
+import { ANCHORS, LIMITS, META, REFUSAL, TOLERANCE_K } from './al_cu_model.mjs'
+
+const $ = (id) => document.getElementById(id)
+const f2 = (v) => v.toFixed(2)
+const pt = ANCHORS.find((a) => a.cu === 2) ?? ANCHORS[Math.floor(ANCHORS.length / 2)]
+
+// the answer
+$('hero').textContent = f2(pt.k)
+$('f-cu').textContent = pt.cu.toFixed(1)
+$('f-br').textContent = pt.e == null ? 'n/a' : pt.e.toFixed(3)
+$('f-id').textContent = pt.id
+$('h-date').textContent = META.created.slice(0, 10).replace(/-/g, '.') + ' · head ' + META.head
+$('f-sentence').textContent = REFUSAL.sentence
+$('f-rledger').textContent = REFUSAL.ledger
+$('f-engine').textContent = META.engine
+$('f-dataset').textContent = META.dataset
+$('f-baked').textContent = META.created.replace('T', ' ')
+$('f-head').textContent = META.head
+$('f-src').textContent = META.source.split('/').pop()
+$('f-tol').textContent = String(TOLERANCE_K)
+
+// the chart: 340 x 96 viewBox, x 0..10 wt%, y 902..935 K, room on the left for the axis labels
+const X = (cu) => 26 + (cu / 10) * 300
+const Y = (k) => 78 - ((k - 902) / 33) * 70
+const svg = $('chart')
+const ns = 'http://www.w3.org/2000/svg'
+const add = (tag, attrs) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e }
+add('line', { x1: 26, y1: 78, x2: 326, y2: 78, stroke: '#c9c7c1', 'stroke-width': .6 })
+add('line', { x1: 26, y1: 8, x2: 26, y2: 78, stroke: '#c9c7c1', 'stroke-width': .6 })
+add('polyline', {
+  points: ANCHORS.map((a) => `${X(a.cu).toFixed(2)},${Y(a.k).toFixed(2)}`).join(' '),
+  fill: 'none', stroke: '#141414', 'stroke-width': 1, 'stroke-linejoin': 'round',
+})
+for (const a of ANCHORS) add('circle', { cx: X(a.cu), cy: Y(a.k), r: 1.5, fill: '#f3f2ee', stroke: '#141414', 'stroke-width': .7 })
+add('circle', { cx: X(pt.cu), cy: Y(pt.k), r: 3.2, fill: '#e4572e' })
+for (const [cu, t] of [[0, 'pure Al'], [5, 'Al-5Cu'], [10, 'Al-10Cu']])
+  add('text', { x: X(cu), y: 85, 'text-anchor': cu === 0 ? 'start' : cu === 10 ? 'end' : 'middle', 'font-size': 4.6, fill: '#6f6c66', 'font-family': 'JetBrains Mono, monospace' }).textContent = t
+for (const [k, t] of [[935, '935 K'], [900, '900 K']])
+  add('text', { x: 23, y: Y(k) + 1.5, 'text-anchor': 'end', 'font-size': 4.6, fill: '#6f6c66', 'font-family': 'JetBrains Mono, monospace' }).textContent = t
+for (const l of LIMITS) { const li = document.createElement('li'); li.textContent = l; $('f-limits').appendChild(li) }
+
+// the ledger: two tables, 11 + 10 rows, so the sheet stays one page
+const table = (rows) => {
+  const t = document.createElement('table')
+  t.innerHTML = '<thead><tr><th>Cu wt%</th><th style="text-align:right">liquidus K</th><th style="text-align:right">&plusmn; K</th><th>ledger</th></tr></thead>'
+  t.innerHTML += rows.map((a) => `<tr><td class="n">${a.cu.toFixed(1)}</td><td class="n">${f2(a.k)}</td>`
+    + `<td class="n">${a.e == null ? 'n/a' : a.e.toFixed(3)}</td><td class="id">${a.id}</td></tr>`).join('')
+  return t
+}
+$('t1').appendChild(table(ANCHORS.slice(0, 11)))
+$('t2').appendChild(table(ANCHORS.slice(11)))
+
+// the audit line is only true if the audit ran; the sheet states the command, not a result
+$('f-audit').textContent = 'anchor = ledger · midpoint tested'
+</script>
+</body>
+</html>

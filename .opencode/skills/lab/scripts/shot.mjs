@@ -1,5 +1,5 @@
-﻿// Vendored from AirsupHQ/machine-skill (MIT). Copyright (c) 2026 Airsup. See ../LICENSE.
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
+// Vendored from AirsupHQ/machine-skill (MIT). Copyright (c) 2026 Airsup. See ../LICENSE.
 // Screenshots for self review (Claude reads every PNG it makes).
 //   node scripts/shot.mjs examples/turbofan.html out/review.png [--wait 4] [--js "lab.toggle('cut', true)"] [--then 2] [--w 1920 --h 1080]
 //   node scripts/shot.mjs examples/turbofan.html out/film --film 1.5,8,14,20   (film stills at those times)
@@ -28,7 +28,10 @@ if (film) {
   for (let k = 0; k < 4; k++) await page.evaluate(() => window.__film.step(0))
   for (const t of film.split(',').map(Number)) {
     await page.evaluate((t) => window.__film.seek(t), t)
-    await page.screenshot({ path: `${OUT}_${t.toFixed(1)}.jpg`, type: 'jpeg', quality: 90 }); console.log('still', t)
+    // headless Chromium on this laptop renders film frames on SwiftShader; the 30 s default times out
+    const t0 = Date.now()
+    await page.screenshot({ path: `${OUT}_${t.toFixed(1)}.jpg`, type: 'jpeg', quality: 90, timeout: 600000 })
+    console.log('still', t, `${((Date.now() - t0) / 1000).toFixed(1)} s`)
   }
 } else {
   await page.waitForFunction(() => window.__lab?.renderer, null, { timeout: 120000 })

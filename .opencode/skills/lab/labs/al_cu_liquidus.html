@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAB · Al-Cu liquidus · kuro-jikken</title>
+<meta name="description" content="Al-Cu liquidus from a CALPHAD database. Every number on screen is a ledger entry, not an in-page solver.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<!-- lab-kit:start -->
+<script type="module" src="../kit/lab-kit.js"></script>
+<!-- lab-kit:end -->
+<script type="module">
+const { THREE, Lab, MAT, GEO, clamp, fmt } = window.LabKit
+import { ANCHORS, META, REFUSAL, TOLERANCE_K } from './al_cu_model.mjs'
+
+// ---------------------------------------------------------------- baked data
+// Single source of truth is labs/al_cu_model.mjs, generated from
+//   data/labs/al_cu_liquidus_r3.json by scripts/gen_model.py
+// Every anchor is one ledger entry produced by bake.py -> mcp/pipeline.ask, and
+// scripts/lab_audit.py checks model == bake file == ledger, so the page cannot drift.
+// The page does not compute physics. It shows a stored, gated, replayable number.
+const XS = ANCHORS.map((a) => a.cu)
+const KS = ANCHORS.map((a) => a.k)
+const IDS = ANCHORS.map((a) => a.id)
+const ES = ANCHORS.map((a) => a.e)
+
+// ---------------------------------------------------------------- the lab
+const lab = new Lab({
+  prompt: 'Al-Cu alasimi kac derecede tamamen erir',
+  no: 1, title: 'Al-Cu liquidus', sub: 'where the last solid disappears',
+  size: 0.34,
+  view: { az: 34, el: 20, dist: 3.1, target: [0, 0.105, 0] },
+  // the kit's floor is at y = 0 and the base plate top is also y = 0: two coplanar huge surfaces,
+  // which z-fought into a hatched wedge across the plate. 2 mm lower and the plate sits on the set.
+  ground: -0.002,
+  cut: { a: [0, 0, 1], b: [0, 1, 0], reach: 0.18 },
+  pills: ['CALPHAD', 'mc_al_v2.032', 'ledger'],
+})
+
+// ---------------------------------------------------------------- the parts
+// 52 named parts in five groups - the list is in labs/al_cu_parts.md and was written
+// before the geometry (anatomy rule). Every part sits on another part.
+const P = []
+function part(group, geo, mat, o) {
+  const m = lab.mesh(geo, mat, o)
+  P.push({ group, name: o.name })
+  return m
+}
+
+// base ----------------------------------------------------------- (10)
+part('base', GEO.rbox(0.34, 0.016, 0.34, 0.012), MAT.castIron(), { name: 'Base plate', pos: [0, -0.008, 0] })
+part('base', GEO.tube(0.155, 0.147, 0.010, 64, 0), MAT.castIron(), { name: 'Base rim', pos: [0, 0.000, 0] })
+for (const [i, [x, z]] of [[-0.135, -0.135], [0.135, -0.135], [-0.135, 0.135], [0.135, 0.135]].entries())
+  part('base', GEO.disc(0.016, 0.010, 0.002, 24), MAT.rubber(), { name: `Foot ${i + 1}`, pos: [x, -0.021, z] })
+part('base', GEO.rbox(0.085, 0.0016, 0.026, 0.002), MAT.brass(), { name: 'Label plate', pos: [-0.090, 0.0016, 0.140] })
+part('base', GEO.rbox(0.140, 0.0012, 0.008, 0.001), MAT.brass(), { name: 'Scale strip', pos: [0.060, 0.0012, 0.160] })
+part('base', GEO.disc(0.004, 0.003, 0.0006, 20), MAT.steel(), { name: 'Corner screw A', pos: [0.160, 0.0015, 0.160] })
+part('base', GEO.disc(0.004, 0.003, 0.0006, 20), MAT.steel(), { name: 'Corner screw B', pos: [-0.160, 0.0015, -0.160] })
+
+// structure ------------------------------------------------------ (12)
+for (const [i, [x, z]] of [[-0.100, -0.100], [0.100, -0.100], [-0.100, 0.100], [0.100, 0.100]].entries())
+  part('structure', GEO.tube(0.007, 0.005, 0.190, 24, 0), MAT.steelDark(), {
+    name: `Post ${i + 1}`, pos: [x, 0.010, z], explode: [x * 0.6, 0, z * 0.6],
+  })
+part('structure', GEO.tube(0.150, 0.092, 0.009, 96, 0), MAT.steelDark(), { name: 'Top lid', pos: [0, 0.206, 0], explode: [0, 0.15, 0] })
+part('structure', GEO.rbox(0.240, 0.006, 0.012, 0.003), MAT.stainless(), { name: 'Cross rail A', pos: [0, 0.150, -0.090] })
+part('structure', GEO.rbox(0.240, 0.006, 0.012, 0.003), MAT.stainless(), { name: 'Cross rail B', pos: [0, 0.150, 0.090] })
+for (const [i, [x, z]] of [[-0.100, -0.100], [0.100, -0.100], [-0.100, 0.100], [0.100, 0.100]].entries())
+  part('structure', GEO.rbox(0.021, 0.013, 0.017, 0.003), MAT.steel(), { name: `Post clamp ${i + 1}`, pos: [x, 0.150, z] })
+part('structure', GEO.tube(0.022, 0.018, 0.060, 32, 0), MAT.steel(), { name: 'Vent stack', pos: [0.112, 0.215, -0.090] })
+
+// mechanism ------------------------------------------------------ (19)
+// The tray bottom was exactly coplanar with the base plate top (y = 0). Every material is
+// DoubleSide, so both faces were drawn and z-fought: the cutaway showed a red/white fan
+// (2026-10-27 screenshot L9_final_cut.png). 0.8 mm of overlap is invisible, coplanarity is not.
+// The tray was r = 0.150 while the cast-iron base rim's inner face is at 0.147, and its cream top
+// (y = 0.0068) stood above the rim's top (0.005): at the plate's front lip it read as a cream
+// half-disc on the floor (film 29.5 s; raycast pick = "Spill tray"). A spill tray is in shadow
+// under the crucible, so it is a dark satin dish inside the rim: 0.1445 radius, top 0.0048.
+part('mechanism', GEO.disc(0.1445, 0.004, 0.0015, 48), MAT.satin({ color: [0.20, 0.20, 0.21], roughness: 0.62 }), { name: 'Spill tray', pos: [0, 0.0028, 0] })
+part('mechanism', GEO.disc(0.115, 0.020, 0.003, 64), MAT.castIron(), { name: 'Susceptor', pos: [0, 0.016, 0], explode: [0, -0.12, 0] })
+part('mechanism', GEO.tube(0.100, 0.092, 0.120, 96, 0), MAT.glass({ roughness: 0.06 }), {
+  name: 'Quartz crucible', pos: [0, 0.026, 0], xray: 'shell', label: 'quartz crucible', explode: [0, 0.03, 0],
+})
+part('mechanism', GEO.disc(0.092, 0.006, 0.0015, 64), MAT.glass({ roughness: 0.06 }), { name: 'Crucible floor', pos: [0, 0.029, 0] })
+// former outer was 0.130, exactly the coil turns' inner radius: two coincident cylinders
+// z-fought into red/white barber stripes at 4x. Half a millimetre in and it is a winding again.
+part('mechanism', GEO.tube(0.1295, 0.126, 0.080, 48, 0), MAT.ceramic(), { name: 'Coil former', pos: [0, 0.030, 0] })
+for (let k = 0; k < 6; k++)
+  part('mechanism', GEO.tube(0.136, 0.130, 0.0075, 48, 0), MAT.copper({ roughness: 0.35 }), {
+    name: `Coil turn ${k + 1}`, pos: [0, 0.034 + k * 0.0135, 0],
+  })
+// The leads used to end at x = +-0.240 in mid air, outside the 0.17 base plate: in the cutaway
+// they read as floating copper debris. They now land on the plate, inside the cut plane (z < 0.061).
+part('mechanism', GEO.pipe([[0.136, 0.034, 0], [0.182, 0.020, 0.020], [0.154, 0.002, 0.048]], 0.0035, { seg: 24, radial: 8 }), MAT.copper(), { name: 'Coil lead A' })
+part('mechanism', GEO.pipe([[-0.136, 0.034, 0], [-0.182, 0.020, 0.020], [-0.154, 0.002, 0.048]], 0.0035, { seg: 24, radial: 8 }), MAT.copper(), { name: 'Coil lead B' })
+part('mechanism', GEO.tube(0.105, 0.072, 0.003, 64, 0), MAT.stainless(), { name: 'Radiation shield', pos: [0, 0.160, 0] })
+part('mechanism', GEO.tube(0.112, 0.108, 0.012, 64, 0), MAT.stainless(), { name: 'Splash guard', pos: [0, 0.146, 0] })
+part('mechanism', GEO.tube(0.0035, 0.0015, 0.190, 32, 0), MAT.inconel(), {
+  name: 'Thermocouple sheath', pos: [0.052, 0.100, 0], explode: [0, 0.16, 0], label: 'type-K probe',
+})
+part('mechanism', GEO.disc(0.0038, 0.010, 0.0012, 24), MAT.inconel(), { name: 'Thermocouple tip', pos: [0.052, 0.060, 0] })
+part('mechanism', GEO.tube(0.006, 0.0035, 0.008, 20, 0), MAT.steel(), { name: 'Probe collar A', pos: [0.052, 0.150, 0] })
+part('mechanism', GEO.tube(0.006, 0.0035, 0.008, 20, 0), MAT.steel(), { name: 'Probe collar B', pos: [0.052, 0.206, 0] })
+
+// controls ------------------------------------------------------- (8)
+part('controls', GEO.disc(0.016, 0.012, 0.002, 40), MAT.plastic(), { name: 'Power knob', pos: [0.118, 0.006, 0.118] })
+part('controls', GEO.gear({ teeth: 20, module: 0.0009, width: 0.007, bore: 0.008 }), MAT.aluminiumMachined(), {
+  name: 'Knob knurl', pos: [0.118, 0.0122, 0.118], rot: [Math.PI / 2, 0, 0],
+})
+// A cream enamel dial (0.93) on a metalness 0.9 plate threw a mirror image of itself onto the
+// plate's front lip, which read as a second cream disc floating on the floor (film 29.5 s,
+// crop_v16/v17). A black gloss dial keeps the control and loses the ghost.
+part('controls', GEO.disc(0.022, 0.004, 0.0008, 40), MAT.enamel({ color: [0.14, 0.14, 0.15] }), { name: 'Dial face', pos: [0.058, 0.0032, 0.128] })
+part('controls', GEO.rbox(0.010, 0.006, 0.006, 0.0015), MAT.plastic(), { name: 'Toggle', pos: [-0.118, 0.004, 0.118] })
+part('controls', GEO.disc(0.0030, 0.0020, 0.0005, 16), MAT.glow({ emissive: [0.2, 1, 0.3], emissiveIntensity: 1.8 }), { name: 'Power LED', pos: [0.118, 0.001, 0.070] })
+part('controls', GEO.disc(0.0030, 0.0020, 0.0005, 16), MAT.glow({ emissive: [1, 0.4, 0.1], emissiveIntensity: 1.5 }), { name: 'Coil LED', pos: [-0.118, 0.001, 0.070] })
+part('controls', GEO.pipe([[-0.150, 0.006, -0.150], [-0.200, 0.005, -0.190], [-0.240, 0.004, -0.240]], 0.004, { seg: 20, radial: 8 }), MAT.rubber(), { name: 'Cable' })
+part('controls', GEO.rbox(0.016, 0.012, 0.012, 0.002), MAT.plastic(), { name: 'Connector', pos: [-0.150, 0.006, -0.150] })
+
+// subject -------------------------------------------------------- (3)
+const meltMat = MAT.glow({ emissive: [1, 0.42, 0.12], emissiveIntensity: 0.6 })
+const melt = part('subject', GEO.disc(0.088, 0.052, 0.004, 64), meltMat, { name: 'Al-Cu melt', pos: [0, 0.0586, 0], label: 'Al-Cu melt' })
+part('subject', GEO.tube(0.0885, 0.0860, 0.005, 64, 0), MAT.glow({ emissive: [1, 0.5, 0.16], emissiveIntensity: 0.9 }), { name: 'Meniscus ring', pos: [0, 0.079, 0] })
+// The skin was a 0.5 mm tube floating over the melt surface: at 4x it read as a stray grey line
+// lying on the orange. A skin on a real melt gathers at the rim, so it is a thin ring there.
+part('subject', GEO.tube(0.0885, 0.0858, 0.0007, 64, 0), MAT.satin({ color: [0.72, 0.70, 0.66] }), { name: 'Oxide skin', pos: [0, 0.0842, 0] })
+
+// ---------------------------------------------------------------- the number
+lab.hero({ label: 'Liquidus', unit: 'K', max: 950, digits: 2 })
+// The kit's slider.set() (what the film uses to drag) changes the DOM value but never fires an
+// 'input' event, so a film take left the hero at the baked 2.0 wt% number while the knob sat at
+// 10.0 wt% (2026-10-27 still L7_base_12.5.jpg). The handler now lives in the slider's own
+// onInput, which both the knob and the film go through, and it snaps the readout to a stored
+// anchor so no intermediate float is ever printed as a number.
+function onCopper(value) {
+  const w = Number(value)
+  let best = 0
+  for (let i = 1; i < XS.length; i++) if (Math.abs(XS[i] - w) < Math.abs(XS[best] - w)) best = i
+  if (Math.abs(XS[best] - cu.value) > 1e-9) cu.set(XS[best])
+  if (!lab.broken) show(best)
+}
+const cu = lab.slider({
+  id: 'cu', label: 'Copper', min: 0, max: 10, step: 0.5, value: 2,
+  unit: 'wt%', digits: 1, ends: ['pure Al', 'Al-10Cu'], onInput: onCopper,
+})
+
+// provenance strip: the side column is the editorial column, so it lives there
+const prov = document.createElement('div')
+prov.style.cssText = [
+  'margin-top:1.15em', 'padding-top:0.75em',
+  'border-top:1px solid rgba(0,0,0,0.14)',
+  'font:500 10px/1.6 "JetBrains Mono",ui-monospace,monospace',
+  'letter-spacing:0.01em', 'color:#6f6c66', 'max-width:23em',
+].join(';')
+lab.$('.lab-side').appendChild(prov)
+
+function show(index) {
+  const k = KS[index]
+  const id = IDS[index]
+  const bracket = ES[index] == null ? 'no bisection bracket (pure element path)' : `&plusmn;${fmt(ES[index], 3)} K`
+  lab.setHero(k, {
+    state: index === 0 ? 'pure aluminium' : 'alloy',
+    sub: `Cu ${fmt(XS[index], 1)} wt% &middot; gate PASS &middot; ${bracket}`,
+  })
+  meltMat.emissiveIntensity = 0.35 + 1.5 * clamp((k - 895) / 45, 0, 1)
+  prov.innerHTML = [
+    `<b style="color:#3d3a35">${META.engine}</b>`,
+    `dataset mc_al_v2.032.pycalphad.tdb`,
+    `gate <span style="color:#2f6b3a">PASS</span> &middot; ${bracket}, not model error`,
+    `ledger ${id}`,
+    `baked ${META.created} &middot; head ${META.head}`,
+    `page model &plusmn;${TOLERANCE_K} K between anchors &middot; lab_audit.py`,
+  ].join('<br>')
+}
+
+function showRefusal() {
+  lab.setHero(0, { state: 'out of domain', sub: 'Au &mdash; no ELEMENT entry', bad: true })
+  lab._hv.textContent = '\u2014'
+  meltMat.emissiveIntensity = 0.05
+  prov.innerHTML = [
+    `<b style="color:#8d2b22">no data</b>`,
+    `gate <span style="color:#8d2b22">RED</span> &middot; ${REFUSAL.reason}`,
+    `${REFUSAL.sentence}`,
+    `ledger ${REFUSAL.ledger}`,
+    `the page shows the refusal, not a number`,
+  ].join('<br>')
+}
+
+lab.onTick(() => {
+  const index = XS.indexOf(Number(cu.el.value))
+  if (index >= 0 && !lab.broken) {
+    // keep the melt turning very slowly so the still frame is not flat
+    melt.rotation.y += 0.0015
+  }
+})
+
+// ---------------------------------------------------------------- break it
+lab.breakIt({
+  label: 'Push it out of the database',
+  run() { showRefusal() },
+  reset() { show(XS.indexOf(Number(cu.el.value))) },
+})
+
+lab.how(
+  'The liquidus is the temperature at which the last solid disappears. '
+  + 'It is computed by pycalphad equilibrium on the MatCalc Al-Cu database, bisected over '
+  + '21 compositions. The page does not run that solver: <b>each slider position is a stored '
+  + 'ledger entry</b>, produced by <code>bake.py</code> and replayable with '
+  + '<code>replay_router.py &lt;id&gt; --compute</code>. The slider snaps to the 21 baked '
+  + 'points, so every readout is a stored number. Between them <code>labs/al_cu_model.mjs</code> '
+  + 'interpolates linearly inside a declared <b>&plusmn;0.5 K</b>, and <code>scripts/lab_audit.py</code> '
+  + 'checks the model against the bake file, the ledger and the engine. <b>Break it</b> asks for gold, which the database '
+  + 'does not declare: the gate goes RED and the page shows the refusal sentence instead of a number.',
+  [
+    'x(Cu) from wt%: n_Cu = w/63.546, n_Al = (100-w)/26.9815, x = n_Cu/(n_Cu+n_Al)',
+    'liquidus: bisect T where any solid phase has NP > 1e-6 (9 steps)',
+    'x_Cu = 0: no bracket exists, so the pure-element path is used (FCC_A1 -> LIQUID)',
+  ],
+)
+
+// ---------------------------------------------------------------- the film
+// The vendored autoFilm tells machine-skill's story ("Claude builds the machine"). This page is a
+// kuro-jikken artifact, so the numbered beats name our own chain: question -> gated engine ->
+// ledger -> page -> refusal. A film that credits the wrong builder is a false caption.
+lab.autoFilm({
+  runBeat: 'Every number is a ledger entry.',
+  runSub: 'pycalphad equilibrium. Gated. Replayable.',
+  breakBeat: 'Then break it.',
+  breakSub: 'Ask for gold: the page refuses.',
+})
+{
+  const F = lab.films.main
+  const ev = F.events
+  const v = lab.view
+  const S = (dz) => ({ ...v, ...dz })
+  // Two defects in the vendored 28 s story, seen in the first take (al_cu_liquidus_v1.mp4):
+  //   * the exploded view is cropped - the lid leaves the top of the frame at dist * 0.9;
+  //   * the film ends on beat 06 ("the page refuses") while the reset has already put a valid
+  //     anchor back on screen, so the last caption contradicts the last frame.
+  // The shots are re-keyed wider and the film runs 3 s longer, ending on a 07 that names the ledger.
+  F.len = 31
+  F.shots = [
+    { t: 0, ...S({ az: v.az - 28, el: v.el + 6, dist: v.dist * 1.08 }) },
+    { t: 4.5, ...S({ az: v.az - 8, dist: v.dist * 1.02 }) },
+    { t: 10, ...S({ az: v.az + 6, el: v.el + 2, dist: v.dist * 1.0 }) },
+    { t: 15, ...S({ az: v.az + 18, el: v.el + 8, dist: v.dist * 1.20, target: [0, 0.135, 0] }) },
+    { t: 20, ...S({ az: v.az + 30, el: v.el + 12, dist: v.dist * 1.24, target: [0, 0.135, 0] }) },
+    { t: 24.5, ...S({ az: v.az + 8, el: v.el + 4, dist: v.dist * 1.06 }) },
+    { t: 31, ...S({ az: v.az - 24, el: v.el + 7, dist: v.dist * 1.14 }) },
+  ]
+  F.events.push({ t: 26.6, beat: ['07', 'Back to the ledger.', `${ANCHORS.length} points, one entry each.`] })
+  ev[0].beat = ['01', 'One question, one sentence.', 'Typed into the agent.']
+  ev[1].beat = ['02', 'The agent builds the machine.', 'Part by part, 52 of them.']
+}
+
+show(XS.indexOf(Number(cu.el.value)))
+lab.start()
+
+// ---------------------------------------------------------------- performance
+// The kit ships VSM shadows + AO. On a laptop GPU (Intel UHD, 1600x900) that is
+// 13.5 fps; PCFSoft + 1024 maps + no AO measured 40.5 fps with the same soft look
+// (scripts/_shadowprobe.mjs, 2026-10-27). Headless Chromium falls back to SwiftShader,
+// so the fps in shot.mjs output is a software-render floor, not the interactive rate.
+lab.ao.enabled = false
+lab.renderer.shadowMap.type = THREE.PCFSoftShadowMap
+lab.scene.traverse((o) => {
+  if (o.isLight && o.shadow) {
+    o.shadow.mapSize.set(1024, 1024)
+    o.shadow.map?.dispose()
+    o.shadow.map = null
+    // VSM does not need a bias; PCFSoft does. The kit's depth range (0.5..20) spent most of its
+    // precision on empty air: the base plate showed shadow-acne stripes (L9_final_cut.png).
+    // The rig is ~3.4 world units wide at ~8.4 from the key, so 5..12 is all the depth we need.
+    o.shadow.camera.near = 5
+    o.shadow.camera.far = 12
+    o.shadow.camera.updateProjectionMatrix()
+    o.shadow.bias = -0.0006
+    o.shadow.normalBias = 0.035
+  }
+  if (o.material) o.material.needsUpdate = true
+})
+lab.renderer.shadowMap.needsUpdate = true
+</script>
+</body>
+</html>

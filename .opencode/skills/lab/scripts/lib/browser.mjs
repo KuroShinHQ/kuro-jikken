@@ -9,6 +9,10 @@ export async function launch({ width = 1920, height = 1080, scale = 1 } = {}) {
   const args = ['--ignore-gpu-blocklist', '--enable-gpu-rasterization', '--disable-background-timer-throttling', '--disable-renderer-backgrounding']
   if (process.platform === 'darwin') args.push('--use-angle=metal')
   else if (process.platform === 'linux') args.push('--use-angle=vulkan', '--enable-features=Vulkan')
+  // Windows headless defaults to SwiftShader (2 fps measured 2026-10-27, scripts/_gpuhead.mjs);
+  // forcing ANGLE/D3D11 gives the real GPU: "ANGLE (NVIDIA ... RTX 4060 ... D3D11)" at 61 fps.
+  // 30x the frames per second, and it is the same path the desktop browser uses.
+  else if (process.platform === 'win32') args.push('--use-gl=angle', '--use-angle=d3d11')
   const browser = await pw.chromium.launch({ headless: true, args })
   const page = guardPage(await browser.newPage({ viewport: { width, height }, deviceScaleFactor: scale }))
   page.on('pageerror', (e) => console.log('PAGE ERROR', e.message.split('\n')[0]))

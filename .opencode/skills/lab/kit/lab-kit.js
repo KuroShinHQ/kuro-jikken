@@ -673,16 +673,17 @@ export class Lab {
 
   /**
    * The hero number: lab.hero({ label: 'Thrust', unit: 'kN', max: 350, digits: 0 })
-   * then lab.setHero(value, { state: 'spooling up', sub: 'N1 94.9 % Â· TGT 959 Â°C', bad: false })
+   * then lab.setHero(value, { state: 'spooling up', sub: 'N1 94.9 % · TGT 959 °C', bad: false })
    */
   hero(o) {
     this.heroO = { digits: 0, ...o }
-    this.metricEl.innerHTML = `<div class="lbl">${o.label} Â· <b class="st"></b></div><div class="lab-big"><span class="v">0</span><i>${o.unit ?? ''}</i></div><div class="lab-bar"><div></div></div><div class="lab-sub"></div>`
+    this.metricEl.innerHTML = `<div class="lbl">${o.label} · <b class="st"></b></div><div class="lab-big"><span class="v">0</span><i>${o.unit ?? ''}</i></div><div class="lab-bar"><div></div></div><div class="lab-sub"></div>`
     this._hv = this.metricEl.querySelector('.v'); this._hs = this.metricEl.querySelector('.st'); this._hb = this.metricEl.querySelector('.lab-bar'); this._hsub = this.metricEl.querySelector('.lab-sub')
   }
   setHero(v, { state, sub, bad = false } = {}) {
     const h = this.heroO; if (!h) return
     if (this._building) { this._heroPending = [v, { state, sub, bad }]; return }
+    this._heroSaved = [v, { state, sub, bad }]
     this.heroValue = v
     this._hv.textContent = fmt(v, h.digits)
     if (state !== undefined) this._hs.textContent = state
@@ -948,19 +949,22 @@ export class Lab {
       const N = this._pc ?? (this._pc = this.partCount())
       let n = 0, cur = this.parts[0]?.name ?? ''
       for (const p of this.parts) { const ai = ease.out(clamp((1 - A) * 1.6 - (p.order / Math.max(1, this.parts.length)) * 0.6)); const c = p.count ?? 1; if (ai > 0.92) { n += p._c ?? (p._c = p.count ?? (() => { let k = 0; p.obj.traverse((m) => { if (m.isMesh && m.layers.mask & 1) k++ }); return Math.max(1, k) })()); cur = p.name || cur } void c }
-      if (!this._building) { this._building = true; this._saveHero = this.metricEl.innerHTML }
+      if (!this._building) { this._building = true; this._heroPending = null; this._saveHero = this.metricEl.innerHTML }
       this._hs.textContent = cur
-      this.metricEl.querySelector('.lbl').firstChild.textContent = 'Building Â· '
+      this.metricEl.querySelector('.lbl').firstChild.textContent = 'Building · '
       this._hv.textContent = fmt(n)
       this.metricEl.querySelector('.lab-big i').textContent = `of ${fmt(N)} parts`
       this._hb.firstElementChild.style.width = `${(n / N) * 100}%`
       this._hb.classList.remove('bad')
-      this._hsub.textContent = `${fmt(this.tris ?? 0)} triangles Â· ${this.matCount ?? 0} materials`
+      this._hsub.textContent = `${fmt(this.tris ?? 0)} triangles · ${this.matCount ?? 0} materials`
     } else if (this._building) {
       this._building = false
-      this.metricEl.querySelector('.lbl').firstChild.textContent = `${this.heroO.label} Â· `
+      this.metricEl.querySelector('.lbl').firstChild.textContent = `${this.heroO.label} · `
       this.metricEl.querySelector('.lab-big i').textContent = this.heroO.unit ?? ''
       if (this._heroPending) this.setHero(...this._heroPending)
+      // a page that sets its number before start() must get it back: the build
+      // counter overwrote the hero and left "0" on screen (2026-10-27 kaniti)
+      else if (this._heroSaved) this.setHero(...this._heroSaved)
     }
   }
   _updateCut() {

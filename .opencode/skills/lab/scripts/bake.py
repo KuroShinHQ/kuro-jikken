@@ -146,7 +146,8 @@ def main(argv=None):
     name, values = parse_sweep(args.sweep)
     payload_template = args.payload
     if args.payload_file:
-        payload_template = pathlib.Path(args.payload_file).read_text(encoding="utf-8").strip()
+        # utf-8-sig: a PowerShell-written template carries a BOM (DEVAM SABIT #10d)
+        payload_template = pathlib.Path(args.payload_file).read_text(encoding="utf-8-sig").strip()
     if payload_template and "{" + name + "}" not in payload_template:
         raise SystemExit(f"--payload carries no {{{name}}} placeholder: the sweep would not change it")
     if "{" + name + "}" not in args.request and not payload_template:

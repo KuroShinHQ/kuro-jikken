@@ -1,0 +1,60 @@
+{
+ "meta": {
+  "created": "2026-10-27T01:55:38",
+  "repo_head": "2e21943",
+  "request_template": "Mg-{x} alasimi erir mi",
+  "payload_template": "{\"tdb\": \"mc_al_v2.032.pycalphad.tdb\", \"elements\": [\"MG\"], \"x_cu\": {x}}",
+  "sweep": {
+   "name": "x",
+   "start": 0.0,
+   "end": 1.0,
+   "steps": 2
+  },
+  "engines": [
+   "pycalphad equilibrium + bisection (pure element)"
+  ],
+  "points": 2,
+  "numbers": 1,
+  "refusals": 1,
+  "ledger_written": true,
+  "interpolation": "linear between points; the page must label midpoints as interpolated"
+ },
+ "points": [
+  {
+   "x": 0.0,
+   "request": "Mg-0.0 alasimi erir mi",
+   "value": 933.47,
+   "unit": "kelvin",
+   "verdict": "GREEN",
+   "gate": "PASS",
+   "reason": null,
+   "sentence": null,
+   "error": null,
+   "provenance": {
+    "engine": "pycalphad equilibrium + bisection (pure element)",
+    "dataset": "mc_al_v2.032.pycalphad.tdb"
+   },
+   "limits": [
+    "pure AL melting point (FCC_A1 -> LIQUID); the Al-Cu liquidus needs x_Cu > 0",
+    "database assessment, not a measurement; no model error bar is claimed"
+   ],
+   "ledger": "20261026T225535-0600170a"
+  },
+  {
+   "x": 1.0,
+   "request": "Mg-1.0 alasimi erir mi",
+   "value": null,
+   "unit": null,
+   "verdict": "RED",
+   "gate": "PASS",
+   "reason": "out of domain",
+   "sentence": "Motor var ama bu molekul onun kapsami disinda (sebep: ValueError: x_Cu must be strictly between 0 and 1 (got 1.0); use the pure-element path).",
+   "error": null,
+   "provenance": {},
+   "limits": [
+    "ValueError: x_Cu must be strictly between 0 and 1 (got 1.0); use the pure-element path"
+   ],
+   "ledger": "20261026T225538-355bd473"
+  }
+ ]
+}

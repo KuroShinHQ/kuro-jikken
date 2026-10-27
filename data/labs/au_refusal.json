@@ -1,0 +1,54 @@
+{
+ "meta": {
+  "created": "2026-10-27T01:59:32",
+  "repo_head": "2e21943",
+  "request_template": "Au-{x} wt alasimi erir mi",
+  "payload_template": "{\"tdb\": \"mc_al_v2.032.pycalphad.tdb\", \"elements\": [\"AU\"], \"cu_wt_pct\": {x}}",
+  "sweep": {
+   "name": "x",
+   "start": 3.0,
+   "end": 4.0,
+   "steps": 2
+  },
+  "engines": [],
+  "points": 2,
+  "numbers": 0,
+  "refusals": 2,
+  "ledger_written": true,
+  "interpolation": "linear between points; the page must label midpoints as interpolated"
+ },
+ "points": [
+  {
+   "x": 3.0,
+   "request": "Au-3.0 wt alasimi erir mi",
+   "value": null,
+   "unit": null,
+   "verdict": "RED",
+   "gate": "RED",
+   "reason": "no data",
+   "sentence": "Bu madde/veri seti elimizde yok; en yakin kapsam: alloy.phase",
+   "error": null,
+   "provenance": {},
+   "limits": [
+    "gate.calphad: mc_al_v2.032.pycalphad.tdb has no ELEMENT entry for AU"
+   ],
+   "ledger": "20261026T225932-91f72739"
+  },
+  {
+   "x": 4.0,
+   "request": "Au-4.0 wt alasimi erir mi",
+   "value": null,
+   "unit": null,
+   "verdict": "RED",
+   "gate": "RED",
+   "reason": "no data",
+   "sentence": "Bu madde/veri seti elimizde yok; en yakin kapsam: alloy.phase",
+   "error": null,
+   "provenance": {},
+   "limits": [
+    "gate.calphad: mc_al_v2.032.pycalphad.tdb has no ELEMENT entry for AU"
+   ],
+   "ledger": "20261026T225932-e86c7ecd"
+  }
+ ]
+}

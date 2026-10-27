@@ -1,5 +1,5 @@
-﻿// Vendored from AirsupHQ/machine-skill (MIT). Copyright (c) 2026 Airsup. See ../LICENSE.
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
+// Vendored from AirsupHQ/machine-skill (MIT). Copyright (c) 2026 Airsup. See ../LICENSE.
 // Paste kit/lab-kit.js into every page between <!-- lab-kit:start --> and <!-- lab-kit:end -->,
 // so the page is ONE self-contained file (three.js still comes from the pinned CDN).
 //   node scripts/inline.mjs examples/turbofan.html [more.html ...]

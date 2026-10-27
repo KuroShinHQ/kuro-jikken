@@ -1,0 +1,35 @@
+{
+  "lab": "al_cu_liquidus",
+  "page": "labs/al_cu_liquidus.html",
+  "date": "2026-10-27",
+  "git_head": "2e21943",
+  "engine": {"name": "pycalphad", "dataset": "mc_al_v2.032.pycalphad.tdb", "gate": "gate.calphad"},
+  "bar": [
+    {"id": "B1", "claim": "her sayinin seridi var", "result": "PASS", "evidence": "provenance: engine+dataset+gate+ledger+baked+head; lab_audit.py page<->model PASS"},
+    {"id": "B2", "claim": "sayi = anchor (defter)", "result": "PASS", "evidence": "21/21 anchor defterle birebir (lab_audit model<->ledger); 2,0 wt% 927.783203125 K, 10,0 wt% 903.857421875 K"},
+    {"id": "B3", "claim": "break sayi uretmez", "result": "PASS", "evidence": "R1_break.png + film 23,2 s: hero '—', 'Au — no ELEMENT entry', defter 20261026T225932-91f72739"},
+    {"id": "B4", "claim": "disksten tek dosya acilir", "result": "PASS", "evidence": "scripts/inline.mjs + CDN three 0.170 (pinned)"},
+    {"id": "B5", "claim": "1x okunur, 4x odullendirir", "result": "PASS", "evidence": "52 adli parca, 42.330 tris; 1x R1_1x.png, 4x L9e_4x_coil.png"},
+    {"id": "B6", "claim": "fps >= 30 + audit exit 0", "result": "PASS", "evidence": "1600x900: 61 fps (3 kosu: 61) · 1920x1080: 16-18 fps (gercek tavan asagida) · lab_audit.py 4/4 PASS"}
+  ],
+  "plan_items": [
+    {"id": "L7", "claim": "1 mp4 + pinkscan exit 0 + 5-7 numarali beat", "result": "PASS", "evidence": "7 beat (01-07), pinkscan clean, 31,00 s"},
+    {"id": "L9", "claim": ">=40 adli parca, 1x/kesit/4x, fps>=30", "result": "PASS", "evidence": "52 parca / 5 grup, parts.md 52 satir"},
+    {"id": "L10", "claim": "anchor=defter, ara deger <= tolerans, RED'de sayi yok", "result": "PASS", "evidence": "lab_audit --compute: worst midpoint 0,3418 K <= 0,5 K"},
+    {"id": "L11", "claim": "1 A4 PDF, defter id'li sayilar", "result": "PASS", "evidence": "data/labs/al_cu_sheet.pdf 288937 B, pages: 1"}
+  ],
+  "film": {"file": "labs/al_cu_liquidus.mp4", "bytes": 27366280, "seconds": 31.0, "frames": 930, "fps": 30, "size": "1920x1080", "beats": 7, "pinkscan": "clean", "render_s": 1251},
+  "critic_rounds": [
+    {"round": 1, "frames": ["R1_1x.png", "R1_cut.png", "R1_break.png"], "open": ["kesitte ince kirmizi halka + kesikli dikis (museum cap, kabul)", "kablo solda havada bitiyor (cihazda da oyle, kabul)"], "fixed": []},
+    {"round": 2, "frames": ["film v1: F_0.9/6.5/9.9/12.5/17.5/23.2/27.2"], "open": ["hero kadranla uyusmuyor (927,78 K @ 10,0 wt%)", "sokme sahnesi kirpik", "son caption celisiyor"], "fixed": ["onInput + anchor snap", "dist 1,20/1,24 + target y 0,135", "31 s + beat 07"]},
+    {"round": 3, "frames": ["V2_29.5.png", "crop_v13/v16/v17"], "open": ["kadran z-fighting", "krem kadranin plaka uzerindeki ayna goruntusu", "tepsi bilezige giriyor"], "fixed": ["+1,2 mm / 17 mm iceri", "siyah cilali kadran", "r 0,1445 / ust 0,0048 / koyu saten"]},
+    {"round": 4, "frames": ["L7_final_1x.png", "V2_29.5.png", "R1_cut.png"], "open": [], "fixed": []}
+  ],
+  "known_limits": [
+    "fps resme bagli: 1600x900 61 fps, 1920x1080 16-18 fps (1,44x piksel icin 3,5x dusus - neden bulunmadi, fill-rate/ANGLE supheli)",
+    "film sessiz (muz denenmedi)",
+    "ret cumlesi Turkce, sayfa metni Ingilizce (answer.py sabit cumlesi; bilincli sinir)",
+    "A4: 3 ciktidan 1'i var (sheet); poster ve detailed sheet yok",
+    "geometri denetimi (parts_audit.py) yok - clearance/oturma otomatik dogrulanmiyor"
+  ]
+}

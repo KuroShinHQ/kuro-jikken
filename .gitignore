@@ -18,3 +18,8 @@ _secrets/
 data/alloy_tdb_normalized/
 data/alloy_tdb_extract/
 data/quarantine/
+
+# lab skill: installed deps + regenerable film outputs (stay on disk, not in git)
+.opencode/skills/lab/node_modules/
+.opencode/skills/lab/labs/*.mp4
+.opencode/skills/lab/scripts/pipe_test*.mp4

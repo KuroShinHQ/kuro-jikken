@@ -1,5 +1,5 @@
-﻿// Vendored from AirsupHQ/machine-skill (MIT). Copyright (c) 2026 Airsup. See ../LICENSE.
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
+// Vendored from AirsupHQ/machine-skill (MIT). Copyright (c) 2026 Airsup. See ../LICENSE.
 // Scan films for magenta flash frames (a dying headless GPU returns #FF00FF). Exit 1 if any frame is
 // more than 25 % pink, or blinks magenta against its neighbours in a dark scene.
 //   node scripts/pinkscan.mjs out/*.mp4
@@ -11,8 +11,11 @@ export function scanFile(file) {
     const p = spawn(process.env.FFMPEG || 'ffmpeg', ['-loglevel', 'error', '-i', file, '-vf', `scale=${W}:${H}:flags=area`, '-f', 'rawvideo', '-pix_fmt', 'rgb24', 'pipe:1'])
     let buf = Buffer.alloc(0), n = 0
     const bad = []
-    let fps = 30
+    // Windows rarely has ffprobe next to the encoder; the film's own fps is known, so take it from
+    // the environment and let a missing probe stay silent instead of crashing on an unhandled error.
+    let fps = Number(process.env.FPS || 30)
     const pr = spawn(process.env.FFPROBE || 'ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=r_frame_rate', '-of', 'csv=p=0', file])
+    pr.on('error', () => {})
     pr.stdout.on('data', (d) => { const [a, b] = String(d).trim().split('/').map(Number); if (a && b) fps = a / b })
     let prevMag = 0
     p.stdout.on('data', (d) => {
