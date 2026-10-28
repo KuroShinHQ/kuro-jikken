@@ -1,0 +1,17 @@
+{
+ "builder": "tools/build_cosmetics.py",
+ "check": "python tools/build_cosmetics.py --check",
+ "generated": "2026-10-28",
+ "note": "generated file: edit the builder, not the JSON",
+ "pools": {
+  "cosmetics": {
+   "bytes": 1136445,
+   "count": 2560,
+   "file": "data/cosmetics/cosmetics.json",
+   "licence": "ODbL-1.0 + DbCL-1.0 (labels) + CC-BY-4.0 (CosIng)",
+   "role": "reference-only: INCI identity, CosIng function and label frequency; never a formulation, never a safety claim, never a ranking",
+   "sha256": "5fc11c7de632d59ad15b5d2eb1e9daacf531db8c07a33cedbe8483d946840ed7"
+  }
+ },
+ "schema": "kj-cosmetics/1"
+}

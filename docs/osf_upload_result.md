@@ -17,3 +17,9 @@
 - Technical note: documented v2 `?meta=` upload returned 400 ("Missing
   required parameter 'name'"); working flow = provider upload link with
   `?name=&kind=file&size=` query params (waterbutler v1), verified 3/3.
+
+---
+
+> **Correction (2026-10-28, append-only):** `10.5281/zenodo.23633859` is the
+> superseded v0.1.0. Current version: `10.5281/zenodo.23638653` (v0.1.1).
+> Concept DOI: `10.5281/zenodo.23633858`.

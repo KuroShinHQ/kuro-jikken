@@ -84,6 +84,7 @@ window.__lab = lab
 const P = []
 function part(group, geo, mat, o) {
   const m = lab.mesh(geo, mat, o)
+  m.name = o.name || m.name
   P.push({ group, name: o.name })
   return m
 }
@@ -101,7 +102,17 @@ const ring = lab.mesh(GEO.tube(__RING_R__, __RING_R__ - 0.005, 0.0022, 64), MAT.
 lab.hero({ label: 'Sicaklik / temperature', unit: '°C', max: 110, digits: 0 })
 
 let current = 0
+let stepState = 0
 const side = lab.$('.lab-side')
+
+// the presenter bubble: one simple line per step, bottom-left of the stage
+const bubble = document.createElement('div')
+bubble.style.cssText = 'position:fixed;left:5.2%;bottom:12%;max-width:24em;background:#fff;color:#1c1b19;border:1px solid rgba(0,0,0,.14);border-radius:14px;padding:12px 16px;font:500 14px/1.45 Inter,system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.10);z-index:5'
+document.body.appendChild(bubble)
+const mise = document.createElement('div')
+mise.style.cssText = 'margin-top:0.9em;padding-top:0.65em;border-top:1px solid rgba(0,0,0,0.14);font:500 10px/1.6 "JetBrains Mono",monospace;color:#6f6c66;max-width:23em'
+mise.textContent = 'masa / mise en place: ' + R.ingredients.map((g) => `${g.name} ${g.amount} ${g.unit}`).join(' · ')
+side.appendChild(mise)
 
 // the step text sits between the hero and the slider
 const callout = document.createElement('div')
@@ -135,6 +146,7 @@ function show(i) {
   current = i
   const step = R.steps[i]
   const trStep = (TR.steps && TR.steps[i]) || step.action
+  bubble.textContent = trStep
   const note = step.note ? `<div style="margin-top:0.35em;color:#7a766e;font-size:10.5px">${step.note}</div>` : ''
   callout.innerHTML = [
     `<div style="font:600 10px/1.4 "JetBrains Mono",monospace;letter-spacing:0.08em;color:#8a857c">STEP ${i + 1} / ${N}</div>`,
@@ -144,6 +156,7 @@ function show(i) {
   ].join('')
   const station = built.stations[i] || [0, 0, 0]
   ring.position.set(station[0], 0.004, station[2])
+  stepState = i
   built.onStep(i)
   if (step.temperature_c !== undefined) {
     lab.setHero(step.temperature_c, {
@@ -162,10 +175,14 @@ function show(i) {
   ].join('<br>')
 }
 
+// test hook: shot.mjs can drive a step without touching the slider
+window.__showStep = show
+
 // the kit's assembly restores a queued hero after the build; enforce the dash
 // for steps that have no temperature until the user moves the slider again
 lab.onTick(() => {
   if (lab._building || lab.broken) return
+  built.onStep(stepState)
   const step = R.steps[current]
   if (step.temperature_c === undefined) {
     lab._hv.textContent = '\u2014'
@@ -323,12 +340,20 @@ function buildScene(lab, THREE, MAT, GEO, part) {
   ]
 
   let steamOn = true
+  const vis = (n, v) => { lab.root.traverse((x) => { if (x.name === n) { if (!x.userData.home) x.userData.home = x.position.clone(); const h = x.userData.home; lab.place(x, h.x, v ? h.y : -5, h.z) } }) }
+  const move = (n, fn) => { let k = 0; lab.root.traverse((x) => { if (x.name === n) { fn(x, k++); lab.place(x, x.position.x, x.position.y, x.position.z) } }) }
   return {
     stations,
     onStep(i) {
       steamOn = i <= 1
-      for (const s of steam) s.visible = steamOn
-      tea.material.opacity = i >= 3 ? 0.7 : 0.25
+      for (let k = 1; k <= 6; k++) vis('Steam ' + k, steamOn)
+      vis('Pot lid', i === 0); vis('Lid knob', i === 0)
+      vis('Mint vein', i === 0)
+      if (i >= 1) move('Mint leaf', (o, k) => o.position.set(potX - 0.018 + (k % 3) * 0.018, 0.074, -0.010 + Math.floor(k / 3) * 0.020))
+      vis('Lemon segment line', i < 2)
+      if (i >= 2) move('Lemon slice', (o, k) => o.position.set(potX - 0.015 + (k % 3) * 0.015, 0.072, -0.008 + Math.floor(k / 3) * 0.016))
+      if (i >= 2) move('Lemon rind', (o, k) => o.position.set(potX - 0.015 + (k % 3) * 0.015, 0.072, -0.008 + Math.floor(k / 3) * 0.016))
+      tea.material.opacity = i >= 4 ? 1.0 : i >= 3 ? 0.55 : 0.15
     },
     tick(sdt, lab) {
       if (!steamOn) return
@@ -385,12 +410,19 @@ function buildScene(lab, THREE, MAT, GEO, part) {
   ]
 
   let bubblesOn = false
+  const vis = (n, v) => { lab.root.traverse((x) => { if (x.name === n) { if (!x.userData.home) x.userData.home = x.position.clone(); const h = x.userData.home; lab.place(x, h.x, v ? h.y : -5, h.z) } }) }
   return {
     stations,
     onStep(i) {
-      bubblesOn = i === 2 || i === 3
-      for (const b of bubbles) b.visible = bubblesOn
-      tarnish.material.opacity = i <= 1 ? 0.85 : i <= 3 ? 0.45 : 0.05
+      const foil = i >= 1, silver = i >= 2, water = i === 3 || i === 4
+      bubblesOn = i === 3 || i === 4
+      for (let k = 1; k <= 7; k++) vis('Bubble ' + k, bubblesOn)
+      for (const n of ['Aluminium foil', 'Foil crease 1', 'Foil crease 2', 'Foil crease 3']) vis(n, foil)
+      for (const n of ['Silver spoon handle', 'Silver spoon bowl', 'Silver sulfide tarnish']) vis(n, silver)
+      vis('Hot water', water)
+      vis('Soda box top', i < 3)
+      vis('Soda mound', i >= 3)
+      tarnish.material.opacity = i <= 2 ? 0.85 : i === 3 ? 0.55 : i === 4 ? 0.30 : 0.02
     },
     tick(sdt) {
       if (!bubblesOn) return

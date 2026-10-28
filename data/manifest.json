@@ -5,9 +5,11 @@
   "allowed_licences": [
     "CC0-1.0",
     "ODbL-1.0",
+    "ODbL-1.0 + DbCL-1.0",
     "MIT",
     "citation-only",
-    "external-research"
+    "external-research",
+    "CC-BY-4.0"
   ],
   "datasets": [
     {
@@ -212,6 +214,50 @@
       ],
       "bytes": 7949,
       "sha256": "881e83a09d84a0b0186638195c300f9d4525858c1c5e5ae350e73905485cc036"
+    },
+    {
+      "id": "obf_products_20261028",
+      "title": "Open Beauty Facts product dump (2026-10-28)",
+      "path": "C:\\KuroshinHQ\\_hub\\data\\cosmetics\\openbeautyfacts-products.jsonl.gz",
+      "in_repo": false,
+      "licence": "ODbL-1.0 + DbCL-1.0",
+      "domain": {
+        "quantity": "cosmetic products with label data",
+        "products": 79010,
+        "with_inci": 20185
+      },
+      "used_by": [
+        "tools/build_cosmetics.py"
+      ],
+      "not_for": [
+        "market share",
+        "concentration",
+        "safety or efficacy claims"
+      ],
+      "bytes": 104231691,
+      "sha256": "9173863ea9f52a3a3609c953fab06951995fcfcfb6b472e4c51447403ffe6c90"
+    },
+    {
+      "id": "cosing_labels_20261028",
+      "title": "CosIng records for label names (2026-10-28)",
+      "path": "C:\\KuroshinHQ\\_hub\\data\\cosmetics\\cosing_inci_20261028.json",
+      "in_repo": false,
+      "licence": "CC-BY-4.0",
+      "domain": {
+        "quantity": "INCI identity, function, restrictions",
+        "records": 4065,
+        "names_queried": 8663
+      },
+      "used_by": [
+        "tools/build_cosmetics.py"
+      ],
+      "not_for": [
+        "formulation design",
+        "safety assessment",
+        "market claims"
+      ],
+      "bytes": 2337454,
+      "sha256": "cf16c156286ed1be6ff9e8154074ec354284f206551dc5ae36da76a03e8b9706"
     }
   ]
 }

@@ -15,6 +15,8 @@ by any engine; a number may not be produced from an unlisted file.
 | `matcalc_mc_ni` | ODbL-1.0 | outside repo, 389 KB | Ni CALPHAD | same |
 | `hsp_chemicals` | MIT | inside `chemicals 1.5.2` | Hansen dD/dP/dH by CASRN | mixtures, polymers |
 | `gamma_inf_literature` | citation-only | `tools/gamma_validation.py` | 9 measured gamma-infinity values, 298 K | redistribution, other solvents |
+| `obf_products_20261028` | ODbL-1.0 + DbCL-1.0 | outside repo, 104.2 MB | 79,010 crowd-sourced cosmetic product records; 20,185 with a readable INCI list | market share, concentration, safety claims |
+| `cosing_labels_20261028` | CC-BY-4.0 | outside repo, 2.3 MB | 4,065 CosIng records for 8,663 label names (identity, CAS/EC, function, restriction) | formulation design, safety assessment, market claims |
 
 Rules:
 
