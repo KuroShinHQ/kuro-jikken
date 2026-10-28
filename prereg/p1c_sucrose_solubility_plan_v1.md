@@ -32,7 +32,8 @@ unit conversion; the two tables agree within 3%.
 
 ## 4. Materials
 
-- 2 kg sucrose (table sugar), one brand for all points
+- 3.5 kg sucrose (table sugar), one brand for all points (the ten points need
+  about 3.0 kg; 2 kg was an arithmetic error)
 - water, 100 g weighed per point
 - kitchen scale, 1 g resolution (verified with a 100 g test mass)
 - thermometer 0-100 C, +/-2 C
@@ -97,4 +98,12 @@ The single-phase 10 g procedure needs 40+ additions at 90 C (over 7 h for the
 The endpoint rule (`last_dissolved_g`, `first_residue_g`, midpoint), the
 hypotheses H1/H2/H3, the thresholds, the reference values and the analysis are
 unchanged. Only the addition rate changes, and only before any data exist.
+
+## 11. Amendment 2 (2026-10-28, before any measurement)
+
+Materials correction: section 4 said 2 kg sucrose, but the ten points need
+1,507 g per replicate set (204 + 238 + 287 + 362 + 416), i.e. about 3.0 kg for
+two replicates. The material list is corrected to 3.5 kg. No hypothesis,
+procedure, threshold or analysis changes.
+
 
