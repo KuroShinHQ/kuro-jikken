@@ -2,7 +2,17 @@
 
 Status: draft for a dated OSF *Update* on https://osf.io/8pbnu/.
 Not sent. Author's approval is required before sending.
-Date written: 2026-10-26.
+Date written: 2026-10-26. Revised: 2026-10-28 (Summary field added; approval date corrected).
+
+## Summary (for the OSF field)
+
+Freeze 2 amendment (2026-10-28) recorded before the confirmatory run: thinking
+disabled (mode A is non-thinking), model/template/prompt hashes frozen, Windows
+llama-server 10288 on CPU only (8 threads), context 8192, temperature 0, seed
+20261026, max tokens 1024, N = 200 (~12 h); the 48-hour fallback is not
+triggered. No hypothesis, scoring rule, tolerance, property definition or
+molecule ID is changed. Pilot figures are debugging only, not a result. No
+confirmatory item has been run at the time of this update.
 
 ## Justification (for the OSF field)
 
