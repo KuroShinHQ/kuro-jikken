@@ -22,7 +22,10 @@ etmek. On kayit: `prereg/p1c_sucrose_solubility_plan_v1.md`.
 
 1. **100 g su** tart, tencereye koy (olcu kabı degil, terazi).
 2. Hedef sicakliga getir (20/40/60/80/90 C), +/-2 C'de tut; kapagi kapali, kisik ates.
-3. Sekeri **10 g'lik** artislarla ekle; her seferinde 30 sn karistir, 60 sn bekle.
+3. Sekeri **iki fazda** ekle:
+   - **Kaba faz:** referans degerin ~%80'ine kadar **50 g** adimlarla, her adimda
+     20 sn karistir (bekleme yok).
+   - **Ince faz:** son %20'de **10 g** adimlarla, 30 sn karistir + 60 sn bekle.
 4. Iki sayiyi kaydet:
    - `last_dissolved_g`: tamamen cozunen son toplam (60 sn sonra kristal yok, berrak);
    - `first_residue_g`: 2 dk karistirmaya ragmen kristalin kaldigi ilk toplam.
