@@ -110,7 +110,7 @@ endpoint 127.0.0.1:8099 only.
 
 The author approves the four decisions above (thinking disabled, N = 200, Windows
 llama-server build 10288, ~12 h estimate), including inference on the CPU only,
-on 2026-10-26 (confirmation word given in the session: ONAYLIYORUM).
+on 2026-10-28 (confirmation word given in the session: ONAY).
 
 ## What this update does not do
 
